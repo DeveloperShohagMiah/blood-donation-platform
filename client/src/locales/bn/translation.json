@@ -1,0 +1,16 @@
+{
+    "navigation": {
+        "mainNavigation": "প্রধান নেভিগেশন",
+        "home": "হোম",
+        "findDonors": "রক্তদাতা খুঁজুন",
+        "becomeDonor": "রক্তদাতা হোন",
+        "bloodRequests": "রক্তের অনুরোধ",
+        "about": "আমাদের সম্পর্কে",
+        "contact": "যোগাযোগ",
+        "login": "লগইন",
+        "tagline": "রক্ত দিন। জীবন বাঁচান।",
+        "chooseLanguage": "ভাষা নির্বাচন করুন",
+        "openMenu": "মেনু খুলুন",
+        "closeMenu": "মেনু বন্ধ করুন"
+    }
+}

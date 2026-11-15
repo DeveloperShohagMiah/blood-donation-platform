@@ -1,0 +1,16 @@
+{
+    "navigation": {
+        "mainNavigation": "Main navigation",
+        "home": "Home",
+        "findDonors": "Find Donors",
+        "becomeDonor": "Become a Donor",
+        "bloodRequests": "Blood Requests",
+        "about": "About Us",
+        "contact": "Contact",
+        "login": "Log in",
+        "tagline": "DONATE BLOOD. SAVE LIVES.",
+        "chooseLanguage": "Choose language",
+        "openMenu": "Open menu",
+        "closeMenu": "Close menu"
+    }
+}
