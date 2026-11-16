@@ -247,9 +247,9 @@ const BecomeDonor = () => {
 
     /* ---------- Form ---------- */
     return (
-        <main className="bg-[#F8FAFB] pb-20">
+        <main className=" pb-20">
             {/* Page header */}
-            <div className="bg-[#0B1020] pt-14 pb-28 sm:pt-16">
+            <div className="bg-linear-to-br from-primary/10 via-white/80 to-primary/10 pt-14 pb-30 sm:pt-28">
                 <div className="mx-auto w-[calc(100%-2rem)] max-w-[1280px] md:w-[calc(100%-4rem)]">
                     <SectionHeader
                         tone="dark"

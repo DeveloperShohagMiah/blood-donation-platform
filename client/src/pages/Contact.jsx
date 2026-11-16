@@ -90,7 +90,7 @@ const Contact = ({ onSubmit }) => {
     };
 
     const inputClass =
-        "w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary/50 focus:ring-4 focus:ring-primary/50/10";
+        "mt-2  w-full rounded-xl border border-[#e9e5e2] bg-[#fcfbfa] px-4 text-sm font-medium text-[#172321] outline-none transition placeholder:font-normal placeholder:text-[#a0a9a5] focus:border-[#d45b69] focus:bg-white focus:ring-4 focus:ring-[#dc263a]/[0.07]";
 
     return (
         <main className="min-h-screen bg-background text-foreground">
@@ -151,11 +151,11 @@ const Contact = ({ onSubmit }) => {
                                     </div>
 
                                     <div className="min-w-0">
-                                        <h3 className="font-bold text-lg">{item.title}</h3>
+                                        <h3 className="font-bold text-[16px]">{item.title}</h3>
                                         <p className="mt-1 text-xs text-muted-foreground">
                                             {item.description}
                                         </p>
-                                        <p className="mt-2 break-words text-sm font-semibold">
+                                        <p className="mt-2 text-sm font-semibold text-muted-foreground/90">
                                             {item.value}
                                         </p>
                                     </div>
@@ -164,21 +164,21 @@ const Contact = ({ onSubmit }) => {
                         })}
                     </div>
 
-                    <div className="mt-8 rounded-2xl bg-primary/10 p-6">
+                    <div className="mt-8 rounded-2xl bg-primary p-6">
                         <div className="flex items-center gap-3">
-                            <Heart className="text-primary" size={23} />
-                            <h3 className="font-bold text-2xl text-primary">Need Blood Urgently?</h3>
+                            <Heart className="text-white" size={23} />
+                            <h3 className="font-bold text-2xl text-white">Need Blood Urgently?</h3>
                         </div>
 
-                        <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                        <p className="mt-3 text-sm leading-7 text-white/70">
                             If someone needs blood, please submit a blood request
                             through our dedicated request system so our volunteers
                             can review and coordinate it.
                         </p>
 
                         <Link
-                            to="/blood-requests"
-                            className="mt-5 inline-flex items-end gap-2 font-bold text-primary text-sm text-right transition hover:gap-3"
+                            to="/create-blood-requests"
+                            className="mt-5 inline-flex items-end gap-2 font-bold text-white text-sm text-right transition hover:gap-3"
                         >
                             Submit Blood Request
                             <ArrowRight size={17} />
@@ -214,7 +214,7 @@ const Contact = ({ onSubmit }) => {
                                         },
                                     })}
                                     placeholder="Enter your full name"
-                                    className={inputClass}
+                                    className={`${inputClass} h-12`}
                                 />
                                 {errors.fullName && (
                                     <p className="mt-1.5 text-xs text-primary">
@@ -236,7 +236,7 @@ const Contact = ({ onSubmit }) => {
                                         },
                                     })}
                                     placeholder="you@example.com"
-                                    className={inputClass}
+                                    className={`${inputClass} h-12`}
                                 />
                                 {errors.email && (
                                     <p className="mt-1.5 text-xs text-primary">
@@ -261,7 +261,7 @@ const Contact = ({ onSubmit }) => {
                                         },
                                     })}
                                     placeholder="+8801XXXXXXXXX"
-                                    className={inputClass}
+                                    className={`${inputClass} h-12`}
                                 />
                                 {errors.phone && (
                                     <p className="mt-1.5 text-xs text-primary">
@@ -278,7 +278,7 @@ const Contact = ({ onSubmit }) => {
                                     {...register("subject", {
                                         required: "Please select a subject.",
                                     })}
-                                    className={inputClass}
+                                    className={`${inputClass} h-12`}
                                     defaultValue=""
                                 >
                                     <option value="" disabled>
@@ -327,7 +327,7 @@ const Contact = ({ onSubmit }) => {
                                     },
                                 })}
                                 placeholder="Write your message here..."
-                                className={`${inputClass} resize-y`}
+                                className={`${inputClass} p-4`}
                             />
                             {errors.message && (
                                 <p className="mt-1.5 text-xs text-primary">

@@ -131,7 +131,7 @@ const DonorShowcase = () => {
     ).toString();
 
     return (
-        <section aria-labelledby="donors-heading" className="relative py-16 md:py-24">
+        <section aria-labelledby="donors-heading" className="relative py-16 md:py-24 border-t border-primary/10">
 
             <div className="mx-auto w-[calc(100%-2rem)] max-w-[1280px] md:w-[calc(100%-4rem)]">
                 {/* Filter bar */}
@@ -139,7 +139,7 @@ const DonorShowcase = () => {
                     ref={filterRef}
                     onSubmit={applyFilters}
                     aria-label={t("home.donors.filterLabel", "Filter donors")}
-                    className="relative z-20 mx-auto md:-mt-40 grid w-full gap-4 rounded-[28px] bg-white p-5 shadow-[0_24px_60px_rgba(11,16,32,0.14)] sm:grid-cols-2 sm:p-6 lg:grid-cols-5 lg:items-end">
+                    className="relative z-20 mx-auto md:-mt-40 grid w-full gap-4 rounded-2xl border border-border/70 bg-white p-5 shadow-[0_24px_60px_rgba(11,16,32,0.14)] sm:grid-cols-2 sm:p-6 lg:grid-cols-5 lg:items-end">
                     <Field
                         label={t("home.donors.group", "Blood group")}
                         placeholder={t("home.donors.selectGroup", "Select Blood Group")}
@@ -220,7 +220,7 @@ const DonorShowcase = () => {
                         {shown.map((d) => (
                             <li
                                 key={d.id}
-                                className="group relative border border-primary/10 rounded-lg p-5 transition hover:shadow-[0_6px_14px_rgba(220,38,38,0.25)]"
+                                className="group relative border border-primary/10 bg-linear-to-b from-primary/3 to-white rounded-lg p-5 shadow-xs hover:shadow-md transition-shadow"
                             >
                                 {/* Top accent line */}
                                 {/* <span

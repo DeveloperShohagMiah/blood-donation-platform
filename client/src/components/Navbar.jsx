@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import {
     ArrowUpRight,
     Droplets,
-    HeartHandshake,
     HeartPulse,
     Home,
     Info,
@@ -41,7 +40,7 @@ const Navbar = () => {
 
     /* Condense the bar once the page scrolls */
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 8);
+        const onScroll = () => setScrolled(window.scrollY > 20);
         onScroll();
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
