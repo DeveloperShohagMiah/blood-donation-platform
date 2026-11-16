@@ -40,6 +40,22 @@ const values = [
     },
 ];
 
+const missionVision = [
+    {
+        icon: <Target />,
+        title: "Our Mission",
+        description:
+            "To connect voluntary blood donors with people in need through an organized, accessible, and responsible coordination system supported by dedicated volunteers.",
+    },
+    {
+        icon: <Eye />,
+        title: "Our Vision",
+        description:
+            "To create a world where everyone has access to timely and reliable blood donation support, fostering a culture of generosity and community care.",
+    }
+];
+
+
 const About = () => {
     return (
         <main className="overflow-hidden bg-background text-foreground">
@@ -49,14 +65,14 @@ const About = () => {
 
                 <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:py-28">
                     <div>
-                        <span className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300">
+                        <span className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
                             <Heart size={15} />
                             About Blood Connect
                         </span>
 
                         <h1 className="mt-7 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
                             Connecting Hearts,
-                            <span className="block text-red-600">
+                            <span className="block text-primary">
                                 Saving Lives.
                             </span>
                         </h1>
@@ -72,7 +88,7 @@ const About = () => {
                         <div className="mt-9 flex flex-wrap gap-4">
                             <Link
                                 to="/become-donor"
-                                className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-6 py-3.5 font-semibold text-white shadow-lg shadow-red-600/20 transition hover:bg-red-700"
+                                className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-semibold text-white shadow-lg shadow-red-600/20 transition hover:bg-red-700"
                             >
                                 Become a Donor
                                 <ArrowRight size={18} />
@@ -95,9 +111,9 @@ const About = () => {
                             className="relative aspect-[5/4] w-full rounded-[2rem] object-cover shadow-2xl"
                         />
 
-                        <div className="absolute -bottom-5 left-5 right-5 rounded-2xl border border-white/60 bg-white/95 p-5 shadow-xl backdrop-blur dark:border-white/10 dark:bg-zinc-900/95 sm:left-auto sm:right-5 sm:w-64">
+                        <div className="absolute -bottom-5 left-5 right-5 rounded-2xl border border-white/60 bg-muted/50/95 p-5 shadow-xl backdrop-blur dark:border-white/10 dark:bg-zinc-900/95 sm:left-auto sm:right-5 sm:w-64">
                             <div className="flex items-center gap-3">
-                                <div className="rounded-xl bg-red-100 p-3 text-red-600 dark:bg-red-950">
+                                <div className="rounded-xl bg-primary/10 p-3 text-primary">
                                     <Droplet size={24} />
                                 </div>
                                 <div>
@@ -117,7 +133,7 @@ const About = () => {
             {/* Introduction */}
             <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
                 <div className="mx-auto max-w-3xl text-center">
-                    <span className="text-sm font-bold uppercase tracking-[0.2em] text-red-600">
+                    <span className="text-sm font-bold uppercase tracking-[0.2em] text-primary">
                         Who We Are
                     </span>
                     <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
@@ -139,38 +155,29 @@ const About = () => {
             </section>
 
             {/* Mission and Vision */}
-            <section className="bg-muted/40 py-20">
+            <section className="bg-primary/3 py-20">
                 <div className="mx-auto grid max-w-7xl gap-7 px-5 sm:px-8 md:grid-cols-2">
-                    <div className="rounded-3xl border border-border bg-card p-8 sm:p-10">
-                        <div className="mb-6 inline-flex rounded-2xl bg-red-100 p-4 text-red-600 dark:bg-red-950">
-                            <Target size={30} />
-                        </div>
-                        <h3 className="text-2xl font-bold">Our Mission</h3>
-                        <p className="mt-4 leading-8 text-muted-foreground">
-                            To connect voluntary blood donors with people in need
-                            through an organized, accessible, and responsible
-                            coordination system supported by dedicated volunteers.
-                        </p>
-                    </div>
+                    {missionVision.map((item, index) => (
+                        <div key={index} className="p-5 sm:p-6 rounded-2xl bg-linear-to-b from-primary/1 to-white border border-primary/10 shadow-xs hover:shadow-md transition-shadow ">
+                            <div className="mb-6 inline-flex rounded-2xl bg-primary/5 p-4 text-primary dark:bg-primary/20">
+                                {item.icon}
+                            </div>
+                            <h3 className="text-2xl font-bold">{item.title}</h3>
+                            <p className="mt-4 leading-8 text-muted-foreground">
+                                {item.description}
+                            </p>
 
-                    <div className="rounded-3xl border border-border bg-card p-8 sm:p-10">
-                        <div className="mb-6 inline-flex rounded-2xl bg-red-100 p-4 text-red-600 dark:bg-red-950">
-                            <Eye size={30} />
                         </div>
-                        <h3 className="text-2xl font-bold">Our Vision</h3>
-                        <p className="mt-4 leading-8 text-muted-foreground">
-                            To build a trusted blood donation community across
-                            Bangladesh where finding voluntary donors is easier,
-                            faster, and more organized.
-                        </p>
-                    </div>
+                    ))}
                 </div>
             </section>
 
+
+
             {/* Values */}
-            <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
+            < section section className="mx-auto max-w-7xl px-5 py-20 sm:px-8" >
                 <div className="mx-auto mb-12 max-w-2xl text-center">
-                    <span className="text-sm font-bold uppercase tracking-[0.2em] text-red-600">
+                    <span className="text-sm font-bold uppercase tracking-[0.2em] text-primary">
                         What Guides Us
                     </span>
                     <h2 className="mt-4 text-3xl font-bold sm:text-4xl">
@@ -185,9 +192,9 @@ const About = () => {
                     {values.map((value) => (
                         <div
                             key={value.title}
-                            className="rounded-2xl border border-border bg-card p-7 transition hover:-translate-y-1 hover:shadow-xl"
+                            className="p-5 sm:p-6 rounded-2xl bg-linear-to-b from-primary/2 to-white border border-primary/10 shadow-xs hover:shadow-md transition-shadow"
                         >
-                            <div className="mb-5 inline-flex rounded-xl bg-red-50 p-3 text-red-600 dark:bg-red-950/50">
+                            <div className="mb-5 inline-flex rounded-xl bg-primary/10 p-3 text-primary">
                                 {value.icon}
                             </div>
                             <h3 className="text-lg font-bold">{value.title}</h3>
@@ -197,13 +204,39 @@ const About = () => {
                         </div>
                     ))}
                 </div>
-            </section>
+            </ section>
+
+            {/* Privacy */}
+            <section className="bg-primary/3 " >
+                <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
+                    <div className="flex flex-col items-start gap-6 rounded-3xl bg-primary p-8 text-white sm:p-12 md:flex-row md:items-center md:justify-between">
+                        <div>
+                            <h2 className="text-3xl font-bold">
+                                Be Part of Something Meaningful
+                            </h2>
+                            <p className="mt-3 max-w-2xl leading-7 text-red-100">
+                                Your willingness to donate blood can make a real
+                                difference. Join our community and help someone
+                                find hope.
+                            </p>
+                        </div>
+
+                        <Link
+                            to="/become-donor"
+                            className="inline-flex shrink-0 items-center gap-2 px-6 py-3.5 font-bold rounded-full bg-white text-primary transition "
+                        >
+                            Join Our Community
+                            <ArrowRight size={18} />
+                        </Link>
+                    </div>
+                </div>
+            </section >
 
             {/* How we work */}
-            <section className="bg-muted/40 py-20">
+            <section className="py-20 " >
                 <div className="mx-auto max-w-7xl px-5 sm:px-8">
                     <div className="mx-auto mb-12 max-w-2xl text-center">
-                        <span className="text-sm font-bold uppercase tracking-[0.2em] text-red-600">
+                        <span className="text-sm font-bold uppercase tracking-[0.2em] text-primary">
                             Our Approach
                         </span>
                         <h2 className="mt-4 text-3xl font-bold sm:text-4xl">
@@ -234,9 +267,9 @@ const About = () => {
                         ].map((item) => (
                             <div
                                 key={item.number}
-                                className="rounded-2xl border border-border bg-card p-8"
+                                className="relative p-5 sm:p-6 rounded-2xl bg-linear-to-b from-primary/2 to-white border border-primary/10 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between"
                             >
-                                <span className="text-4xl font-black text-red-600/20">
+                                <span className="text-4xl font-black text-primary/20">
                                     {item.number}
                                 </span>
                                 <h3 className="mt-5 text-xl font-bold">{item.title}</h3>
@@ -247,32 +280,10 @@ const About = () => {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section >
 
-            {/* Privacy */}
-            <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
-                <div className="flex flex-col items-start gap-6 rounded-3xl bg-red-600 p-8 text-white sm:p-12 md:flex-row md:items-center md:justify-between">
-                    <div>
-                        <h2 className="text-3xl font-bold">
-                            Be Part of Something Meaningful
-                        </h2>
-                        <p className="mt-3 max-w-2xl leading-7 text-red-100">
-                            Your willingness to donate blood can make a real
-                            difference. Join our community and help someone
-                            find hope.
-                        </p>
-                    </div>
 
-                    <Link
-                        to="/become-donor"
-                        className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-white px-6 py-3.5 font-bold text-red-600 transition hover:bg-red-50"
-                    >
-                        Join Our Community
-                        <ArrowRight size={18} />
-                    </Link>
-                </div>
-            </section>
-        </main>
+        </main >
     );
 };
 

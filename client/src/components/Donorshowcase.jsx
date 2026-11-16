@@ -1,8 +1,6 @@
 import { useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
-    ArrowRight,
     CalendarDays,
     ChevronDown,
     Filter,
@@ -133,7 +131,7 @@ const DonorShowcase = () => {
     ).toString();
 
     return (
-        <section aria-labelledby="donors-heading" className=" py-16 md:py-24">
+        <section aria-labelledby="donors-heading" className="relative py-16 md:py-24">
 
             <div className="mx-auto w-[calc(100%-2rem)] max-w-[1280px] md:w-[calc(100%-4rem)]">
                 {/* Filter bar */}
@@ -141,8 +139,7 @@ const DonorShowcase = () => {
                     ref={filterRef}
                     onSubmit={applyFilters}
                     aria-label={t("home.donors.filterLabel", "Filter donors")}
-                    className="grid  gap-4 rounded-[28px] bg-white p-5 shadow-[0_24px_60px_rgba(11,16,32,0.14)] sm:grid-cols-2 sm:p-6 lg:grid-cols-[repeat(4,minmax(0,1fr))_auto] lg:items-end"
-                >
+                    className="relative z-20 mx-auto md:-mt-40 grid w-full gap-4 rounded-[28px] bg-white p-5 shadow-[0_24px_60px_rgba(11,16,32,0.14)] sm:grid-cols-2 sm:p-6 lg:grid-cols-5 lg:items-end">
                     <Field
                         label={t("home.donors.group", "Blood group")}
                         placeholder={t("home.donors.selectGroup", "Select Blood Group")}
@@ -176,7 +173,7 @@ const DonorShowcase = () => {
 
                     <button
                         type="submit"
-                        className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#DC2626] to-[#E11D48] px-7 text-sm font-extrabold tracking-wide text-white uppercase shadow-[0_10px_22px_rgba(220,38,38,0.3)] outline-none transition hover:brightness-95 focus-visible:ring-4 focus-visible:ring-[#C62838]/30 active:scale-[0.98] sm:col-span-2 lg:col-span-1"
+                        className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-[#E11D48] px-7 text-sm font-extrabold tracking-wide text-white uppercase shadow-[0_10px_22px_rgba(220,38,38,0.3)] outline-none transition hover:brightness-95 focus-visible:ring-4 focus-visible:ring-[#C62838]/30 active:scale-[0.98] sm:col-span-2 lg:col-span-1"
                     >
                         <Filter size={17} strokeWidth={2.4} />
                         {t("home.donors.filter", "Filter donors")}
@@ -193,25 +190,8 @@ const DonorShowcase = () => {
                             "home.donors.subtitle",
                             "Connecting voluntary blood donors from across the country. Find compatible blood groups and location matches instantly."
                         )}
-                        actions={
-                            <>
-                                <button
-                                    type="button"
-                                    onClick={focusFilters}
-                                    className="inline-flex h-11 items-center gap-2 rounded-full border border-[#E4EBE7] bg-white px-5 text-sm font-bold text-[#192623] transition-colors hover:border-[#C62838] hover:text-[#C62838]"
-                                >
-                                    <Filter size={16} />
-                                    {t("home.donors.filterBtn", "Filter Blood Donors")}
-                                </button>
-                                <Link
-                                    to={viewAllQuery ? `/donors?${viewAllQuery}` : "/donors"}
-                                    className="inline-flex h-11 items-center gap-2 rounded-full bg-[#DC2626] px-5 text-sm font-bold text-white shadow-[0_8px_18px_rgba(220,38,38,0.25)] transition hover:bg-[#B91C1C]"
-                                >
-                                    {t("home.donors.viewAll", "View All Donors")}
-                                    <ArrowRight size={16} strokeWidth={2.4} />
-                                </Link>
-                            </>
-                        }
+                        label={"Donor Network"}
+                        icon={<Users size={14} />}
                     />
                 </div>
 
@@ -240,13 +220,13 @@ const DonorShowcase = () => {
                         {shown.map((d) => (
                             <li
                                 key={d.id}
-                                className="group relative overflow-hidden rounded-2xl border border-[#EEF1F4] bg-white p-5 shadow-[0_6px_20px_rgba(11,16,32,0.05)] transition-shadow duration-200 hover:shadow-[0_18px_40px_rgba(11,16,32,0.1)]"
+                                className="group relative border border-primary/10 rounded-lg p-5 transition hover:shadow-[0_6px_14px_rgba(220,38,38,0.25)]"
                             >
                                 {/* Top accent line */}
-                                <span
+                                {/* <span
                                     aria-hidden="true"
-                                    className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#F28B93] via-[#F7C0C4] to-transparent"
-                                />
+                                    className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent"
+                                /> */}
 
                                 <div className="flex items-center gap-3">
                                     <span className="grid size-11 shrink-0 place-items-center rounded-full bg-[#F1F4F7] text-sm font-bold text-[#33443D]">
@@ -255,19 +235,19 @@ const DonorShowcase = () => {
                                     <p className="min-w-0 flex-1 truncate text-[16px] font-extrabold text-[#0B1020]">
                                         {d.name}
                                     </p>
-                                    <span className="grid size-10 shrink-0 place-items-center rounded-full border border-[#FADADD] bg-[#FDEEF0] text-sm font-extrabold text-[#DC2626]">
+                                    <span className="grid size-10 shrink-0 place-items-center rounded-full border border-[#FADADD] bg-[#FDEEF0] text-sm font-extrabold text-primary">
                                         {d.group}
                                     </span>
                                 </div>
 
                                 <p className="mt-4 flex items-center gap-2 rounded-full bg-[#F6F8FA] px-3 py-2 text-xs text-[#66736E]">
-                                    <CalendarDays size={14} className="text-[#DC2626]" />
+                                    <CalendarDays size={14} className="text-primary" />
                                     {t("home.donors.last", "Last donated:")}{" "}
                                     <span className="font-bold text-[#0B1020]">{d.last}</span>
                                 </p>
 
                                 <p className="mt-3 flex items-start gap-2 text-xs font-medium text-[#475650]">
-                                    <MapPin size={14} className="mt-0.5 shrink-0 text-[#DC2626]" />
+                                    <MapPin size={14} className="mt-0.5 shrink-0 text-primary" />
                                     {d.upazila}, {d.district}, {d.division}
                                 </p>
 
@@ -291,7 +271,7 @@ const DonorShowcase = () => {
                                     <a
                                         href={`tel:${d.phone}`}
                                         aria-label={t("home.donors.contactName", "Contact {{name}}", { name: d.name })}
-                                        className="inline-flex h-10 items-center gap-2 rounded-full bg-[#DC2626] px-5 text-sm font-bold text-white shadow-[0_6px_14px_rgba(220,38,38,0.25)] transition hover:bg-[#B91C1C] active:scale-[0.97]"
+                                        className="inline-flex h-10 items-center gap-2 rounded-full bg-primary px-5 text-sm font-bold text-white shadow-[0_6px_14px_rgba(220,38,38,0.25)] transition hover:bg-[#B91C1C] active:scale-[0.97]"
                                     >
                                         <Phone size={15} />
                                         {t("home.donors.contact", "Contact")}

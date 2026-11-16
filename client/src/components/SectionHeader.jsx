@@ -13,17 +13,15 @@ const SectionHeader = ({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="max-w-[600px]">
 
-                {label && (
-                    <p className="mb-2 flex gap-1 w-fit items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-primary">
+                {label && icon && (
+                    <div className=" mb-2 border border-primary/10 flex gap-1 w-fit rounded-full bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-primary">
                         {icon && (
-                            <div className="">
-                                <span className={dark ? "text-primary" : "text-primary"}>
-                                    {icon}
-                                </span>
-                            </div>
+                            <span className={dark ? "text-primary" : "text-primary"}>
+                                {icon}
+                            </span>
                         )}
                         {label}
-                    </p>
+                    </div>
                 )}
 
 

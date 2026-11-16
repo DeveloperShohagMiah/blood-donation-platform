@@ -232,7 +232,7 @@ const BecomeDonor = () => {
                         })}
                     </p>
                     <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-                        <Link to="/blood-requests" className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#DC2626] px-6 text-sm font-bold text-white transition hover:bg-[#B91C1C]">
+                        <Link to="/blood-requests" className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-bold text-white transition hover:bg-[#B91C1C]">
                             {t("register.seeRequests", "See open requests")}
                             <ArrowRight size={16} />
                         </Link>
@@ -329,7 +329,7 @@ const BecomeDonor = () => {
                                             onChange={() => update("bloodGroup", g)}
                                             className="peer sr-only"
                                         />
-                                        <span className="grid h-12 place-items-center rounded-xl border border-[#E4EBE7] bg-[#F4F7F9] text-base font-extrabold text-[#33443D] transition hover:border-[#F0BDC0] peer-checked:border-[#DC2626] peer-checked:bg-[#DC2626] peer-checked:text-white peer-checked:shadow-[0_8px_18px_rgba(220,38,38,0.3)] peer-focus-visible:ring-2 peer-focus-visible:ring-[#C62838]/50">
+                                        <span className="grid h-12 place-items-center rounded-xl border border-[#E4EBE7] bg-[#F4F7F9] text-base font-extrabold text-[#33443D] transition hover:border-[#F0BDC0] peer-checked:border-[#DC2626] peer-checked:bg-primary peer-checked:text-white peer-checked:shadow-[0_8px_18px_rgba(220,38,38,0.3)] peer-focus-visible:ring-2 peer-focus-visible:ring-[#C62838]/50">
                                             {g}
                                         </span>
                                     </label>

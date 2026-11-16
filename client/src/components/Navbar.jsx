@@ -100,7 +100,7 @@ const Navbar = () => {
             "text-[15px] font-semibold transition-colors duration-200",
             isActive
                 ? "bg-[#FDEEF0] text-[#C62838]"
-                : "text-[#33443D] hover:bg-[#F4F7F5]",
+                : "text-[#33443D] hover:bg-muted",
         ].join(" ");
 
     return (
@@ -110,7 +110,7 @@ const Navbar = () => {
                     "sticky top-0 z-50 w-full border-b backdrop-blur-xl",
                     "transition-[background-color,border-color,box-shadow] duration-300",
                     scrolled
-                        ? "border-[#E4EBE7] bg-white/80 shadow-[0_8px_30px_rgba(29,55,44,0.07)]"
+                        ? "border-border/70 bg-white/80 shadow-[0_8px_30px_rgba(29,55,44,0.07)]"
                         : "border-transparent bg-white/95",
                 ].join(" ")}
             >
@@ -133,7 +133,7 @@ const Navbar = () => {
                         <span
                             className={[
                                 "relative grid place-items-center rounded-[14px]",
-                                "bg-gradient-to-br from-[#E64B5A] to-[#B91F32] text-white",
+                                "bg-linear-to-br from-primary to-primary/80 text-white",
                                 "shadow-[0_8px_18px_rgba(198,40,56,0.28),inset_0_1px_0_rgba(255,255,255,0.28)]",
                                 "transition-all duration-300 group-hover:-rotate-6 group-hover:scale-105",
                                 scrolled ? "size-10" : "size-11",
@@ -197,7 +197,7 @@ const Navbar = () => {
                     <div className="ml-auto flex shrink-0 items-center gap-2.5 md:ml-0 md:gap-3">
                         {/* Language switcher */}
                         <div
-                            className="relative grid h-9 w-[78px] grid-cols-2 items-center rounded-full border border-[#E4EBE7] bg-[#F4F7F5] p-[3px]"
+                            className="relative grid h-9 w-[78px] grid-cols-2 items-center rounded-full border border-border/70 p-[3px]"
                             role="group"
                             aria-label={t("navigation.chooseLanguage")}
                         >
@@ -205,7 +205,7 @@ const Navbar = () => {
                                 aria-hidden="true"
                                 className={[
                                     "pointer-events-none absolute top-[3px] bottom-[3px] left-[3px]",
-                                    "w-[calc(50%-3px)] rounded-full bg-white",
+                                    "w-[calc(50%-3px)] rounded-lg bg-primary",
                                     "shadow-[0_1px_4px_rgba(28,48,39,0.16)]",
                                     "transition-transform duration-300 ease-out motion-reduce:transition-none",
                                     currentLanguage === "BN" ? "translate-x-full" : "",
@@ -222,7 +222,7 @@ const Navbar = () => {
                                         "text-[11px] font-bold outline-none transition-colors",
                                         "focus-visible:ring-2 focus-visible:ring-[#C62838]/40",
                                         currentLanguage === language
-                                            ? "text-[#C62838]"
+                                            ? "text-muted"
                                             : "text-[#829089] hover:text-[#33443D]",
                                     ].join(" ")}
                                 >
@@ -234,7 +234,7 @@ const Navbar = () => {
                         {/* Desktop login */}
                         <Link
                             to="/login"
-                            className="hidden rounded-full px-3.5 py-2 text-[13.5px] font-semibold text-[#475650] transition-colors hover:bg-[#F1F5F3] hover:text-[#192623] md:inline-flex"
+                            className="hidden rounded-full px-3.5 py-2 text-[13.5px] font-semibold text-[#475650] transition-colors bg-muted md:inline-flex"
                         >
                             {t("navigation.login")}
                         </Link>
@@ -243,7 +243,7 @@ const Navbar = () => {
                         <Link
                             to="/become-donor"
                             className={[
-                                "group/cta relative hidden min-h-10 items-center justify-center gap-1.5 overflow-hidden",
+                                "group/cta relative hidden px-3.5 py-2 items-center justify-center gap-1.5 overflow-hidden",
                                 "rounded-full bg-gradient-to-b from-[#D6313F] to-[#B91F32] px-4 text-[13px] font-bold text-white",
                                 "shadow-[0_6px_16px_rgba(198,40,56,0.28),inset_0_1px_0_rgba(255,255,255,0.25)]",
                                 "ring-1 ring-[#A91F30]/60 transition-all duration-200",
@@ -263,7 +263,7 @@ const Navbar = () => {
                     {/* Mobile menu button */}
                     <button
                         type="button"
-                        className="grid size-10 shrink-0 place-items-center rounded-xl border border-[#E4EBE7] bg-white text-[#33443D] outline-none transition-colors hover:border-[#F0BDC0] hover:text-[#C62838] focus-visible:ring-2 focus-visible:ring-[#C62838]/40 md:hidden"
+                        className="grid size-10 shrink-0 place-items-center rounded-xl border border-border/70 bg-white text-[#33443D] outline-none transition-colors hover:border-[#F0BDC0] hover:text-[#C62838] focus-visible:ring-2 focus-visible:ring-[#C62838]/40 md:hidden"
                         aria-label={
                             menuOpen ? t("navigation.closeMenu") : t("navigation.openMenu")
                         }
@@ -294,7 +294,7 @@ const Navbar = () => {
                         id="primary-navigation"
                         className={[
                             "absolute inset-x-0 top-full mt-2 origin-top md:hidden",
-                            "rounded-2xl border border-[#E4EBE7] bg-white p-2",
+                            "rounded-2xl border border-border/70 bg-white p-2",
                             "shadow-[0_24px_60px_rgba(26,48,39,0.18)]",
                             "transition-all duration-200 ease-out motion-reduce:transition-none",
                             menuOpen
@@ -324,7 +324,7 @@ const Navbar = () => {
                             <Link
                                 to="/login"
                                 onClick={closeMenu}
-                                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#E4EBE7] text-sm font-semibold text-[#33443D] transition-colors hover:bg-[#F4F7F5]"
+                                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/70 text-sm font-semibold text-[#33443D] transition-colors hover:bg-muted"
                             >
                                 <LogIn size={16} />
                                 {t("navigation.login")}

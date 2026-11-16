@@ -17,6 +17,8 @@ import {
     ShieldCheck,
     Stethoscope,
     X,
+    InfoIcon,
+    Heart,
 } from "lucide-react";
 import Hero from "../components/Hero";
 import SectionHeader from "../components/SectionHeader";
@@ -147,7 +149,7 @@ const Home = () => {
             <DonorShowcase />
 
             {/* 2. Emergency requests */}
-            <section aria-labelledby="emergency-heading" className="py-16 md:py-24">
+            <section aria-labelledby="emergency-heading" className="py-16 md:py-24 bg-primary/3">
                 <div className={container}>
                     <SectionHeader
                         id="emergency-heading"
@@ -157,13 +159,13 @@ const Home = () => {
                             "home.emergency.subtitle",
                             "These patients need blood today. Call the hospital to confirm, then go if you match."
                         )}
-                        label="Donor Network"
-                        icon={<Users size={14} />}
+                        label="Emergency requests"
+                        icon={<InfoIcon size={14} />}
                     />
 
                     <ul className="mt-10 grid gap-5 lg:grid-cols-3">
                         {sampleEmergencies.map((r) => (
-                            <li key={r.id} className="flex flex-col rounded-2xl bg-white p-5 shadow-[0_20px_50px_rgba(0,0,0,0.25)]">
+                            <li key={r.id} className="flex flex-col rounded-lg card p-5 shadow-[0_20px_50px_rgba(0,0,0,0.25)]">
                                 <div className="flex items-start justify-between">
                                     <span className="grid size-16 place-items-center rounded-2xl bg-gradient-to-br from-[#E64B5A] to-[#B91F32] text-2xl font-extrabold text-white shadow-[0_8px_18px_rgba(198,40,56,0.35)]">
                                         {r.group}
@@ -257,12 +259,14 @@ const Home = () => {
             </section>
 
             {/* 4. Tips and guidelines */}
-            <section aria-labelledby="tips-heading" className="bg-[#F7FAF8] py-16 md:py-24">
+            <section aria-labelledby="tips-heading" className="bg-primary/3 border-b border-primary/20 py-16 md:py-24">
                 <div className={container}>
                     <SectionHeader
                         id="tips-heading"
                         title={t("home.tips.title", "Blood donation tips and guidelines")}
                         subtitle={t("home.tips.subtitle", "What to do before, during and after you donate.")}
+                        label={"Health & Education"}
+                        icon={<Heart size={14} />}
                     />
 
                     <div className="mt-10 rounded-3xl border border-[#E4EBE7] bg-white p-5 shadow-[0_24px_60px_rgba(29,55,44,0.07)] sm:p-8">

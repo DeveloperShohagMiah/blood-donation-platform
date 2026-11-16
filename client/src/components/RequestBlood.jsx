@@ -89,7 +89,7 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
         t("bloodRequest.form.validation.required", `${field} is required`);
 
     return (
-        <section className="relative isolate overflow-hidden bg-[#fbfaf9] px-4 py-12 sm:px-6 sm:py-16">
+        <section className="relative isolate overflow-hidden px-4 py-12 sm:px-6 sm:py-16">
             <div
                 aria-hidden="true"
                 className="pointer-events-none absolute -right-40 -top-40 -z-10 size-[500px] rounded-full bg-[radial-gradient(circle,rgba(220,38,58,0.10)_0%,transparent_68%)]"
@@ -97,14 +97,14 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
 
             <div className="mx-auto max-w-5xl">
                 <header className="mb-8 max-w-2xl">
-                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#eadfdd] bg-white px-3.5 py-2 text-xs font-bold text-[#68746e] shadow-sm">
-                        <span className="size-2 rounded-full bg-[#c51f35]" />
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-2 text-xs font-bold text-[#68746e] shadow-sm">
+                        <span className="size-2 rounded-full bg-primary" />
                         {t("bloodRequest.form.eyebrow", "HELP SOMEONE IN NEED")}
                     </div>
-                    <h1 className="text-3xl leading-tight font-extrabold tracking-[-0.045em] text-[#172321] sm:text-4xl lg:text-5xl">
+                    <h1 className="text-3xl leading-tight font-extrabold tracking-[-0.045em] sm:text-4xl lg:text-5xl">
                         {t("bloodRequest.form.title", "Create a blood request")}
                     </h1>
-                    <p className="mt-3 max-w-xl text-sm leading-7 text-[#758079] sm:text-base">
+                    <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground/70 sm:text-base">
                         {t(
                             "bloodRequest.form.subtitle",
                             "Share the essential details so nearby donors can understand how and when to help."
@@ -115,7 +115,7 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
                 <form
                     noValidate
                     onSubmit={handleSubmit(submit)}
-                    className="overflow-hidden rounded-[28px] border border-[#eee6e3] bg-white shadow-[0_24px_75px_rgba(40,28,28,0.08)]"
+                    className="overflow-hidden rounded-[28px] border border-primary/10 bg-linear-to-tr from-primary/2 to-white shadow-xl shadow-primary/10"
                 >
                     <div className="grid lg:grid-cols-[minmax(0,1fr)_280px]">
                         <div className="p-5 sm:p-8 lg:p-9">
@@ -163,8 +163,8 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
                                                 />
                                                 <span
                                                     className={`grid h-11 place-items-center rounded-xl border text-sm font-extrabold transition-all peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#c51f35] ${selectedBloodGroup === group
-                                                            ? "border-[#c51f35] bg-[#c51f35] text-white shadow-[0_6px_15px_rgba(197,31,53,0.2)]"
-                                                            : "border-[#eee9e6] bg-[#fcfbfa] text-[#59645f] hover:border-[#e7aab1] hover:bg-[#fff5f5] hover:text-[#c51f35]"
+                                                        ? "border-[#c51f35] bg-[#c51f35] text-white shadow-[0_6px_15px_rgba(197,31,53,0.2)]"
+                                                        : "border-[#eee9e6] bg-[#fcfbfa] text-[#59645f] hover:border-[#e7aab1] hover:bg-[#fff5f5] hover:text-[#c51f35]"
                                                         }`}
                                                 >
                                                     {group}
@@ -383,7 +383,7 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#d93449] to-[#b91f35] px-6 text-sm font-extrabold text-white shadow-[0_9px_22px_rgba(185,31,53,0.22)] transition hover:-translate-y-0.5 hover:shadow-[0_13px_26px_rgba(185,31,53,0.27)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c51f35] disabled:cursor-not-allowed disabled:opacity-60"
+                                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-primary to-primary/80 px-6 text-sm font-extrabold text-white shadow-[0_9px_22px_rgba(185,31,53,0.22)] transition hover:-translate-y-0.5 hover:shadow-[0_13px_26px_rgba(185,31,53,0.27)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c51f35] disabled:cursor-not-allowed disabled:opacity-60"
                                 >
                                     {isSubmitting
                                         ? t("bloodRequest.form.submitting", "Submitting...")
@@ -393,14 +393,14 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
                             </div>
                         </div>
 
-                        <aside className="border-t border-[#f0ece9] bg-[#fcfaf9] p-5 sm:p-8 lg:border-t-0 lg:border-l lg:p-7">
-                            <div className="grid size-12 place-items-center rounded-2xl bg-[#fff0f1] text-[#c51f35]">
+                        <aside className="border-t border-primary/10 bg-primary/3 p-5 sm:p-8 lg:border-t-0 lg:border-l lg:p-7">
+                            <div className="grid size-12 place-items-center rounded-2xl bg-primary/20 text-primary">
                                 <HeartPulse size={22} />
                             </div>
-                            <h3 className="mt-5 text-lg font-extrabold tracking-[-0.03em] text-[#172321]">
+                            <h3 className="mt-5 text-lg font-extrabold tracking-[-0.03em] text-primary">
                                 {t("bloodRequest.form.sideTitle", "A few things to remember")}
                             </h3>
-                            <p className="mt-2 text-sm leading-6 text-[#7a8580]">
+                            <p className="mt-2 text-sm leading-6 text-muted-foreground">
                                 {t("bloodRequest.form.sideDescription", "Clear and accurate information helps people respond to your request.")}
                             </p>
                             <div className="mt-6 space-y-4">
@@ -417,7 +417,7 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
                                     </div>
                                 ))}
                             </div>
-                            <div className="mt-8 rounded-2xl border border-[#e8e3df] bg-white p-4">
+                            <div className="mt-8 rounded-2xl border border-border bg-white p-4">
                                 <div className="flex items-center gap-2 text-[#277653]">
                                     <ShieldCheck size={17} />
                                     <span className="text-xs font-extrabold">

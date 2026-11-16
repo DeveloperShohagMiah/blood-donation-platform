@@ -88,7 +88,7 @@
 :root {
   color-scheme: light;
 
-  --background: #FAF9FC;
+  --background: #ffffff;
   --foreground: #0a0a0a;
 
   --card: #FFFFFF;
@@ -254,7 +254,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--ring);
+    background: var(--primary);
     border: 2px solid var(--card);
     border-radius: var(--radius-lg);
   }

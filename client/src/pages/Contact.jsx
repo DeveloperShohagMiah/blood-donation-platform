@@ -20,13 +20,13 @@ const contactMethods = [
         icon: Phone,
         title: "Phone Support",
         description: "For direct communication and coordination.",
-        value: "Add your official phone number",
+        value: "+880 1234 567890",
     },
     {
         icon: Mail,
         title: "Email Support",
         description: "Send us your questions and inquiries.",
-        value: "Add your official email address",
+        value: "bloodconnect@gmail.com",
     },
     {
         icon: MapPin,
@@ -38,7 +38,7 @@ const contactMethods = [
         icon: Clock,
         title: "Availability",
         description: "Contact our volunteer coordination team.",
-        value: "Add your official support hours",
+        value: "Within 24 hours on weekdays",
     },
 ];
 
@@ -90,23 +90,23 @@ const Contact = ({ onSubmit }) => {
     };
 
     const inputClass =
-        "w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition placeholder:text-muted-foreground focus:border-red-500 focus:ring-4 focus:ring-red-500/10";
+        "w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary/50 focus:ring-4 focus:ring-primary/50/10";
 
     return (
         <main className="min-h-screen bg-background text-foreground">
             {/* Hero */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-red-50 via-background to-rose-100/60 py-20 dark:from-red-950/20 dark:via-background ">
-                <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-red-500/10 blur-3xl" />
+            <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-rose-100/60 py-20 dark:from-red-950/20 dark:via-background ">
+                <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-primary/50/10 blur-3xl" />
 
                 <div className="relative mx-auto max-w-7xl px-5 text-center sm:px-8">
-                    <span className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700 ">
+                    <span className="inline-flex items-center gap-2 rounded-full border border-primary/10 bg-primary/5 px-4 py-2 text-sm font-semibold text-primary">
                         <MessageCircle size={16} />
                         Get in Touch
                     </span>
 
                     <h1 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
                         Let's Start a
-                        <span className="block text-red-600">
+                        <span className="block text-primary">
                             Conversation.
                         </span>
                     </h1>
@@ -123,7 +123,7 @@ const Contact = ({ onSubmit }) => {
             <section className="mx-auto grid max-w-7xl gap-12 px-5 py-20 sm:px-8 lg:grid-cols-[0.8fr_1.2fr]">
                 {/* Left side */}
                 <div>
-                    <span className="text-sm font-bold uppercase tracking-[0.2em] text-red-600">
+                    <span className="text-sm font-bold uppercase tracking-[0.2em] text-primary">
                         Contact Information
                     </span>
 
@@ -144,15 +144,15 @@ const Contact = ({ onSubmit }) => {
                             return (
                                 <div
                                     key={item.title}
-                                    className="flex gap-4 rounded-2xl border border-border bg-card p-5"
+                                    className="flex gap-4 rounded-lg border border-border/40 bg-muted/30 p-5 shadow-xs"
                                 >
-                                    <div className="h-fit rounded-xl bg-red-100 p-3 text-red-600">
-                                        <Icon size={22} />
+                                    <div className="h-fit rounded-xl bg-primary/5 p-3 text-primary">
+                                        <Icon size={18} />
                                     </div>
 
                                     <div className="min-w-0">
-                                        <h3 className="font-bold">{item.title}</h3>
-                                        <p className="mt-1 text-sm text-muted-foreground">
+                                        <h3 className="font-bold text-lg">{item.title}</h3>
+                                        <p className="mt-1 text-xs text-muted-foreground">
                                             {item.description}
                                         </p>
                                         <p className="mt-2 break-words text-sm font-semibold">
@@ -164,10 +164,10 @@ const Contact = ({ onSubmit }) => {
                         })}
                     </div>
 
-                    <div className="mt-8 rounded-2xl bg-red-50 p-6 dark:bg-red-950/30">
+                    <div className="mt-8 rounded-2xl bg-primary/10 p-6">
                         <div className="flex items-center gap-3">
-                            <Heart className="text-red-600" size={23} />
-                            <h3 className="font-bold">Need Blood Urgently?</h3>
+                            <Heart className="text-primary" size={23} />
+                            <h3 className="font-bold text-2xl text-primary">Need Blood Urgently?</h3>
                         </div>
 
                         <p className="mt-3 text-sm leading-7 text-muted-foreground">
@@ -178,7 +178,7 @@ const Contact = ({ onSubmit }) => {
 
                         <Link
                             to="/blood-requests"
-                            className="mt-5 inline-flex items-center gap-2 font-bold text-red-600 transition hover:gap-3"
+                            className="mt-5 inline-flex items-end gap-2 font-bold text-primary text-sm text-right transition hover:gap-3"
                         >
                             Submit Blood Request
                             <ArrowRight size={17} />
@@ -187,7 +187,7 @@ const Contact = ({ onSubmit }) => {
                 </div>
 
                 {/* Right side: Form */}
-                <div className="rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-9">
+                <div className="rounded-3xl bg-linear-to-b from-primary/2 to-white border border-primary/10 shadow-xs hover:shadow-md transition-shadow sm:p-9 h-fit">
                     <div className="mb-8">
                         <h2 className="text-2xl font-bold">Send Us a Message</h2>
                         <p className="mt-2 text-sm text-muted-foreground">
@@ -217,7 +217,7 @@ const Contact = ({ onSubmit }) => {
                                     className={inputClass}
                                 />
                                 {errors.fullName && (
-                                    <p className="mt-1.5 text-xs text-red-600">
+                                    <p className="mt-1.5 text-xs text-primary">
                                         {errors.fullName.message}
                                     </p>
                                 )}
@@ -239,7 +239,7 @@ const Contact = ({ onSubmit }) => {
                                     className={inputClass}
                                 />
                                 {errors.email && (
-                                    <p className="mt-1.5 text-xs text-red-600">
+                                    <p className="mt-1.5 text-xs text-primary">
                                         {errors.email.message}
                                     </p>
                                 )}
@@ -264,7 +264,7 @@ const Contact = ({ onSubmit }) => {
                                     className={inputClass}
                                 />
                                 {errors.phone && (
-                                    <p className="mt-1.5 text-xs text-red-600">
+                                    <p className="mt-1.5 text-xs text-primary">
                                         {errors.phone.message}
                                     </p>
                                 )}
@@ -302,7 +302,7 @@ const Contact = ({ onSubmit }) => {
                                     <option value="Other">Other</option>
                                 </select>
                                 {errors.subject && (
-                                    <p className="mt-1.5 text-xs text-red-600">
+                                    <p className="mt-1.5 text-xs text-primary">
                                         {errors.subject.message}
                                     </p>
                                 )}
@@ -330,7 +330,7 @@ const Contact = ({ onSubmit }) => {
                                 className={`${inputClass} resize-y`}
                             />
                             {errors.message && (
-                                <p className="mt-1.5 text-xs text-red-600">
+                                <p className="mt-1.5 text-xs text-primary">
                                     {errors.message.message}
                                 </p>
                             )}
@@ -341,7 +341,7 @@ const Contact = ({ onSubmit }) => {
                                 role="status"
                                 className={`flex items-start gap-3 rounded-xl p-4 text-sm ${submitStatus.type === "success"
                                     ? "bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-400"
-                                    : "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400"
+                                    : "bg-primary/5 text-red-700 dark:bg-red-950/30 dark:text-red-400"
                                     }`}
                             >
                                 {submitStatus.type === "success" ? (
@@ -356,7 +356,7 @@ const Contact = ({ onSubmit }) => {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-red-600 px-6 py-4 font-bold text-white shadow-lg shadow-red-600/20 transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary/90 px-6 py-4 font-bold text-white shadow-lg shadow-red-600/20 transition disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {isSubmitting ? (
                                 <>
