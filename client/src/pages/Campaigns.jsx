@@ -37,10 +37,10 @@ const timelineStatus = (item) => {
 const formatDate = (value) =>
     value
         ? new Date(value).toLocaleDateString("en-GB", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-          })
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+        })
         : "—";
 
 const Campaigns = () => {
@@ -123,11 +123,10 @@ const Campaigns = () => {
                                 type="button"
                                 onClick={() => setFilter(tab.key)}
                                 aria-pressed={filter === tab.key}
-                                className={`inline-flex h-9 items-center gap-2 rounded-full border px-4 text-xs font-bold transition ${
-                                    filter === tab.key
+                                className={`inline-flex h-9 items-center gap-2 rounded-full border px-4 text-xs font-bold transition ${filter === tab.key
                                         ? "border-primary bg-primary text-white shadow-md shadow-primary/25"
                                         : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-primary"
-                                }`}
+                                    }`}
                             >
                                 {tab.label}
                                 <span className={`grid min-w-5 place-items-center rounded-full px-1.5 text-[10px] ${filter === tab.key ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"}`}>
@@ -222,7 +221,7 @@ const Campaigns = () => {
                                         <button
                                             type="button"
                                             onClick={() => setViewing(item)}
-                                            className="mt-auto inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/5 text-sm font-bold text-primary transition hover:bg-primary/10"
+                                            className="mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/5 text-sm font-bold text-primary transition hover:bg-primary/10"
                                         >
                                             View details <ArrowRight size={15} />
                                         </button>

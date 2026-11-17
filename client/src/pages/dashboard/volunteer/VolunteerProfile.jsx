@@ -1,22 +1,40 @@
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { CheckCircle2, Save } from "lucide-react";
 import { apiFetch } from "../../../utils/api";
 import Select from "../../../components/Select";
 import { ErrorBanner, PageHeader } from "../components/UI";
 
-const inputClass =
-    "h-11 w-full rounded-xl border border-border bg-background px-3.5 text-sm text-foreground outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10";
+const inputClass = (hasError) =>
+    [
+        "h-11 w-full rounded-xl border bg-background px-3.5 text-sm text-foreground outline-none transition focus:ring-4",
+        hasError
+            ? "border-rose-400 focus:border-rose-400 focus:ring-rose-500/10"
+            : "border-border focus:border-primary focus:ring-primary/10",
+    ].join(" ");
 
 const VolunteerProfile = () => {
-    const [form, setForm] = useState({
-        availability: "unavailable",
-        maxActiveAssignments: 5,
-        serviceAreas: [],
-    });
     const [areas, setAreas] = useState([]);
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
-    const [saving, setSaving] = useState(false);
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+        watch,
+        setValue,
+        formState: { errors, isSubmitting },
+    } = useForm({
+        defaultValues: {
+            availability: "unavailable",
+            maxActiveAssignments: 5,
+            serviceAreas: [],
+        },
+        mode: "onBlur",
+    });
+
+    const selectedAreas = watch("serviceAreas") || [];
 
     useEffect(() => {
         let active = true;
@@ -30,7 +48,7 @@ const VolunteerProfile = () => {
                 const profile = profileData?.profile;
                 setAreas((locationData?.items || []).filter((i) => i.type !== "division"));
                 if (profile) {
-                    setForm({
+                    reset({
                         availability: profile.availability || "unavailable",
                         maxActiveAssignments: profile.maxActiveAssignments || 5,
                         serviceAreas: (profile.serviceAreas || []).map((a) =>
@@ -45,35 +63,30 @@ const VolunteerProfile = () => {
         return () => {
             active = false;
         };
-    }, []);
+    }, [reset]);
 
-    const toggleArea = (id) =>
-        setForm((current) => ({
-            ...current,
-            serviceAreas: current.serviceAreas.includes(id)
-                ? current.serviceAreas.filter((item) => item !== id)
-                : [...current.serviceAreas, id],
-        }));
+    const toggleArea = (id) => {
+        const next = selectedAreas.includes(id)
+            ? selectedAreas.filter((item) => item !== id)
+            : [...selectedAreas, id];
+        setValue("serviceAreas", next, { shouldValidate: true, shouldDirty: true });
+    };
 
-    const submit = async (event) => {
-        event.preventDefault();
+    const submit = async (values) => {
         setError("");
         setMessage("");
-        setSaving(true);
         try {
             await apiFetch("/volunteers/me", {
                 method: "PUT",
                 body: {
-                    availability: form.availability,
-                    maxActiveAssignments: Number(form.maxActiveAssignments),
-                    serviceAreas: form.serviceAreas,
+                    availability: values.availability,
+                    maxActiveAssignments: Number(values.maxActiveAssignments),
+                    serviceAreas: values.serviceAreas || [],
                 },
             });
             setMessage("Volunteer profile saved.");
         } catch (err) {
             setError(err.message);
-        } finally {
-            setSaving(false);
         }
     };
 
@@ -90,7 +103,7 @@ const VolunteerProfile = () => {
                 </div>
             )}
 
-            <form onSubmit={submit} className="max-w-3xl space-y-6">
+            <form onSubmit={handleSubmit(submit)} noValidate className="max-w-3xl space-y-6">
                 <section className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6">
                     <div className="grid gap-5 sm:grid-cols-2">
                         <div>
@@ -100,8 +113,8 @@ const VolunteerProfile = () => {
                             <Select
                                 id="availability"
                                 size="lg"
-                                value={form.availability}
-                                onChange={(e) => setForm((f) => ({ ...f, availability: e.target.value }))}
+                                {...register("availability")}
+                                value={watch("availability")}
                             >
                                 <option value="available">Available</option>
                                 <option value="unavailable">Unavailable</option>
@@ -116,10 +129,18 @@ const VolunteerProfile = () => {
                                 type="number"
                                 min="1"
                                 max="20"
-                                value={form.maxActiveAssignments}
-                                onChange={(e) => setForm((f) => ({ ...f, maxActiveAssignments: e.target.value }))}
-                                className={inputClass}
+                                {...register("maxActiveAssignments", {
+                                    valueAsNumber: true,
+                                    min: { value: 1, message: "At least 1 assignment." },
+                                    max: { value: 20, message: "At most 20 assignments." },
+                                })}
+                                className={inputClass(errors.maxActiveAssignments)}
                             />
+                            {errors.maxActiveAssignments && (
+                                <p role="alert" className="mt-1.5 text-xs font-medium text-rose-600">
+                                    {errors.maxActiveAssignments.message}
+                                </p>
+                            )}
                         </div>
                     </div>
                 </section>
@@ -131,7 +152,7 @@ const VolunteerProfile = () => {
                     </p>
                     <div className="mt-4 grid max-h-72 gap-2 overflow-y-auto rounded-xl border border-border bg-background p-3 sm:grid-cols-2">
                         {areas.map((area) => {
-                            const checked = form.serviceAreas.includes(area._id);
+                            const checked = selectedAreas.includes(area._id);
                             return (
                                 <label
                                     key={area._id}
@@ -157,10 +178,10 @@ const VolunteerProfile = () => {
 
                 <button
                     type="submit"
-                    disabled={saving}
+                    disabled={isSubmitting}
                     className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                    <Save size={17} /> {saving ? "Saving…" : "Save profile"}
+                    <Save size={17} /> {isSubmitting ? "Saving…" : "Save profile"}
                 </button>
             </form>
         </>
