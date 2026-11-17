@@ -495,7 +495,7 @@ const Home = () => {
                                                 <span className="text-xs font-bold">
                                                     {Number.isNaN(start.getTime())
                                                         ? "—"
-                                                        : start.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                                                        : `${start.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })} · ${new Date(item.startAt).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}`}
                                                 </span>
                                             </div>
                                         </div>

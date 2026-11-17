@@ -17,7 +17,7 @@ import {
 import { apiFetch } from "../../../utils/api";
 import { useApiData } from "../hooks";
 import Select from "../../../components/Select";
-import { formatDate } from "../format";
+import { formatDate, formatDateTime, formatTime } from "../format";
 import {
     EmptyState,
     ErrorBanner,
@@ -238,7 +238,9 @@ const Campaigns = () => {
                                         <div className="absolute bottom-4 left-5 flex items-center gap-2 rounded-xl bg-black/20 px-3 py-1.5 text-white backdrop-blur-md">
                                             <CalendarDays size={14} />
                                             <span className="text-xs font-bold">
-                                                {Number.isNaN(start.getTime()) ? "—" : start.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                                                {Number.isNaN(start.getTime())
+                                                    ? "—"
+                                                    : `${start.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })} · ${formatTime(item.startAt)}`}
                                             </span>
                                         </div>
                                     </div>
@@ -268,7 +270,7 @@ const Campaigns = () => {
 
                                         <div className="mt-4 rounded-xl bg-muted/50 px-3.5 py-2.5 text-xs text-muted-foreground">
                                             <span className="font-semibold text-foreground">Duration:</span>{" "}
-                                            {formatDate(item.startAt)} — {formatDate(item.endAt)}
+                                            {formatDateTime(item.startAt)} — {formatDateTime(item.endAt)}
                                         </div>
 
                                         {/* Actions */}

@@ -43,6 +43,17 @@ const formatDate = (value) =>
         })
         : "—";
 
+const formatTime = (value) =>
+    value
+        ? new Date(value).toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+        })
+        : "";
+
+const formatDateTime = (value) =>
+    value ? `${formatDate(value)} · ${formatTime(value)}` : "—";
+
 const Campaigns = () => {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -189,7 +200,9 @@ const Campaigns = () => {
                                         <div className="absolute bottom-4 left-5 flex items-center gap-2 rounded-xl bg-black/20 px-3 py-1.5 text-white backdrop-blur-md">
                                             <CalendarDays size={14} />
                                             <span className="text-xs font-bold">
-                                                {Number.isNaN(start.getTime()) ? "—" : start.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                                                {Number.isNaN(start.getTime())
+                                                    ? "—"
+                                                    : `${start.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })} · ${formatTime(item.startAt)}`}
                                             </span>
                                         </div>
                                     </div>
@@ -216,7 +229,7 @@ const Campaigns = () => {
                                         <div className="mt-4 rounded-xl bg-muted/50 px-3.5 py-2.5 text-xs text-muted-foreground">
                                             <Clock size={12} className="mr-1 inline text-primary" />
                                             <span className="font-semibold text-foreground">Duration:</span>{" "}
-                                            {formatDate(item.startAt)} — {formatDate(item.endAt)}
+                                            {formatDateTime(item.startAt)} — {formatDateTime(item.endAt)}
                                         </div>
                                         <button
                                             type="button"
@@ -258,11 +271,11 @@ const Campaigns = () => {
                             <dl className="mt-5 grid gap-3 rounded-xl bg-muted/50 p-4 text-sm sm:grid-cols-2">
                                 <div>
                                     <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Starts</dt>
-                                    <dd className="mt-1 font-semibold text-foreground">{formatDate(viewing.startAt)}</dd>
+                                    <dd className="mt-1 font-semibold text-foreground">{formatDateTime(viewing.startAt)}</dd>
                                 </div>
                                 <div>
                                     <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Ends</dt>
-                                    <dd className="mt-1 font-semibold text-foreground">{formatDate(viewing.endAt)}</dd>
+                                    <dd className="mt-1 font-semibold text-foreground">{formatDateTime(viewing.endAt)}</dd>
                                 </div>
                                 <div>
                                     <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Venue</dt>
