@@ -14,6 +14,7 @@ import {
     LoaderCircle,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { apiFetch } from "../utils/api";
 
 const contactMethods = [
     {
@@ -42,7 +43,7 @@ const contactMethods = [
     },
 ];
 
-const Contact = ({ onSubmit }) => {
+const Contact = () => {
     const [submitStatus, setSubmitStatus] = useState({
         type: "",
         message: "",
@@ -67,15 +68,14 @@ const Contact = ({ onSubmit }) => {
         setSubmitStatus({ type: "", message: "" });
 
         try {
-            if (!onSubmit) {
-                throw new Error("Contact form service is not connected yet.");
-            }
-
-            await onSubmit(values);
+            const result = await apiFetch("/contact", {
+                method: "POST",
+                body: values,
+            });
 
             setSubmitStatus({
                 type: "success",
-                message: "Your message has been submitted successfully.",
+                message: result?.message || "Your message has been submitted successfully.",
             });
 
             reset();

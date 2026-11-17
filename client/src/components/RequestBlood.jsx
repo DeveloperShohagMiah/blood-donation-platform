@@ -12,15 +12,17 @@ import {
     ShieldCheck,
     UserRound,
 } from "lucide-react";
+import { toInternationalPhone } from "../utils/api";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
 
 const inputClass =
-    "mt-2 h-12 w-full rounded-xl border border-[#e9e5e2] bg-[#fcfbfa] px-4 text-sm font-medium text-[#172321] outline-none transition placeholder:font-normal placeholder:text-[#a0a9a5] focus:border-[#d45b69] focus:bg-white focus:ring-4 focus:ring-[#dc263a]/[0.07]";
+    "mt-2 h-12 w-full rounded-xl border border-[#e9e5e2] bg-[#fcfbfa] px-4 text-sm font-medium text-[#172321] outline-none transition placeholder:font-normal placeholder:text-[#a0a9a5] focus:border-[#d45b69] focus:bg-white focus:ring-4 focus:ring-[#dc263a]/[0.07] disabled:cursor-not-allowed disabled:bg-[#f4f2f1] disabled:opacity-60";
 const labelClass = "text-[13px] font-bold text-[#34413b]";
 const errorClass = "mt-1.5 text-xs font-medium text-[#b42336]";
+const today = () => new Date().toISOString().split("T")[0];
 
-export default function BloodRequestForm({ onSubmit, onCancel }) {
+export default function BloodRequestForm({ onSubmit, onCancel, locations = [] }) {
     const { t } = useTranslation();
 
     const {
@@ -28,17 +30,21 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
         handleSubmit,
         watch,
         reset,
+        setValue,
         setError,
         formState: { errors, isSubmitting },
     } = useForm({
         defaultValues: {
             patientName: "",
             bloodGroup: "",
-            units: 1,
             urgency: "urgent",
-            hospital: "",
-            location: "",
-            requiredDate: "",
+            units: 1,
+            division: "",
+            district: "",
+            upazila: "",
+            hospitalName: "",
+            hospitalAddress: "",
+            neededAt: "",
             contactName: "",
             contactPhone: "",
             details: "",
@@ -47,6 +53,17 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
     });
 
     const selectedBloodGroup = watch("bloodGroup");
+    const selectedUrgency = watch("urgency");
+    const selectedDivision = watch("division");
+    const selectedDistrict = watch("district");
+
+    const divisions = locations.filter((item) => item.type === "division");
+    const districts = locations.filter(
+        (item) => item.type === "district" && String(item.parent) === selectedDivision
+    );
+    const upazilas = locations.filter(
+        (item) => item.type === "upazila" && String(item.parent) === selectedDistrict
+    );
 
     const submit = async (values) => {
         if (typeof onSubmit !== "function") {
@@ -65,11 +82,11 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
                 ...values,
                 units: Number(values.units),
                 patientName: values.patientName.trim(),
-                hospital: values.hospital.trim(),
-                location: values.location.trim(),
+                hospitalName: values.hospitalName.trim(),
+                hospitalAddress: (values.hospitalAddress || "").trim(),
                 contactName: values.contactName.trim(),
-                contactPhone: values.contactPhone.trim(),
-                details: values.details.trim(),
+                contactPhone: toInternationalPhone(values.contactPhone),
+                details: (values.details || "").trim(),
             });
             reset();
         } catch (error) {
@@ -175,6 +192,45 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
                                     <FieldError error={errors.bloodGroup} />
                                 </fieldset>
 
+                                <fieldset className="sm:col-span-2">
+                                    <legend className={labelClass}>
+                                        {t("bloodRequest.form.urgency", "Urgency")}
+                                    </legend>
+                                    <div className="mt-2 grid grid-cols-3 gap-2">
+                                        {[
+                                            { value: "normal", label: t("bloodRequest.form.normal", "Normal") },
+                                            { value: "urgent", label: t("bloodRequest.form.urgent", "Urgent") },
+                                            { value: "critical", label: t("bloodRequest.form.critical", "Critical") },
+                                        ].map((option) => {
+                                            const active = selectedUrgency === option.value;
+                                            const activeClass =
+                                                option.value === "critical"
+                                                    ? "border-rose-600 bg-rose-600 text-white shadow-[0_6px_15px_rgba(225,29,72,0.25)]"
+                                                    : option.value === "urgent"
+                                                        ? "border-amber-500 bg-amber-500 text-white shadow-[0_6px_15px_rgba(245,158,11,0.25)]"
+                                                        : "border-emerald-600 bg-emerald-600 text-white shadow-[0_6px_15px_rgba(5,150,105,0.25)]";
+                                            return (
+                                                <label key={option.value} className="cursor-pointer">
+                                                    <input
+                                                        type="radio"
+                                                        value={option.value}
+                                                        {...register("urgency", {
+                                                            required: t("bloodRequest.form.validation.urgency", "Please select an urgency level"),
+                                                        })}
+                                                        className="peer sr-only"
+                                                    />
+                                                    <span
+                                                        className={`grid h-11 place-items-center rounded-xl border text-sm font-bold transition-all peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#c51f35] ${active ? activeClass : "border-[#eee9e6] bg-[#fcfbfa] text-[#59645f] hover:border-[#e7aab1]"}`}
+                                                    >
+                                                        {option.label}
+                                                    </span>
+                                                </label>
+                                            );
+                                        })}
+                                    </div>
+                                    <FieldError error={errors.urgency} />
+                                </fieldset>
+
                                 <label>
                                     <span className={labelClass}>
                                         {t("bloodRequest.form.units", "Units required")}
@@ -189,13 +245,13 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
                                                 message: t("bloodRequest.form.validation.unitsMin", "At least 1 unit is required"),
                                             },
                                             max: {
-                                                value: 20,
-                                                message: t("bloodRequest.form.validation.unitsMax", "Maximum 20 units"),
+                                                value: 10,
+                                                message: t("bloodRequest.form.validation.unitsMax", "Maximum 10 units"),
                                             },
                                         })}
                                         className={inputClass}
                                         min="1"
-                                        max="20"
+                                        max="10"
                                         aria-invalid={Boolean(errors.units)}
                                     />
                                     <FieldError error={errors.units} />
@@ -203,13 +259,27 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
 
                                 <label>
                                     <span className={labelClass}>
-                                        {t("bloodRequest.form.urgency", "Urgency")}
+                                        {t("bloodRequest.form.requiredDate", "Needed by")}
                                     </span>
-                                    <select {...register("urgency", { required: true })} className={inputClass}>
-                                        <option value="critical">{t("bloodRequest.form.critical", "Critical")}</option>
-                                        <option value="urgent">{t("bloodRequest.form.urgent", "Urgent")}</option>
-                                        <option value="normal">{t("bloodRequest.form.normal", "Normal")}</option>
-                                    </select>
+                                    <span className="relative block">
+                                        <CalendarDays
+                                            size={17}
+                                            className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-[#9aa39f]"
+                                        />
+                                        <input
+                                            type="date"
+                                            {...register("neededAt", {
+                                                required: requiredRule("Required date"),
+                                                validate: (value) =>
+                                                    value >= today() ||
+                                                    t("bloodRequest.form.validation.date", "Date cannot be in the past"),
+                                            })}
+                                            min={today()}
+                                            className={`${inputClass} pl-11`}
+                                            aria-invalid={Boolean(errors.neededAt)}
+                                        />
+                                    </span>
+                                    <FieldError error={errors.neededAt} />
                                 </label>
                             </div>
 
@@ -227,7 +297,7 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
                                         {t("bloodRequest.form.hospital", "Hospital / medical centre")}
                                     </span>
                                     <input
-                                        {...register("hospital", {
+                                        {...register("hospitalName", {
                                             required: requiredRule("Hospital"),
                                             minLength: {
                                                 value: 2,
@@ -236,47 +306,84 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
                                         })}
                                         className={inputClass}
                                         placeholder={t("bloodRequest.form.hospitalPlaceholder", "Enter hospital name")}
-                                        aria-invalid={Boolean(errors.hospital)}
+                                        aria-invalid={Boolean(errors.hospitalName)}
                                     />
-                                    <FieldError error={errors.hospital} />
+                                    <FieldError error={errors.hospitalName} />
                                 </label>
 
                                 <label>
                                     <span className={labelClass}>
-                                        {t("bloodRequest.form.location", "City / area")}
+                                        {t("bloodRequest.form.division", "Division")}
+                                    </span>
+                                    <select
+                                        {...register("division", {
+                                            required: requiredRule("Division"),
+                                            onChange: () => {
+                                                setValue("district", "");
+                                                setValue("upazila", "");
+                                            },
+                                        })}
+                                        className={inputClass}
+                                        aria-invalid={Boolean(errors.division)}
+                                    >
+                                        <option value="">Select division</option>
+                                        {divisions.map((item) => (
+                                            <option key={item._id} value={item._id}>{item.nameEn}</option>
+                                        ))}
+                                    </select>
+                                    <FieldError error={errors.division} />
+                                </label>
+
+                                <label>
+                                    <span className={labelClass}>
+                                        {t("bloodRequest.form.district", "District")}
+                                    </span>
+                                    <select
+                                        {...register("district", {
+                                            required: requiredRule("District"),
+                                            onChange: () => setValue("upazila", ""),
+                                        })}
+                                        className={inputClass}
+                                        disabled={!selectedDivision}
+                                        aria-invalid={Boolean(errors.district)}
+                                    >
+                                        <option value="">Select district</option>
+                                        {districts.map((item) => (
+                                            <option key={item._id} value={item._id}>{item.nameEn}</option>
+                                        ))}
+                                    </select>
+                                    <FieldError error={errors.district} />
+                                </label>
+
+                                <label>
+                                    <span className={labelClass}>
+                                        {t("bloodRequest.form.upazila", "Upazila (optional)")}
+                                    </span>
+                                    <select
+                                        {...register("upazila")}
+                                        className={inputClass}
+                                        disabled={!selectedDistrict}
+                                    >
+                                        <option value="">Select upazila</option>
+                                        {upazilas.map((item) => (
+                                            <option key={item._id} value={item._id}>{item.nameEn}</option>
+                                        ))}
+                                    </select>
+                                </label>
+
+                                <label>
+                                    <span className={labelClass}>
+                                        {t("bloodRequest.form.hospitalAddress", "Hospital address / area")}
                                     </span>
                                     <input
-                                        {...register("location", { required: requiredRule("Location") })}
+                                        {...register("hospitalAddress", {
+                                            required: requiredRule("Hospital address"),
+                                        })}
                                         className={inputClass}
-                                        placeholder={t("bloodRequest.form.locationPlaceholder", "e.g. Nicosia")}
-                                        aria-invalid={Boolean(errors.location)}
+                                        placeholder="e.g. Tangail Sadar, Dhaka"
+                                        aria-invalid={Boolean(errors.hospitalAddress)}
                                     />
-                                    <FieldError error={errors.location} />
-                                </label>
-
-                                <label>
-                                    <span className={labelClass}>
-                                        {t("bloodRequest.form.requiredDate", "Required by")}
-                                    </span>
-                                    <span className="relative block">
-                                        <CalendarDays
-                                            size={17}
-                                            className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-[#9aa39f]"
-                                        />
-                                        <input
-                                            type="date"
-                                            {...register("requiredDate", {
-                                                required: requiredRule("Required date"),
-                                                validate: (value) =>
-                                                    value >= new Date().toISOString().split("T")[0] ||
-                                                    t("bloodRequest.form.validation.date", "Date cannot be in the past"),
-                                            })}
-                                            min={new Date().toISOString().split("T")[0]}
-                                            className={`${inputClass} pl-11`}
-                                            aria-invalid={Boolean(errors.requiredDate)}
-                                        />
-                                    </span>
-                                    <FieldError error={errors.requiredDate} />
+                                    <FieldError error={errors.hospitalAddress} />
                                 </label>
                             </div>
 
@@ -328,13 +435,13 @@ export default function BloodRequestForm({ onSubmit, onCancel }) {
                                             type="tel"
                                             {...register("contactPhone", {
                                                 required: requiredRule("Phone number"),
-                                                minLength: {
-                                                    value: 7,
+                                                pattern: {
+                                                    value: /^(?:\+?88)?01[3-9]\d{8}$/,
                                                     message: t("bloodRequest.form.validation.phone", "Enter a valid phone number"),
                                                 },
                                             })}
                                             className={`${inputClass} pl-11`}
-                                            placeholder={t("bloodRequest.form.phonePlaceholder", "+357 ...")}
+                                            placeholder="01XXXXXXXXX"
                                             autoComplete="tel"
                                             aria-invalid={Boolean(errors.contactPhone)}
                                         />

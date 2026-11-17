@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../context/useAuth";
 import {
     AlertCircle,
     ArrowLeft,
@@ -25,12 +26,6 @@ import {
 // Configuration
 // --------------------------------------------------
 
-// Set VITE_API_URL in your client .env file.
-// Example: VITE_API_URL=http://localhost:5000/api/v1
-const API_BASE_URL =
-    import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
-
-const LOGIN_ENDPOINT = `${API_BASE_URL}/auth/login`;
 const REQUEST_TIMEOUT_MS = 15000;
 const LAST_ID_KEY = "bc:lastIdentifier";
 
@@ -94,39 +89,6 @@ const getInputClass = (hasError) =>
             : "border-slate-200 hover:border-slate-300 focus:border-primary/90 focus:ring-primary/90/10",
     ].join(" ");
 
-async function loginRequest(payload, signal) {
-    const response = await fetch(LOGIN_ENDPOINT, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(payload),
-        signal,
-    });
-
-    let data = null;
-
-    try {
-        data = await response.json();
-    } catch {
-        // Handle non-JSON responses.
-    }
-
-    if (!response.ok) {
-        const error = new Error(data?.message || "Login failed");
-
-        error.status = response.status;
-        error.retryAfter =
-            Number(response.headers.get("Retry-After")) || null;
-
-        throw error;
-    }
-
-    return data;
-}
-
 // --------------------------------------------------
 // Reusable components
 // --------------------------------------------------
@@ -167,6 +129,7 @@ const FieldError = ({ id, children }) => {
 
 const Login = ({ onSuccess }) => {
     const { t } = useTranslation();
+    const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -231,7 +194,7 @@ const Login = ({ onSuccess }) => {
         const identifier = values.identifier.trim();
 
         try {
-            const data = await loginRequest(
+            const data = await login(
                 {
                     identifier,
                     password: values.password,
@@ -276,10 +239,12 @@ const Login = ({ onSuccess }) => {
                 resetField("password");
                 setFocus("password");
             } else if (error.status === 403) {
-                message = t(
-                    "login.err.blocked",
-                    "This account cannot log in right now. Please contact support."
-                );
+                message =
+                    error.message ||
+                    t(
+                        "login.err.blocked",
+                        "This account cannot log in right now. Please contact support."
+                    );
             } else if (error.status === 429) {
                 message = error.retryAfter
                     ? t(

@@ -27,6 +27,7 @@ import {
 import Hero from "../components/Hero";
 import SectionHeader from "../components/SectionHeader";
 import DonorShowcase from "../components/Donorshowcase";
+import { apiFetch } from "../utils/api";
 
 const container =
     "mx-auto w-[calc(100%-2rem)] max-w-[1280px] md:w-[calc(100%-4rem)]";
@@ -38,6 +39,41 @@ const sampleEmergencies = [
     { id: 3, group: "B-", patientName: "Alice Johnson", units: 1, got: 0, hospital: "Central Medical College", place: "Chattogram", time: "1 hr ago", contactPerson: "Bob Williams", phone: "+8801000000003", urgency: "normal" },
     { id: 4, group: "AB+", patientName: "Michael Brown", units: 4, got: 2, hospital: "National Hospital", place: "Khulna", time: "2 hr ago", contactPerson: "Sarah Miller", phone: "+8801000000004", urgency: "critical" },
 ];
+
+/* Map the public API response to the shape the emergency cards expect. */
+const mapPublicRequest = (item) => {
+    const urgencyByStatus = {
+        verified: "normal",
+        matching: "urgent",
+        in_progress: "critical",
+    };
+    const minutes = Math.max(
+        1,
+        Math.round((Date.now() - new Date(item.createdAt).getTime()) / 60000)
+    );
+    const time =
+        minutes < 60
+            ? `${minutes} min ago`
+            : minutes < 1440
+                ? `${Math.floor(minutes / 60)} hr ago`
+                : `${Math.floor(minutes / 1440)} d ago`;
+
+    return {
+        id: item._id,
+        group: item.bloodGroup,
+        patientName: item.patientName,
+        units: item.units,
+        got: item.unitsFulfilled || 0,
+        hospital: item.hospitalName,
+        place: item.district?.nameEn || item.upazila?.nameEn || "",
+        time,
+        contactPerson: item.contactName,
+        phone: item.contactPhone,
+        urgency: ["critical", "urgent", "normal"].includes(item.urgency)
+            ? item.urgency
+            : urgencyByStatus[item.status] || "normal",
+    };
+};
 
 /* Leave src empty to show a placeholder tile */
 const galleryItems = [
@@ -96,19 +132,36 @@ const Home = () => {
 
     /* ---------------- Emergency requests ---------------- */
     const [urgencyFilter, setUrgencyFilter] = useState("all");
+    const [emergencies, setEmergencies] = useState(sampleEmergencies);
+
+    useEffect(() => {
+        let active = true;
+        apiFetch("/blood-requests/public")
+            .then((data) => {
+                if (active && data?.items?.length) {
+                    setEmergencies(data.items.map(mapPublicRequest));
+                }
+            })
+            .catch(() => {
+                // Keep the sample feed visible when the API is unavailable.
+            });
+        return () => {
+            active = false;
+        };
+    }, []);
 
     const counts = useMemo(() => {
-        const c = { all: sampleEmergencies.length, critical: 0, urgent: 0, normal: 0 };
-        sampleEmergencies.forEach((r) => (c[levelOf(r.urgency)] += 1));
+        const c = { all: emergencies.length, critical: 0, urgent: 0, normal: 0 };
+        emergencies.forEach((r) => (c[levelOf(r.urgency)] += 1));
         return c;
-    }, []);
+    }, [emergencies]);
 
     const visibleRequests = useMemo(
         () =>
-            sampleEmergencies
+            emergencies
                 .filter((r) => urgencyFilter === "all" || levelOf(r.urgency) === urgencyFilter)
                 .sort((a, b) => urgencyStyles[levelOf(a.urgency)].rank - urgencyStyles[levelOf(b.urgency)].rank),
-        [urgencyFilter]
+        [urgencyFilter, emergencies]
     );
 
     const urgencyTabs = [
@@ -345,7 +398,7 @@ const Home = () => {
 
                                         <div className="mt-auto flex gap-2.5 pt-6">
                                             <Link
-                                                to="/blood-requests"
+                                                to="/create-blood-requests"
                                                 className="inline-flex h-11 flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:brightness-95 active:scale-[0.98]"
                                             >
                                                 {t("home.emergency.respond", "I can donate")}
@@ -371,7 +424,7 @@ const Home = () => {
 
                     <div className="mt-8 text-center">
                         <Link
-                            to="/blood-requests"
+                            to="/create-blood-requests"
                             className="group inline-flex h-11 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-bold text-foreground transition hover:border-primary hover:text-primary"
                         >
                             {t("home.emergency.viewAll", "View all requests")}

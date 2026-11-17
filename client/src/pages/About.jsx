@@ -8,8 +8,6 @@ import {
     Droplet,
     ArrowRight,
     HandHeart,
-    MapPin,
-    CheckCircle2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -175,7 +173,7 @@ const About = () => {
 
 
             {/* Values */}
-            < section section className="mx-auto max-w-7xl px-5 py-20 sm:px-8" >
+            <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
                 <div className="mx-auto mb-12 max-w-2xl text-center">
                     <span className="text-sm font-bold uppercase tracking-[0.2em] text-primary">
                         What Guides Us
@@ -204,7 +202,7 @@ const About = () => {
                         </div>
                     ))}
                 </div>
-            </ section>
+            </section>
 
             {/* Privacy */}
             <section className="bg-primary/3 " >

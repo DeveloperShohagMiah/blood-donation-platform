@@ -1,13 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-@import url('https://fonts.cdnfonts.com/css/decaydence');
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Outfit:wght@100..900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Geist+Mono:wght@400;500;600;700&family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 @import "tailwindcss";
 
-/* dark = "not inside .light", light = "inside .light" */
-@custom-variant dark (&:where(:not(.light, .light *)));
-@custom-variant light (&:where(.light, .light *));
+/* Class-based theming: add `.dark` to <html> for dark mode.
+   Light is the default, so `dark:` utilities only apply inside `.dark`. */
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* ==========================================================================
    Theme Tokens
@@ -25,6 +22,7 @@
   --color-popover-foreground: var(--popover-foreground);
 
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
   --color-primary-foreground: var(--primary-foreground);
 
   --color-secondary: var(--secondary);
@@ -58,7 +56,6 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* Shadows now follow the theme (heavy black shadows looked muddy in light mode) */
   --shadow-sm: var(--elev-sm);
   --shadow-md: var(--elev-md);
   --shadow-lg: var(--elev-lg);
@@ -67,7 +64,7 @@
 /* Static values */
 @theme {
   --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Decaydence", "Philosopher", ui-sans-serif, sans-serif;
+  --font-heading: "Philosopher", ui-serif, Georgia, serif;
   --font-code: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --radius-sm: 0.375rem;
@@ -84,61 +81,118 @@
 
 /* ==========================================================================
    Theme State
+   Brand: crimson #C8102E, deep red #9E0B23, blush #FDECEF, teal accent #1B7F8C
    ========================================================================== */
+
+/* Light (default) */
 :root {
   color-scheme: light;
 
   --background: #ffffff;
-  --foreground: #0a0a0a;
+  --foreground: #1f2933;
 
-  --card: #FFFFFF;
-  --card-foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-foreground: #1f2933;
 
   --popover: #ffffff;
-  --popover-foreground: #0a0a0a;
+  --popover-foreground: #1f2933;
 
-  --primary: #D6313F;
+  --primary: #c8102e;
+  --primary-hover: #9e0b23;
   --primary-foreground: #ffffff;
 
-  --secondary: #e8e8ec;
-  --secondary-foreground: #1a1a1a;
+  --secondary: #f4eff0;
+  --secondary-foreground: #1f2933;
 
-  /* --muted is a SURFACE colour (bg-muted/40 etc.). It was #777180, a mid-grey
-       that turned those fills muddy. Text greys live in --muted-foreground. */
-  --muted: #EFECF4;
-  --muted-foreground: #5c5c66;
+  /* --muted is a SURFACE colour (bg-muted/40 etc.). Text greys live in --muted-foreground. */
+  --muted: #fdecef;
+  --muted-foreground: #5b6470;
 
-  --accent: #e8e8ec;
-  --accent-foreground: #1a1a1a;
+  --accent: #e3f2f4;
+  --accent-foreground: #14606b;
 
-  --destructive: #dc2626;
+  --destructive: #b42318;
   --destructive-foreground: #ffffff;
 
-  /* Slightly stronger so card borders read on the near-white background */
-  --border: #DDD6E8;
-  --input: rgba(0, 0, 0, 0.2);
-  --ring: #8b1fc4;
+  --border: #eadde0;
+  --input: #d9c9cd;
+  --ring: #c8102e;
 
-  --chart-1: #8b1fc4;
-  --chart-2: #2563eb;
-  --chart-3: #059669;
-  --chart-4: #d97706;
-  --chart-5: #dc2626;
+  --chart-1: #c8102e;
+  --chart-2: #1b7f8c;
+  --chart-3: #d97706;
+  --chart-4: #475569;
+  --chart-5: #e8718a;
 
-  --sidebar: #ececef;
-  --sidebar-foreground: #0a0a0a;
-  --sidebar-primary: #8b1fc4;
+  --sidebar: #fbf5f6;
+  --sidebar-foreground: #1f2933;
+  --sidebar-primary: #c8102e;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e0e0e5;
-  --sidebar-accent-foreground: #1a1a1a;
-  --sidebar-border: rgba(0, 0, 0, 0.12);
-  --sidebar-ring: #8b1fc4;
+  --sidebar-accent: #fdecef;
+  --sidebar-accent-foreground: #9e0b23;
+  --sidebar-border: #eadde0;
+  --sidebar-ring: #c8102e;
 
-  /* Elevation (light) — violet-tinted instead of the old warm brown */
-  --elev-sm: 0 1px 2px rgba(60, 20, 110, 0.08);
-  --elev-md: 0 12px 30px -12px rgba(60, 20, 110, 0.22);
-  --elev-lg: 0 24px 60px -20px rgba(60, 20, 110, 0.28);
-  --shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 24px 48px -30px rgba(60, 20, 110, 0.28);
+  /* Elevation: red-tinted */
+  --elev-sm: 0 1px 2px rgba(120, 10, 30, 0.08);
+  --elev-md: 0 12px 30px -12px rgba(120, 10, 30, 0.22);
+  --elev-lg: 0 24px 60px -20px rgba(120, 10, 30, 0.28);
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 24px 48px -30px rgba(120, 10, 30, 0.26);
+}
+
+/* Dark */
+.dark {
+  color-scheme: dark;
+
+  --background: #140a0c;
+  --foreground: #f5eff0;
+
+  --card: #1d1114;
+  --card-foreground: #f5eff0;
+
+  --popover: #1d1114;
+  --popover-foreground: #f5eff0;
+
+  /* Slightly brighter red so it holds contrast on dark surfaces */
+  --primary: #d42a47;
+  --primary-hover: #e8506a;
+  --primary-foreground: #ffffff;
+
+  --secondary: #2a1a1e;
+  --secondary-foreground: #f5eff0;
+
+  --muted: #261619;
+  --muted-foreground: #b4a7ab;
+
+  --accent: #123a40;
+  --accent-foreground: #8fd3dc;
+
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+
+  --border: #3a272b;
+  --input: #4a3338;
+  --ring: #e8506a;
+
+  --chart-1: #ef5b74;
+  --chart-2: #4fb6c4;
+  --chart-3: #f59e0b;
+  --chart-4: #94a3b8;
+  --chart-5: #f4a3b3;
+
+  --sidebar: #190d10;
+  --sidebar-foreground: #f5eff0;
+  --sidebar-primary: #d42a47;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #2a1a1e;
+  --sidebar-accent-foreground: #f5eff0;
+  --sidebar-border: #3a272b;
+  --sidebar-ring: #e8506a;
+
+  --elev-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --elev-md: 0 12px 30px -12px rgba(0, 0, 0, 0.6);
+  --elev-lg: 0 24px 60px -20px rgba(0, 0, 0, 0.7);
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 48px -30px rgba(0, 0, 0, 0.7);
 }
 
 /* ==========================================================================
@@ -170,8 +224,6 @@
     min-height: 100dvh;
     background-color: var(--background);
     color: var(--foreground);
-    /* Body copy uses the body font. Philosopher is a display face and was
-           being applied to every paragraph. */
     font-family: var(--font-display);
     font-size: 16px;
     transition:
@@ -209,7 +261,7 @@
   }
 
   /* Inside the base layer on purpose: an unlayered h1/h2 rule would override
-       text-* utilities (e.g. text-4xl) on headings. */
+     text-* utilities (e.g. text-4xl) on headings. */
   @media (max-width: 768px) {
     h1 {
       font-size: clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
@@ -231,8 +283,6 @@
     cursor: pointer;
   }
 
-  /* No forced border-radius here: it used to reshape every focused pill, avatar
-       and chamfered element. */
   :focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
@@ -260,14 +310,14 @@
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--primary);
+    background: var(--primary-hover);
   }
 
   /* Firefox (Chromium would ignore the ::-webkit rules above if this applied there) */
   @supports not selector(::-webkit-scrollbar) {
     html {
       scrollbar-width: thin;
-      scrollbar-color: var(--ring) var(--card);
+      scrollbar-color: var(--primary) var(--card);
     }
   }
 
@@ -286,9 +336,8 @@
 
 /* ==========================================================================
    Component Styles
-   Everything here — including the responsive tweaks — stays inside
-   @layer components. Unlayered CSS beats every Tailwind utility, so the old
-   unlayered `.card { padding: 1rem }` media rule silently overrode `p-6`.
+   Everything here, including the responsive tweaks, stays inside
+   @layer components. Unlayered CSS beats every Tailwind utility.
    ========================================================================== */
 
 @layer components {
@@ -305,11 +354,11 @@
     color: var(--card-foreground);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
     transition:
       transform 300ms var(--ease-premium),
       box-shadow 300ms var(--ease-premium),
       border-color 300ms var(--ease-premium);
-    box-shadow: var(--shadow);
   }
 
   .btn {
@@ -358,17 +407,22 @@
       box-shadow: var(--elev-md);
     }
 
-    .btn-primary:hover,
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--elev-md);
+    }
+
     .btn-secondary:hover,
     .btn-destructive:hover {
-      transform: scale(1.05);
+      transform: translateY(-1px);
       box-shadow: var(--elev-md);
     }
 
     .btn-outline:hover {
       background-color: var(--primary);
       color: var(--primary-foreground);
-      transform: scale(1.05);
+      transform: translateY(-1px);
     }
   }
 
@@ -382,7 +436,7 @@
     padding: 0.75rem 1rem;
     background-color: var(--card);
     color: var(--foreground);
-    border: 1px solid var(--border);
+    border: 1px solid var(--input);
     border-radius: var(--radius-md);
     outline: none;
     transition:
@@ -436,10 +490,10 @@
   .glow-btn-border,
   .glow-btn-shadow {
     background: conic-gradient(from 0deg,
-        #8b5cf6,
-        #ec4899,
-        #06b6d4,
-        #8b5cf6);
+        #c8102e,
+        #f43f5e,
+        #f59e0b,
+        #c8102e);
     animation: glow-spin 3s linear infinite;
   }
 
@@ -478,29 +532,21 @@
 
 /* ==========================================================================
    Custom Utilities
-   (@utility registers real Tailwind utilities, so they work with variants
-   like hover: / md: and sit in the correct cascade layer.)
    ========================================================================== */
 
-/* Gradient text. Dark is the default, so the light gradient belongs to dark mode.
-   (The old rule was keyed to `.dark`, a class your app never sets, so dark mode
-   got the dark violet gradient on a dark background.) */
+/* Gradient text. Light is the default; dark gets a brighter gradient. */
 @utility text-gradient {
-  background-image: linear-gradient(90deg, #a78bfa, #e9d5ff);
+  background-image: linear-gradient(90deg, #9e0b23, #e11d48);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   /* keeps the last letter and descenders from being clipped */
   padding: 0 0.08em 0.1em 0;
 
-  .light & {
-    background-image: linear-gradient(90deg, #6d28d9, #a855f7);
+  .dark & {
+    background-image: linear-gradient(90deg, #ff8a9b, #ffd1d8);
   }
 }
-
-/* Angled-corner shape. clip-path also clips outlines, so keyboard focus is drawn
-   as an inset ring that stays inside the shape. */
-
 
 @utility glass {
   background: color-mix(in srgb, var(--card) 70%, transparent);
@@ -513,7 +559,7 @@
   position: relative;
   padding: 2px;
   border-radius: var(--radius-lg);
-  background: linear-gradient(180deg, var(--muted), var(--secondary));
+  background: linear-gradient(180deg, var(--primary), var(--muted));
 }
 
 @utility scrollbar-hide {
@@ -547,13 +593,9 @@
       color-mix(in srgb, var(--primary) 15%, transparent),
       transparent 45%),
     linear-gradient(120deg,
-      color-mix(in srgb, var(--muted) 5%, transparent),
+      color-mix(in srgb, var(--muted) 60%, transparent),
       transparent 70%);
 }
-
-/* (text-balance, text-pretty and the font-display / font-body / font-code
-   utilities were removed: Tailwind v4 already provides them, the fonts from the
-   @theme tokens above.) */
 
 /* ==========================================================================
    Animations

@@ -227,7 +227,7 @@ const FindDonors = ({
                             </a>
 
                             <a
-                                href="/blood-requests"
+                                href="/create-blood-requests"
                                 className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-[#E8D5D6] bg-white px-6 text-sm font-bold text-[#34423B] transition hover:border-[#C62838] hover:text-[#C62838]"
                             >
                                 {content.requestBlood}
@@ -472,7 +472,10 @@ const FindDonors = ({
                 {!isLoading && !error && donors.length > 0 && (
                     <>
                         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                            {donors.map((donor) => (
+                            {donors.map((donor) => {
+                                const upazila = donor.upazila || donor.location?.upazila;
+                                const district = donor.district || donor.location?.district;
+                                return (
                                 <article
                                     key={donor._id}
                                     className="group rounded-2xl border border-[#E8EEEA] bg-white p-5 shadow-[0_5px_20px_rgba(29,55,44,0.025)] transition duration-300 hover:-translate-y-1 hover:border-[#F0C5C9] hover:shadow-[0_15px_35px_rgba(29,55,44,0.07)]"
@@ -491,13 +494,9 @@ const FindDonors = ({
                                                 <div className="mt-1 flex items-center gap-1.5 text-xs text-[#829089]">
                                                     <MapPin size={13} />
                                                     <span className="truncate">
-                                                        {isBn
-                                                            ? donor.location?.upazila?.nameBn
-                                                            : donor.location?.upazila?.nameEn}
+                                                        {isBn ? upazila?.nameBn : upazila?.nameEn}
                                                         {", "}
-                                                        {isBn
-                                                            ? donor.location?.district?.nameBn
-                                                            : donor.location?.district?.nameEn}
+                                                        {isBn ? district?.nameBn : district?.nameEn}
                                                     </span>
                                                 </div>
                                             </div>
@@ -546,7 +545,8 @@ const FindDonors = ({
                                         </button>
                                     </div>
                                 </article>
-                            ))}
+                                );
+                            })}
                         </div>
 
                         {/* Pagination */}
@@ -667,7 +667,7 @@ const FindDonors = ({
                         </p>
 
                         <a
-                            href="/blood-requests"
+                            href="/create-blood-requests"
                             className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-xl bg-white px-6 text-sm font-bold text-[#C62838] shadow-lg transition hover:-translate-y-0.5 hover:bg-[#FFF4F4]"
                         >
                             {content.requestBlood}

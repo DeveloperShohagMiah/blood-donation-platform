@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../context/useAuth";
+import UserMenu from "./UserMenu";
 import {
     ArrowUpRight,
     Droplets,
@@ -8,6 +10,7 @@ import {
     Home,
     Info,
     LogIn,
+    LogOut,
     Mail,
     Menu,
     Search,
@@ -27,8 +30,8 @@ const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [hover, setHover] = useState({ left: 0, width: 0, visible: false });
     const listRef = useRef(null);
-    const { pathname } = useLocation();
     const { t, i18n } = useTranslation();
+    const { user, isAuthenticated, logout } = useAuth();
 
     const currentLanguage = i18n.resolvedLanguage?.startsWith("bn") ? "BN" : "EN";
 
@@ -45,11 +48,6 @@ const Navbar = () => {
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
-
-    /* Close the menu on route change */
-    useEffect(() => {
-        setMenuOpen(false);
-    }, [pathname]);
 
     /* Escape to close, close when resized up to desktop */
     useEffect(() => {
@@ -230,13 +228,19 @@ const Navbar = () => {
                             ))}
                         </div>
 
-                        {/* Desktop login */}
-                        <Link
-                            to="/login"
-                            className="hidden rounded-full px-3.5 py-2 text-[13.5px] font-semibold text-[#475650] transition-colors bg-muted md:inline-flex"
-                        >
-                            {t("navigation.login")}
-                        </Link>
+                        {/* Desktop account dropdown / login */}
+                        {isAuthenticated ? (
+                            <div className="hidden md:block">
+                                <UserMenu onNavigate={closeMenu} />
+                            </div>
+                        ) : (
+                            <Link
+                                to="/login"
+                                className="hidden rounded-full px-3.5 py-2 text-[13.5px] font-semibold text-[#475650] transition-colors bg-muted md:inline-flex"
+                            >
+                                {t("navigation.login")}
+                            </Link>
+                        )}
 
                         {/* Desktop CTA */}
                         <Link
@@ -320,14 +324,45 @@ const Navbar = () => {
                         </div>
 
                         <div className="mt-2 grid gap-2 border-t border-[#EDF2EF] p-1 pt-3">
-                            <Link
-                                to="/login"
-                                onClick={closeMenu}
-                                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/70 text-sm font-semibold text-[#33443D] transition-colors hover:bg-muted"
-                            >
-                                <LogIn size={16} />
-                                {t("navigation.login")}
-                            </Link>
+                            {isAuthenticated && user && (
+                                <div className="flex items-center gap-2.5 px-2 pb-1">
+                                    <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary/10 text-[11px] font-bold text-primary">
+                                        {user.fullName.slice(0, 2).toUpperCase()}
+                                    </span>
+                                    <div className="min-w-0">
+                                        <p className="truncate text-sm font-bold text-[#192623]">{user.fullName}</p>
+                                        <p className="truncate text-xs capitalize text-[#829089]">{user.role}</p>
+                                    </div>
+                                </div>
+                            )}
+                            {isAuthenticated && (
+                                <Link
+                                    to="/dashboard"
+                                    onClick={closeMenu}
+                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#192623] text-sm font-bold text-white"
+                                >
+                                    Dashboard
+                                </Link>
+                            )}
+                            {isAuthenticated ? (
+                                <button
+                                    type="button"
+                                    onClick={() => { logout(); closeMenu(); }}
+                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/70 text-sm font-semibold text-[#33443D] transition-colors hover:bg-muted"
+                                >
+                                    <LogOut size={16} />
+                                    {t("navigation.logout", "Log out")}
+                                </button>
+                            ) : (
+                                <Link
+                                    to="/login"
+                                    onClick={closeMenu}
+                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/70 text-sm font-semibold text-[#33443D] transition-colors hover:bg-muted"
+                                >
+                                    <LogIn size={16} />
+                                    {t("navigation.login")}
+                                </Link>
+                            )}
 
                             <Link
                                 to="/become-donor"

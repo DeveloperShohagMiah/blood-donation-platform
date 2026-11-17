@@ -1,4 +1,5 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
     CalendarDays,
@@ -11,6 +12,7 @@ import {
 } from "lucide-react";
 import SectionHeader from "../components/SectionHeader";
 import { bdLocations } from "../utils/BDLocations";
+import { apiFetch } from "../utils/api";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
 const PREVIEW_LIMIT = 8;
@@ -28,6 +30,24 @@ const sampleDonors = [
     { id: 9, name: "Farhana Islam", group: "A-", division: "Dhaka", district: "Dhaka", upazila: "Mirpur", last: "3 months ago", available: false, phone: "+8801000000009" },
     { id: 10, name: "Imran Khan", group: "B-", division: "Khulna", district: "Khulna", upazila: "Khulna Sadar", last: "7 months ago", available: true, phone: "+8801000000010" },
 ];
+
+const mapApiDonor = (item) => ({
+    id: item._id,
+    name: item.fullName || "Donor",
+    group: item.bloodGroup,
+    division: item.division?.nameEn || "",
+    district: item.district?.nameEn || "",
+    upazila: item.upazila?.nameEn || item.area || "",
+    last: item.lastDonationDate
+        ? new Date(item.lastDonationDate).toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+        })
+        : "Never",
+    available: item.availability === "available",
+    phone: "",
+});
 
 const initials = (name) =>
     name
@@ -80,6 +100,23 @@ const DonorShowcase = () => {
     const empty = { group: "", division: "", district: "", upazila: "" };
     const [draft, setDraft] = useState(empty);
     const [applied, setApplied] = useState(empty);
+    const [donors, setDonors] = useState(sampleDonors);
+
+    useEffect(() => {
+        let active = true;
+        apiFetch("/donors/search?limit=8")
+            .then((data) => {
+                if (active && data?.items?.length) {
+                    setDonors(data.items.map(mapApiDonor));
+                }
+            })
+            .catch(() => {
+                // Keep the sample showcase when the API is unavailable.
+            });
+        return () => {
+            active = false;
+        };
+    }, []);
 
     const divisions = Object.keys(bdLocations);
     const districts = draft.division ? Object.keys(bdLocations[draft.division]) : [];
@@ -99,14 +136,14 @@ const DonorShowcase = () => {
 
     const filtered = useMemo(
         () =>
-            sampleDonors.filter(
+            donors.filter(
                 (d) =>
                     (!applied.group || d.group === applied.group) &&
                     (!applied.division || d.division === applied.division) &&
                     (!applied.district || d.district === applied.district) &&
                     (!applied.upazila || d.upazila === applied.upazila)
             ),
-        [applied]
+        [applied, donors]
     );
     const shown = filtered.slice(0, PREVIEW_LIMIT);
     const hasFilters = Object.values(applied).some(Boolean);
@@ -120,15 +157,6 @@ const DonorShowcase = () => {
         setDraft(empty);
         setApplied(empty);
     };
-
-    const focusFilters = () => {
-        filterRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-        filterRef.current?.querySelector("select")?.focus({ preventScroll: true });
-    };
-
-    const viewAllQuery = new URLSearchParams(
-        Object.entries(applied).filter(([, v]) => v)
-    ).toString();
 
     return (
         <section aria-labelledby="donors-heading" className="relative py-16 md:py-24 border-t border-primary/10">
@@ -268,14 +296,24 @@ const DonorShowcase = () => {
                                             : t("home.donors.unavailable", "Unavailable")}
                                     </span>
 
-                                    <a
-                                        href={`tel:${d.phone}`}
-                                        aria-label={t("home.donors.contactName", "Contact {{name}}", { name: d.name })}
-                                        className="inline-flex h-10 items-center gap-2 rounded-full bg-primary px-5 text-sm font-bold text-white shadow-[0_6px_14px_rgba(220,38,38,0.25)] transition hover:bg-[#B91C1C] active:scale-[0.97]"
-                                    >
-                                        <Phone size={15} />
-                                        {t("home.donors.contact", "Contact")}
-                                    </a>
+                                    {d.phone ? (
+                                        <a
+                                            href={`tel:${d.phone}`}
+                                            aria-label={t("home.donors.contactName", "Contact {{name}}", { name: d.name })}
+                                            className="inline-flex h-10 items-center gap-2 rounded-full bg-primary px-5 text-sm font-bold text-white shadow-[0_6px_14px_rgba(220,38,38,0.25)] transition hover:bg-[#B91C1C] active:scale-[0.97]"
+                                        >
+                                            <Phone size={15} />
+                                            {t("home.donors.contact", "Contact")}
+                                        </a>
+                                    ) : (
+                                        <Link
+                                            to={`/donors?group=${encodeURIComponent(d.group)}`}
+                                            className="inline-flex h-10 items-center gap-2 rounded-full bg-primary px-5 text-sm font-bold text-white shadow-[0_6px_14px_rgba(220,38,38,0.25)] transition hover:bg-[#B91C1C] active:scale-[0.97]"
+                                        >
+                                            <Phone size={15} />
+                                            {t("home.donors.contact", "Contact")}
+                                        </Link>
+                                    )}
                                 </div>
                             </li>
                         ))}

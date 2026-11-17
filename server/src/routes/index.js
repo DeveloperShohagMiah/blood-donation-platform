@@ -1,0 +1,35 @@
+import { Router } from "express";
+import AuthRoutes from "./auth.routes.js";
+import UsersRoutes from "./users.routes.js";
+import DonorsRoutes from "./donors.routes.js";
+import VolunteersRoutes from "./volunteers.routes.js";
+import LocationsRoutes from "./locations.routes.js";
+import BloodRequestsRoutes from "./blood-requests.routes.js";
+import AssignmentsRoutes from "./assignments.routes.js";
+import DonorResponsesRoutes from "./donor-responses.routes.js";
+import DonationsRoutes from "./donations.routes.js";
+import CampaignsRoutes from "./campaigns.routes.js";
+import NotificationsRoutes from "./notifications.routes.js";
+import AuditLogsRoutes from "./audit-logs.routes.js";
+import ContactRequestsRoutes from "./contact-requests.routes.js";
+import ContactRoutes from "./contact.routes.js";
+import AdminRoutes from "./admin.routes.js";
+
+const router = Router();
+router.use(AuthRoutes);
+router.use(UsersRoutes);
+router.use(DonorsRoutes);
+router.use(VolunteersRoutes);
+router.use(LocationsRoutes);
+router.use(BloodRequestsRoutes);
+router.use(AssignmentsRoutes);
+router.use(DonorResponsesRoutes);
+router.use(DonationsRoutes);
+router.use(CampaignsRoutes);
+router.use(NotificationsRoutes);
+router.use(AuditLogsRoutes);
+router.use(ContactRequestsRoutes);
+router.use(ContactRoutes);
+router.use(AdminRoutes);
+
+export default router;
