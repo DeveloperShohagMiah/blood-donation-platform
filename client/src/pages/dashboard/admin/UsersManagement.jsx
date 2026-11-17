@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import {
+    AlertCircle,
     CheckCircle2,
     Pencil,
     Trash2,
@@ -24,8 +26,20 @@ import {
 } from "../components/UI";
 
 const emptyForm = { fullName: "", phone: "", email: "" };
-const inputClass =
-    "h-11 w-full rounded-xl border border-border bg-background px-3.5 text-sm text-foreground outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10";
+const inputClass = (hasError) =>
+    [
+        "h-11 w-full rounded-xl border bg-background px-3.5 text-sm text-foreground outline-none transition focus:ring-4",
+        hasError
+            ? "border-rose-400 focus:border-rose-400 focus:ring-rose-500/10"
+            : "border-border focus:border-primary focus:ring-primary/10",
+    ].join(" ");
+
+const FieldError = ({ message }) =>
+    message ? (
+        <p role="alert" className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-rose-600">
+            <AlertCircle size={13} /> {message}
+        </p>
+    ) : null;
 
 const UsersManagement = () => {
     const { user: currentUser } = useAuth();
@@ -35,8 +49,15 @@ const UsersManagement = () => {
     const [notice, setNotice] = useState("");
     const [filter, setFilter] = useState("");
     const [editing, setEditing] = useState(null);
-    const [form, setForm] = useState(emptyForm);
     const [confirmDelete, setConfirmDelete] = useState(null);
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+        setError,
+        formState: { errors, isSubmitting },
+    } = useForm({ defaultValues: emptyForm, mode: "onBlur" });
 
     const items = (data?.items || []).filter((item) =>
         !filter ||
@@ -44,29 +65,34 @@ const UsersManagement = () => {
         item.phone.includes(filter)
     );
 
-    const openEdit = (item) => {
-        setEditing(item);
-        setForm({
-            fullName: item.fullName,
-            phone: item.phone,
-            email: item.email || "",
-        });
+    const closeForm = () => {
+        setEditing(null);
         setActionError("");
     };
 
-    const saveEdit = async (event) => {
-        event.preventDefault();
+    const openEdit = (item) => {
+        reset({
+            fullName: item.fullName || "",
+            phone: item.phone || "",
+            email: item.email || "",
+        });
+        setActionError("");
+        setEditing(item);
+    };
+
+    const saveEdit = async (values) => {
         setActionError("");
         setBusyId(editing._id);
         try {
             await apiFetch(`/users/${editing._id}`, {
                 method: "PATCH",
-                body: form,
+                body: values,
             });
-            setNotice(`${form.fullName}'s details were updated.`);
-            setEditing(null);
+            setNotice(`${values.fullName}'s details were updated.`);
+            closeForm();
             reload();
         } catch (err) {
+            setError("root.server", { type: "server", message: err.message });
             setActionError(err.message);
         } finally {
             setBusyId("");
@@ -224,37 +250,73 @@ const UsersManagement = () => {
             )}
 
             {editing && (
-                <div className="fixed inset-0 z-[70] grid place-items-center bg-black/50 p-4 backdrop-blur-sm" onClick={() => setEditing(null)}>
+                <div className="fixed inset-0 z-[70] grid place-items-center bg-black/50 p-4 backdrop-blur-sm" onClick={closeForm}>
                     <form
-                        onSubmit={saveEdit}
+                        onSubmit={handleSubmit(saveEdit)}
                         onClick={(e) => e.stopPropagation()}
+                        noValidate
                         className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-2xl"
                     >
                         <div className="flex items-center justify-between">
                             <h2 className="text-lg font-extrabold text-foreground">Edit user</h2>
-                            <button type="button" onClick={() => setEditing(null)} aria-label="Close" className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-muted">
+                            <button type="button" onClick={closeForm} aria-label="Close" className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-muted">
                                 <X size={18} />
                             </button>
                         </div>
                         <div className="mt-5 space-y-4">
                             <div>
                                 <label htmlFor="edit-name" className="mb-1.5 block text-sm font-bold text-foreground">Full name</label>
-                                <input id="edit-name" required value={form.fullName} onChange={(e) => setForm((f) => ({ ...f, fullName: e.target.value }))} className={inputClass} />
+                                <input
+                                    id="edit-name"
+                                    {...register("fullName", {
+                                        required: "Full name is required.",
+                                        minLength: { value: 2, message: "Name must be at least 2 characters." },
+                                    })}
+                                    className={inputClass(errors.fullName)}
+                                />
+                                <FieldError message={errors.fullName?.message} />
                             </div>
                             <div>
                                 <label htmlFor="edit-phone" className="mb-1.5 block text-sm font-bold text-foreground">Phone number</label>
-                                <input id="edit-phone" required value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} className={inputClass} />
+                                <input
+                                    id="edit-phone"
+                                    {...register("phone", {
+                                        required: "Phone number is required.",
+                                        pattern: {
+                                            value: /^(?:\+?88)?01[3-9]\d{8}$/,
+                                            message: "Enter a valid mobile number.",
+                                        },
+                                    })}
+                                    className={inputClass(errors.phone)}
+                                />
+                                <FieldError message={errors.phone?.message} />
                             </div>
                             <div>
                                 <label htmlFor="edit-email" className="mb-1.5 block text-sm font-bold text-foreground">Email</label>
-                                <input id="edit-email" type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} className={inputClass} />
+                                <input
+                                    id="edit-email"
+                                    type="email"
+                                    {...register("email", {
+                                        pattern: {
+                                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                            message: "Enter a valid email address.",
+                                        },
+                                    })}
+                                    className={inputClass(errors.email)}
+                                />
+                                <FieldError message={errors.email?.message} />
                             </div>
                         </div>
+                        {errors.root?.server && (
+                            <p role="alert" className="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-medium text-rose-700">
+                                {errors.root.server.message}
+                            </p>
+                        )}
                         <div className="mt-6 flex gap-2">
-                            <button type="submit" disabled={busyId === editing._id} className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-white disabled:opacity-60">
-                                {busyId === editing._id ? "Saving…" : "Save changes"}
+                            <button type="submit" disabled={isSubmitting || busyId === editing._id} className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-white disabled:opacity-60">
+                                {isSubmitting || busyId === editing._id ? "Saving…" : "Save changes"}
                             </button>
-                            <button type="button" onClick={() => setEditing(null)} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">
+                            <button type="button" onClick={closeForm} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">
                                 Cancel
                             </button>
                         </div>

@@ -6,6 +6,7 @@ import {
     ArrowRight,
     BadgeCheck,
     Ban,
+    CalendarDays,
     Camera,
     ChevronLeft,
     ChevronRight,
@@ -18,6 +19,7 @@ import {
     Images,
     Maximize2,
     MapPin,
+    Megaphone,
     Phone,
     ShieldCheck,
     Siren,
@@ -67,16 +69,6 @@ const mapPublicRequest = (item) => {
             : urgencyByStatus[item.status] || "normal",
     };
 };
-
-/* Leave src empty to show a placeholder tile */
-const galleryItems = [
-    { id: 1, src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D", caption: "Community blood drive, Dhaka", tall: true },
-    { id: 2, src: "https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D", caption: "Volunteers preparing donor kits" },
-    { id: 3, src: "https://plus.unsplash.com/premium_photo-1733306621909-1d63c088a93e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D", caption: "First-time donors with certificates" },
-    { id: 4, src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D", caption: "University donation camp", tall: true },
-    { id: 5, src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D", caption: "Thank-you day for regular donors" },
-    { id: 6, src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D", caption: "Health check before donating" },
-];
 
 /* Urgency styling. Values are matched case-insensitively. */
 const urgencyStyles = {
@@ -128,6 +120,8 @@ const Home = () => {
     const [emergencies, setEmergencies] = useState([]);
     const [requestsLoading, setRequestsLoading] = useState(true);
     const [requestsError, setRequestsError] = useState("");
+    const [campaigns, setCampaigns] = useState([]);
+    const [galleryItems, setGalleryItems] = useState([]);
 
     useEffect(() => {
         let active = true;
@@ -140,6 +134,43 @@ const Home = () => {
             })
             .finally(() => {
                 if (active) setRequestsLoading(false);
+            });
+        return () => {
+            active = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        let active = true;
+        apiFetch("/campaigns")
+            .then((data) => {
+                if (active) setCampaigns(data?.items || []);
+            })
+            .catch(() => {
+                // Campaigns are optional on the home page.
+            });
+        return () => {
+            active = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        let active = true;
+        apiFetch("/gallery")
+            .then((data) => {
+                if (active) {
+                    setGalleryItems(
+                        (data?.items || []).map((item) => ({
+                            id: item._id,
+                            src: item.url,
+                            caption: item.caption || "",
+                            tall: Boolean(item.tall),
+                        }))
+                    );
+                }
+            })
+            .catch(() => {
+                // Gallery is optional on the home page.
             });
         return () => {
             active = false;
@@ -408,7 +439,7 @@ const Home = () => {
 
                                         <div className="mt-auto flex gap-2.5 pt-6">
                                             <Link
-                                                to={r.verified ? "/dashboard/matching" : "/create-blood-requests"}
+                                                to={r.verified ? "/dashboard/matching" : "/blood-requests"}
                                                 className="inline-flex h-11 flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:brightness-95 active:scale-[0.98]"
                                             >
                                                 {r.verified
@@ -440,7 +471,7 @@ const Home = () => {
 
                     <div className="mt-8 text-center">
                         <Link
-                            to="/dashboard/matching"
+                            to="/blood-requests"
                             className="group inline-flex h-11 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-bold text-foreground transition hover:border-primary hover:text-primary"
                         >
                             {t("home.emergency.viewAll", "View all requests")}
@@ -449,6 +480,66 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+
+            {/* 2b. Upcoming campaigns */}
+            {campaigns.length > 0 && (
+                <section aria-labelledby="campaigns-heading" className="border-t border-primary/10 bg-primary/3 py-16 md:py-20">
+                    <div className={container}>
+                        <SectionHeader
+                            id="campaigns-heading"
+                            tone="dark"
+                            title={t("home.campaigns.title", "Upcoming donation drives")}
+                            subtitle={t(
+                                "home.campaigns.subtitle",
+                                "Meet our team at a campaign near you and give blood on the spot."
+                            )}
+                            label="Campaigns"
+                            icon={<Megaphone size={14} />}
+                        />
+
+                        <div className="mt-8 grid gap-5 md:grid-cols-3">
+                            {campaigns.slice(0, 3).map((item) => {
+                                const start = new Date(item.startAt);
+                                return (
+                                    <article key={item._id} className="premium-card overflow-hidden">
+                                        <div className="relative h-24 bg-gradient-to-br from-[#7F1D1D] via-primary to-[#E11D48]">
+                                            <div className="absolute -top-8 -right-6 size-28 rounded-full border-[14px] border-white/10" />
+                                            <div className="absolute bottom-3 left-4 flex items-center gap-2 rounded-xl bg-black/20 px-3 py-1.5 text-white backdrop-blur-md">
+                                                <CalendarDays size={13} />
+                                                <span className="text-xs font-bold">
+                                                    {Number.isNaN(start.getTime())
+                                                        ? "—"
+                                                        : `${start.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })} · ${new Date(item.startAt).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}`}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="p-5">
+                                            <h3 className="line-clamp-1 font-extrabold text-foreground">{item.title}</h3>
+                                            <p className="mt-1.5 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                                                <MapPin size={13} className="text-primary" />
+                                                {item.venue || item.location || "Location to be announced"}
+                                            </p>
+                                            <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
+                                                {item.description}
+                                            </p>
+                                        </div>
+                                    </article>
+                                );
+                            })}
+                        </div>
+
+                        <div className="mt-8 text-center">
+                            <Link
+                                to="/campaigns"
+                                className="group inline-flex h-11 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-bold text-foreground transition hover:border-primary hover:text-primary"
+                            >
+                                {t("home.campaigns.viewAll", "View all campaigns")}
+                                <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+                            </Link>
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* 3. Safety and advisory */}
             <section aria-labelledby="safety-heading" className="border-t border-primary/10 py-16 md:py-24">
@@ -614,6 +705,11 @@ const Home = () => {
                         icon={<Images size={14} />}
                     />
 
+                    {galleryItems.length === 0 ? (
+                        <p className="mt-10 rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center text-sm text-muted-foreground">
+                            {t("home.gallery.empty", "No photos have been added yet.")}
+                        </p>
+                    ) : (
                     <ul className="mt-10 grid auto-rows-[180px] grid-cols-2 gap-3 md:auto-rows-[220px] md:grid-cols-3 md:gap-4">
                         {galleryItems.map((item, i) => (
                             <li key={item.id} className={item.tall ? "row-span-2" : ""}>
@@ -638,9 +734,10 @@ const Home = () => {
                             </li>
                         ))}
                     </ul>
+                    )}
                 </div>
 
-                {lightbox !== null && (
+                {lightbox !== null && galleryItems[lightbox] && (
                     <div
                         role="dialog"
                         aria-modal="true"

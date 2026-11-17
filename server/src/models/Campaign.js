@@ -9,7 +9,7 @@ const campaignSchema = new Schema(
     description: { type: String, required: true, maxlength: 5000 },
     startAt: { type: Date, required: true },
     endAt: { type: Date, required: true },
-    location: { type: Schema.Types.ObjectId, ref: "Location", default: null },
+    location: { type: String, trim: true, default: "" },
     venue: { type: String, maxlength: 300, default: "" },
     banner: { url: String, publicId: String },
     status: {

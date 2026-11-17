@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Check, Pencil, Trash2, UserPlus, X } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { AlertCircle, Check, Pencil, Trash2, UserPlus, X } from "lucide-react";
 import { apiFetch } from "../../../utils/api";
 import { useApiData } from "../hooks";
 import Select from "../../../components/Select";
@@ -28,8 +29,20 @@ const statuses = [
     "expired",
 ];
 
-const inputClass =
-    "h-11 w-full rounded-xl border border-border bg-background px-3.5 text-sm text-foreground outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10";
+const inputClass = (hasError) =>
+    [
+        "h-11 w-full rounded-xl border bg-background px-3.5 text-sm text-foreground outline-none transition focus:ring-4",
+        hasError
+            ? "border-rose-400 focus:border-rose-400 focus:ring-rose-500/10"
+            : "border-border focus:border-primary focus:ring-primary/10",
+    ].join(" ");
+
+const FieldError = ({ message }) =>
+    message ? (
+        <p role="alert" className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-rose-600">
+            <AlertCircle size={13} /> {message}
+        </p>
+    ) : null;
 
 const emptyForm = {
     patientName: "",
@@ -57,8 +70,20 @@ const RequestsManagement = () => {
     const [notice, setNotice] = useState("");
     const [filter, setFilter] = useState("");
     const [editing, setEditing] = useState(null);
-    const [form, setForm] = useState(emptyForm);
     const [confirmDelete, setConfirmDelete] = useState(null);
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+        watch,
+        setValue,
+        setError,
+        formState: { errors, isSubmitting },
+    } = useForm({ defaultValues: emptyForm, mode: "onBlur" });
+
+    const divisionValue = watch("division");
+    const districtValue = watch("district");
 
     const items = (data?.items || []).filter((item) =>
         !filter ||
@@ -70,9 +95,13 @@ const RequestsManagement = () => {
     );
     const locations = locationsQuery.data?.items || [];
 
+    const closeForm = () => {
+        setEditing(null);
+        setActionError("");
+    };
+
     const openEdit = (item) => {
-        setEditing(item);
-        setForm({
+        reset({
             patientName: item.patientName || "",
             bloodGroup: item.bloodGroup || "",
             urgency: item.urgency || "normal",
@@ -89,39 +118,29 @@ const RequestsManagement = () => {
             status: item.status || "submitted",
         });
         setActionError("");
+        setEditing(item);
     };
 
-    const update = (key, value) =>
-        setForm((current) => {
-            const next = { ...current, [key]: value };
-            if (key === "division") {
-                next.district = "";
-                next.upazila = "";
-            }
-            if (key === "district") next.upazila = "";
-            return next;
-        });
-
-    const saveEdit = async (event) => {
-        event.preventDefault();
+    const saveEdit = async (values) => {
         setActionError("");
         setBusyId(editing._id);
         try {
             await apiFetch(`/blood-requests/${editing._id}`, {
                 method: "PATCH",
                 body: {
-                    ...form,
-                    units: Number(form.units),
-                    upazila: form.upazila || undefined,
-                    neededAt: form.neededAt
-                        ? new Date(form.neededAt).toISOString()
+                    ...values,
+                    units: Number(values.units),
+                    upazila: values.upazila || undefined,
+                    neededAt: values.neededAt
+                        ? new Date(values.neededAt).toISOString()
                         : undefined,
                 },
             });
             setNotice("Request updated.");
-            setEditing(null);
+            closeForm();
             reload();
         } catch (err) {
+            setError("root.server", { type: "server", message: err.message });
             setActionError(err.message);
         } finally {
             setBusyId("");
@@ -178,10 +197,10 @@ const RequestsManagement = () => {
 
     const divisions = locations.filter((item) => item.type === "division");
     const districts = locations.filter(
-        (item) => item.type === "district" && String(item.parent) === form.division
+        (item) => item.type === "district" && String(item.parent) === divisionValue
     );
     const upazilas = locations.filter(
-        (item) => item.type === "upazila" && String(item.parent) === form.district
+        (item) => item.type === "upazila" && String(item.parent) === districtValue
     );
 
     return (
@@ -304,15 +323,16 @@ const RequestsManagement = () => {
             )}
 
             {editing && (
-                <div className="fixed inset-0 z-[70] grid place-items-center bg-black/50 p-4 backdrop-blur-sm" onClick={() => setEditing(null)}>
+                <div className="fixed inset-0 z-[70] grid place-items-center bg-black/50 p-4 backdrop-blur-sm" onClick={closeForm}>
                     <form
-                        onSubmit={saveEdit}
+                        onSubmit={handleSubmit(saveEdit)}
                         onClick={(e) => e.stopPropagation()}
+                        noValidate
                         className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-2xl"
                     >
                         <div className="flex items-center justify-between">
                             <h2 className="text-lg font-extrabold text-foreground">Edit request</h2>
-                            <button type="button" onClick={() => setEditing(null)} aria-label="Close" className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-muted">
+                            <button type="button" onClick={closeForm} aria-label="Close" className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-muted">
                                 <X size={18} />
                             </button>
                         </div>
@@ -320,17 +340,24 @@ const RequestsManagement = () => {
                         <div className="mt-5 grid gap-4 sm:grid-cols-2">
                             <label className="sm:col-span-2">
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">Patient name</span>
-                                <input required value={form.patientName} onChange={(e) => update("patientName", e.target.value)} className={inputClass} />
+                                <input
+                                    {...register("patientName", {
+                                        required: "Patient name is required.",
+                                        minLength: { value: 2, message: "Name must be at least 2 characters." },
+                                    })}
+                                    className={inputClass(errors.patientName)}
+                                />
+                                <FieldError message={errors.patientName?.message} />
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">Blood group</span>
-                                <Select value={form.bloodGroup} onChange={(e) => update("bloodGroup", e.target.value)} size="lg">
+                                <Select size="lg" {...register("bloodGroup", { required: true })} value={watch("bloodGroup")} invalid={Boolean(errors.bloodGroup)}>
                                     {bloodGroups.map((group) => <option key={group} value={group}>{group}</option>)}
                                 </Select>
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">Urgency</span>
-                                <Select value={form.urgency} onChange={(e) => update("urgency", e.target.value)} size="lg">
+                                <Select size="lg" {...register("urgency")} value={watch("urgency")}>
                                     <option value="normal">Normal</option>
                                     <option value="urgent">Urgent</option>
                                     <option value="critical">Critical</option>
@@ -338,66 +365,104 @@ const RequestsManagement = () => {
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">Units</span>
-                                <input type="number" min="1" max="10" value={form.units} onChange={(e) => update("units", e.target.value)} className={inputClass} />
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max="10"
+                                    {...register("units", {
+                                        valueAsNumber: true,
+                                        min: { value: 1, message: "At least 1 unit." },
+                                        max: { value: 10, message: "At most 10 units." },
+                                    })}
+                                    className={inputClass(errors.units)}
+                                />
+                                <FieldError message={errors.units?.message} />
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">Needed by</span>
-                                <input type="date" value={form.neededAt} onChange={(e) => update("neededAt", e.target.value)} className={inputClass} />
+                                <input type="date" {...register("neededAt")} className={inputClass(errors.neededAt)} />
+                                <FieldError message={errors.neededAt?.message} />
                             </label>
                             <label className="sm:col-span-2">
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">Hospital</span>
-                                <input required value={form.hospitalName} onChange={(e) => update("hospitalName", e.target.value)} className={inputClass} />
+                                <input
+                                    {...register("hospitalName", { required: "Hospital is required." })}
+                                    className={inputClass(errors.hospitalName)}
+                                />
+                                <FieldError message={errors.hospitalName?.message} />
                             </label>
                             <label className="sm:col-span-2">
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">Hospital address</span>
-                                <input value={form.hospitalAddress} onChange={(e) => update("hospitalAddress", e.target.value)} className={inputClass} />
+                                <input {...register("hospitalAddress")} className={inputClass(errors.hospitalAddress)} />
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">Division</span>
-                                <Select value={form.division} onChange={(e) => update("division", e.target.value)} size="lg">
+                                <Select
+                                    size="lg"
+                                    {...register("division", {
+                                        onChange: () => {
+                                            setValue("district", "");
+                                            setValue("upazila", "");
+                                        },
+                                    })}
+                                    value={divisionValue}
+                                >
                                     <option value="">Select division</option>
                                     {divisions.map((item) => <option key={item._id} value={item._id}>{item.nameEn}</option>)}
                                 </Select>
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">District</span>
-                                <Select value={form.district} onChange={(e) => update("district", e.target.value)} disabled={!form.division} size="lg">
+                                <Select
+                                    size="lg"
+                                    {...register("district", {
+                                        onChange: () => setValue("upazila", ""),
+                                    })}
+                                    value={districtValue}
+                                    disabled={!divisionValue}
+                                >
                                     <option value="">Select district</option>
                                     {districts.map((item) => <option key={item._id} value={item._id}>{item.nameEn}</option>)}
                                 </Select>
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">Upazila</span>
-                                <Select value={form.upazila} onChange={(e) => update("upazila", e.target.value)} disabled={!form.district} size="lg">
+                                <Select size="lg" {...register("upazila")} value={watch("upazila")} disabled={!districtValue}>
                                     <option value="">Select upazila</option>
                                     {upazilas.map((item) => <option key={item._id} value={item._id}>{item.nameEn}</option>)}
                                 </Select>
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">Status</span>
-                                <Select value={form.status} onChange={(e) => update("status", e.target.value)} size="lg">
+                                <Select size="lg" {...register("status")} value={watch("status")}>
                                     {statuses.map((status) => <option key={status} value={status}>{status.replaceAll("_", " ")}</option>)}
                                 </Select>
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">Contact name</span>
-                                <input value={form.contactName} onChange={(e) => update("contactName", e.target.value)} className={inputClass} />
+                                <input {...register("contactName")} className={inputClass(errors.contactName)} />
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">Contact phone</span>
-                                <input value={form.contactPhone} onChange={(e) => update("contactPhone", e.target.value)} className={inputClass} />
+                                <input {...register("contactPhone")} className={inputClass(errors.contactPhone)} />
                             </label>
                             <label className="sm:col-span-2">
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">Details</span>
-                                <textarea rows={2} value={form.details} onChange={(e) => update("details", e.target.value)} className="w-full resize-y rounded-xl border border-border bg-background px-3.5 py-3 text-sm outline-none focus:border-primary" />
+                                <textarea rows={2} {...register("details")} className="w-full resize-y rounded-xl border border-border bg-background px-3.5 py-3 text-sm outline-none focus:border-primary" />
                             </label>
                         </div>
 
+                        {errors.root?.server && (
+                            <p role="alert" className="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-medium text-rose-700">
+                                {errors.root.server.message}
+                            </p>
+                        )}
+
                         <div className="mt-6 flex gap-2">
-                            <button type="submit" disabled={busyId === editing._id} className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-white disabled:opacity-60">
-                                {busyId === editing._id ? "Saving…" : "Save changes"}
+                            <button type="submit" disabled={isSubmitting || busyId === editing._id} className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-white disabled:opacity-60">
+                                {isSubmitting || busyId === editing._id ? "Saving…" : "Save changes"}
                             </button>
-                            <button type="button" onClick={() => setEditing(null)} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">Cancel</button>
+                            <button type="button" onClick={closeForm} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">Cancel</button>
                         </div>
                     </form>
                 </div>

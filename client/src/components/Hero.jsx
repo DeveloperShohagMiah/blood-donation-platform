@@ -198,7 +198,7 @@ const Hero = ({ stats }) => {
                                 {t("hero.becomeDonor", "Become a donor")}
                                 <ArrowUpRight size={16} strokeWidth={2.4} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                             </Link>
-                            <Link to="/create-blood-requests" className="font-semibold text-[#475650] underline-offset-4 hover:text-[#14201C] hover:underline">
+                            <Link to="/blood-requests" className="font-semibold text-[#475650] underline-offset-4 hover:text-[#14201C] hover:underline">
                                 {t("hero.viewRequests", "See open blood requests")}
                             </Link>
                         </div>

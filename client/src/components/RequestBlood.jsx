@@ -57,6 +57,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
     const selectedUrgency = watch("urgency");
     const selectedDivision = watch("division");
     const selectedDistrict = watch("district");
+    const selectedUpazila = watch("upazila");
 
     const divisions = locations.filter((item) => item.type === "division");
     const districts = locations.filter(
@@ -324,6 +325,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                                 setValue("upazila", "");
                                             },
                                         })}
+                                        value={selectedDivision}
                                         size="lg"
                                         invalid={Boolean(errors.division)}
                                     >
@@ -344,6 +346,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                             required: requiredRule("District"),
                                             onChange: () => setValue("upazila", ""),
                                         })}
+                                        value={selectedDistrict}
                                         size="lg"
                                         disabled={!selectedDivision}
                                         invalid={Boolean(errors.district)}
@@ -362,6 +365,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                     </span>
                                     <Select
                                         {...register("upazila")}
+                                        value={selectedUpazila}
                                         size="lg"
                                         disabled={!selectedDistrict}
                                     >

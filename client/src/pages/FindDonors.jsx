@@ -141,8 +141,10 @@ const FindDonors = ({
         },
     });
 
+    const selectedBloodGroup = watch("bloodGroup");
     const selectedDivision = watch("division");
     const selectedDistrict = watch("district");
+    const selectedUpazila = watch("upazila");
 
     const filteredDistricts = useMemo(
         () =>
@@ -272,6 +274,7 @@ const FindDonors = ({
 
                                 <Select
                                     {...register("bloodGroup")}
+                                    value={selectedBloodGroup}
                                     size="lg"
                                 >
                                     <option value="">{content.allGroups}</option>
@@ -302,6 +305,7 @@ const FindDonors = ({
                                             );
                                         },
                                     })}
+                                    value={selectedDivision}
                                     size="lg"
                                 >
                                     <option value="">{content.selectDivision}</option>
@@ -331,6 +335,7 @@ const FindDonors = ({
                                             );
                                         },
                                     })}
+                                    value={selectedDistrict}
                                     disabled={!selectedDivision}
                                     size="lg"
                                 >
@@ -351,6 +356,7 @@ const FindDonors = ({
 
                                 <Select
                                     {...register("upazila")}
+                                    value={selectedUpazila}
                                     disabled={!selectedDistrict}
                                     size="lg"
                                 >
@@ -477,75 +483,75 @@ const FindDonors = ({
                                 const upazila = donor.upazila || donor.location?.upazila;
                                 const district = donor.district || donor.location?.district;
                                 return (
-                                <article
-                                    key={donor._id}
-                                    className="group rounded-2xl border border-[#E8EEEA] bg-white p-5 shadow-[0_5px_20px_rgba(29,55,44,0.025)] transition duration-300 hover:-translate-y-1 hover:border-[#F0C5C9] hover:shadow-[0_15px_35px_rgba(29,55,44,0.07)]"
-                                >
-                                    <div className="flex items-start justify-between gap-3">
-                                        <div className="flex min-w-0 items-center gap-3">
-                                            <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-[#FFF0F1] text-[#C62838]">
-                                                <Droplets size={25} />
-                                            </div>
+                                    <article
+                                        key={donor._id}
+                                        className="group rounded-2xl border border-[#E8EEEA] bg-white p-5 shadow-[0_5px_20px_rgba(29,55,44,0.025)] transition duration-300 hover:-translate-y-1 hover:border-[#F0C5C9] hover:shadow-[0_15px_35px_rgba(29,55,44,0.07)]"
+                                    >
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div className="flex min-w-0 items-center gap-3">
+                                                <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-[#FFF0F1] text-[#C62838]">
+                                                    <Droplets size={25} />
+                                                </div>
 
-                                            <div className="min-w-0">
-                                                <h3 className="truncate font-bold text-[#192623]">
-                                                    {donor.fullName}
-                                                </h3>
+                                                <div className="min-w-0">
+                                                    <h3 className="truncate font-bold text-lg text-[#192623]">
+                                                        {donor.fullName}
+                                                    </h3>
 
-                                                <div className="mt-1 flex items-center gap-1.5 text-xs text-[#829089]">
-                                                    <MapPin size={13} />
-                                                    <span className="truncate">
-                                                        {isBn ? upazila?.nameBn : upazila?.nameEn}
-                                                        {", "}
-                                                        {isBn ? district?.nameBn : district?.nameEn}
-                                                    </span>
+                                                    <div className="mt-1 flex items-center gap-1.5 text-xs text-[#829089]">
+                                                        <MapPin size={13} />
+                                                        <span className="truncate">
+                                                            {isBn ? upazila?.nameBn : upazila?.nameEn}
+                                                            {", "}
+                                                            {isBn ? district?.nameBn : district?.nameEn}
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
+
+                                            <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-[#C62838] text-lg font-extrabold text-white shadow-md shadow-red-900/10">
+                                                {donor.bloodGroup}
+                                            </span>
                                         </div>
 
-                                        <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-[#C62838] text-lg font-extrabold text-white shadow-md shadow-red-900/10">
-                                            {donor.bloodGroup}
-                                        </span>
-                                    </div>
+                                        <div className="mt-5 flex items-center justify-between gap-2 border-t border-b border-[#EEF1EF] py-4">
+                                            <div>
+                                                <p className="text-[11px] font-medium text-[#929D97]">
+                                                    {content.lastDonation}
+                                                </p>
+                                                <p className="mt-1 text-sm font-semibold text-[#34423B]">
+                                                    {formatDate(donor.lastDonationDate)}
+                                                </p>
+                                            </div>
 
-                                    <div className="mt-5 flex items-center justify-between gap-2 border-t border-b border-[#EEF1EF] py-4">
-                                        <div>
-                                            <p className="text-[11px] font-medium text-[#929D97]">
-                                                {content.lastDonation}
-                                            </p>
-                                            <p className="mt-1 text-sm font-semibold text-[#34423B]">
-                                                {formatDate(donor.lastDonationDate)}
-                                            </p>
+                                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EDF8F1] px-3 py-1.5 text-xs font-bold text-[#27834D]">
+                                                <span className="size-1.5 rounded-full bg-[#35A467]" />
+                                                {content.availableStatus}
+                                            </span>
                                         </div>
 
-                                        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EDF8F1] px-3 py-1.5 text-xs font-bold text-[#27834D]">
-                                            <span className="size-1.5 rounded-full bg-[#35A467]" />
-                                            {content.availableStatus}
-                                        </span>
-                                    </div>
+                                        <div className="mt-4 flex items-center justify-between gap-2">
+                                            {donor.isVerified ? (
+                                                <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#43805C]">
+                                                    <ShieldCheck size={15} />
+                                                    {content.verified}
+                                                </span>
+                                            ) : (
+                                                <span className="text-xs text-[#929D97]">
+                                                    {isBn ? "যাচাই করা হয়নি" : "Not verified"}
+                                                </span>
+                                            )}
 
-                                    <div className="mt-4 flex items-center justify-between gap-2">
-                                        {donor.isVerified ? (
-                                            <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#43805C]">
-                                                <ShieldCheck size={15} />
-                                                {content.verified}
-                                            </span>
-                                        ) : (
-                                            <span className="text-xs text-[#929D97]">
-                                                {isBn ? "যাচাই করা হয়নি" : "Not verified"}
-                                            </span>
-                                        )}
-
-                                        <button
-                                            type="button"
-                                            onClick={() => onContactRequest(donor._id)}
-                                            className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-[#FFF0F1] px-3 text-xs font-bold text-[#C62838] transition hover:bg-[#C62838] hover:text-white"
-                                        >
-                                            {content.contact}
-                                            <ArrowRight size={14} />
-                                        </button>
-                                    </div>
-                                </article>
+                                            <button
+                                                type="button"
+                                                onClick={() => onContactRequest(donor._id)}
+                                                className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-[#FFF0F1] px-3 text-xs font-bold text-[#C62838] transition hover:bg-[#C62838] hover:text-white"
+                                            >
+                                                {content.contact}
+                                                <ArrowRight size={14} />
+                                            </button>
+                                        </div>
+                                    </article>
                                 );
                             })}
                         </div>

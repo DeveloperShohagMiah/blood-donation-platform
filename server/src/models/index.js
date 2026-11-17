@@ -11,4 +11,5 @@ export { Notification } from "./Notification.js";
 export { AuditLog } from "./AuditLog.js";
 export { ContactRequest } from "./ContactRequest.js";
 export { ContactMessage } from "./ContactMessage.js";
+export { GalleryImage } from "./GalleryImage.js";
 export { VerificationCode } from "./VerificationCode.js";

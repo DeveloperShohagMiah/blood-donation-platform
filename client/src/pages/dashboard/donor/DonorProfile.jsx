@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, Save } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { AlertCircle, CheckCircle2, Save } from "lucide-react";
 import { apiFetch } from "../../../utils/api";
 import Select from "../../../components/Select";
 import { ErrorBanner, PageHeader } from "../components/UI";
@@ -17,16 +18,40 @@ const emptyForm = {
     allowContactRequests: true,
 };
 
-const inputClass =
-    "h-11 w-full rounded-xl border border-border bg-background px-3.5 text-sm text-foreground outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10 disabled:cursor-not-allowed disabled:bg-muted";
+const inputClass = (hasError) =>
+    [
+        "h-11 w-full rounded-xl border bg-background px-3.5 text-sm text-foreground outline-none transition focus:ring-4 disabled:cursor-not-allowed disabled:bg-muted",
+        hasError
+            ? "border-rose-400 focus:border-rose-400 focus:ring-rose-500/10"
+            : "border-border focus:border-primary focus:ring-primary/10",
+    ].join(" ");
+
+const FieldError = ({ message }) =>
+    message ? (
+        <p role="alert" className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-rose-600">
+            <AlertCircle size={13} /> {message}
+        </p>
+    ) : null;
 
 const DonorProfile = () => {
-    const [form, setForm] = useState(emptyForm);
     const [locations, setLocations] = useState([]);
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
-    const [saving, setSaving] = useState(false);
     const [loading, setLoading] = useState(true);
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+        watch,
+        setValue,
+        formState: { errors, isSubmitting },
+    } = useForm({ defaultValues: emptyForm, mode: "onBlur" });
+
+    const selectedGroup = watch("bloodGroup");
+    const selectedDivision = watch("division");
+    const selectedDistrict = watch("district");
+    const isPubliclyListed = watch("isPubliclyListed");
 
     useEffect(() => {
         let active = true;
@@ -40,7 +65,7 @@ const DonorProfile = () => {
                 const profile = profileData?.profile;
                 setLocations(locationData?.items || []);
                 if (profile) {
-                    setForm({
+                    reset({
                         bloodGroup: profile.bloodGroup || "",
                         lastDonationDate: profile.lastDonationDate
                             ? String(profile.lastDonationDate).slice(0, 10)
@@ -63,68 +88,36 @@ const DonorProfile = () => {
         return () => {
             active = false;
         };
-    }, []);
+    }, [reset]);
 
     const { divisions, districts, upazilas } = useMemo(
         () => ({
             divisions: locations.filter((i) => i.type === "division"),
             districts: locations.filter(
-                (i) => i.type === "district" && String(i.parent) === form.division
+                (i) => i.type === "district" && String(i.parent) === selectedDivision
             ),
             upazilas: locations.filter(
-                (i) => i.type === "upazila" && String(i.parent) === form.district
+                (i) => i.type === "upazila" && String(i.parent) === selectedDistrict
             ),
         }),
-        [locations, form.division, form.district]
+        [locations, selectedDivision, selectedDistrict]
     );
 
-    const update = (key, value) =>
-        setForm((current) => {
-            const next = { ...current, [key]: value };
-            if (key === "division") {
-                next.district = "";
-                next.upazila = "";
-            }
-            if (key === "district") next.upazila = "";
-            if (key === "isPubliclyListed" && value) next.allowContactRequests = true;
-            return next;
-        });
-
-    const submit = async (event) => {
-        event.preventDefault();
+    const submit = async (values) => {
         setError("");
         setMessage("");
-
-        if (!form.bloodGroup || !form.division || !form.district) {
-            setError("Blood group, division and district are required.");
-            return;
-        }
-        if (form.isPubliclyListed && !form.allowContactRequests) {
-            setError("Public listing requires contact-request consent.");
-            return;
-        }
-
-        setSaving(true);
         try {
             await apiFetch("/donors/me", {
                 method: "PUT",
                 body: {
-                    bloodGroup: form.bloodGroup,
-                    lastDonationDate: form.lastDonationDate || null,
-                    availability: form.availability,
-                    division: form.division,
-                    district: form.district,
-                    upazila: form.upazila || undefined,
-                    area: form.area,
-                    isPubliclyListed: form.isPubliclyListed,
-                    allowContactRequests: form.allowContactRequests,
+                    ...values,
+                    lastDonationDate: values.lastDonationDate || null,
+                    upazila: values.upazila || undefined,
                 },
             });
             setMessage("Your donor profile has been saved.");
         } catch (err) {
             setError(err.message);
-        } finally {
-            setSaving(false);
         }
     };
 
@@ -141,7 +134,7 @@ const DonorProfile = () => {
                 </div>
             )}
 
-            <form onSubmit={submit} className="max-w-3xl space-y-6">
+            <form onSubmit={handleSubmit(submit)} noValidate className="max-w-3xl space-y-6">
                 <section className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6">
                     <h2 className="font-extrabold text-foreground">Donation details</h2>
                     <div className="mt-5 grid gap-5 sm:grid-cols-2">
@@ -149,14 +142,15 @@ const DonorProfile = () => {
                             <label className="mb-2 block text-sm font-bold text-foreground">
                                 Blood group *
                             </label>
+                            <input type="hidden" {...register("bloodGroup", { required: "Blood group is required." })} />
                             <div className="grid grid-cols-4 gap-2">
                                 {bloodGroups.map((group) => (
                                     <button
                                         key={group}
                                         type="button"
-                                        onClick={() => update("bloodGroup", group)}
+                                        onClick={() => setValue("bloodGroup", group, { shouldValidate: true })}
                                         className={`h-10 rounded-xl border text-sm font-extrabold transition ${
-                                            form.bloodGroup === group
+                                            selectedGroup === group
                                                 ? "border-primary bg-primary text-white shadow-md shadow-primary/20"
                                                 : "border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-primary"
                                         }`}
@@ -165,6 +159,7 @@ const DonorProfile = () => {
                                     </button>
                                 ))}
                             </div>
+                            <FieldError message={errors.bloodGroup?.message} />
                         </div>
 
                         <div>
@@ -173,9 +168,9 @@ const DonorProfile = () => {
                             </label>
                             <Select
                                 id="availability"
-                                value={form.availability}
-                                onChange={(e) => update("availability", e.target.value)}
                                 size="lg"
+                                {...register("availability")}
+                                value={watch("availability")}
                             >
                                 <option value="available">Available to donate</option>
                                 <option value="temporarily_unavailable">Temporarily unavailable</option>
@@ -191,10 +186,10 @@ const DonorProfile = () => {
                                 id="lastDonation"
                                 type="date"
                                 max={new Date().toISOString().split("T")[0]}
-                                value={form.lastDonationDate}
-                                onChange={(e) => update("lastDonationDate", e.target.value)}
-                                className={inputClass}
+                                {...register("lastDonationDate")}
+                                className={inputClass(errors.lastDonationDate)}
                             />
+                            <FieldError message={errors.lastDonationDate?.message} />
                         </div>
 
                         <div>
@@ -203,11 +198,11 @@ const DonorProfile = () => {
                             </label>
                             <input
                                 id="area"
-                                value={form.area}
-                                onChange={(e) => update("area", e.target.value)}
+                                {...register("area")}
                                 placeholder="e.g. Tangail Sadar"
-                                className={inputClass}
+                                className={inputClass(errors.area)}
                             />
+                            <FieldError message={errors.area?.message} />
                         </div>
                     </div>
                 </section>
@@ -221,15 +216,23 @@ const DonorProfile = () => {
                             </label>
                             <Select
                                 id="division"
-                                value={form.division}
-                                onChange={(e) => update("division", e.target.value)}
                                 size="lg"
+                                {...register("division", {
+                                    required: "Division is required.",
+                                    onChange: () => {
+                                        setValue("district", "");
+                                        setValue("upazila", "");
+                                    },
+                                })}
+                                value={selectedDivision}
+                                invalid={Boolean(errors.division)}
                             >
                                 <option value="">Select division</option>
                                 {divisions.map((item) => (
                                     <option key={item._id} value={item._id}>{item.nameEn}</option>
                                 ))}
                             </Select>
+                            <FieldError message={errors.division?.message} />
                         </div>
                         <div>
                             <label htmlFor="district" className="mb-2 block text-sm font-bold text-foreground">
@@ -237,16 +240,21 @@ const DonorProfile = () => {
                             </label>
                             <Select
                                 id="district"
-                                value={form.district}
-                                onChange={(e) => update("district", e.target.value)}
-                                disabled={!form.division}
                                 size="lg"
+                                {...register("district", {
+                                    required: "District is required.",
+                                    onChange: () => setValue("upazila", ""),
+                                })}
+                                value={selectedDistrict}
+                                disabled={!selectedDivision}
+                                invalid={Boolean(errors.district)}
                             >
                                 <option value="">Select district</option>
                                 {districts.map((item) => (
                                     <option key={item._id} value={item._id}>{item.nameEn}</option>
                                 ))}
                             </Select>
+                            <FieldError message={errors.district?.message} />
                         </div>
                         <div>
                             <label htmlFor="upazila" className="mb-2 block text-sm font-bold text-foreground">
@@ -254,10 +262,10 @@ const DonorProfile = () => {
                             </label>
                             <Select
                                 id="upazila"
-                                value={form.upazila}
-                                onChange={(e) => update("upazila", e.target.value)}
-                                disabled={!form.district}
                                 size="lg"
+                                {...register("upazila")}
+                                value={watch("upazila")}
+                                disabled={!selectedDistrict}
                             >
                                 <option value="">Select upazila</option>
                                 {upazilas.map((item) => (
@@ -274,14 +282,17 @@ const DonorProfile = () => {
                         <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-background p-4">
                             <input
                                 type="checkbox"
-                                checked={form.isPubliclyListed}
-                                onChange={(e) => update("isPubliclyListed", e.target.checked)}
+                                {...register("isPubliclyListed", {
+                                    onChange: (event) => {
+                                        if (event.target.checked) {
+                                            setValue("allowContactRequests", true, { shouldValidate: true });
+                                        }
+                                    },
+                                })}
                                 className="mt-0.5 size-4 accent-primary"
                             />
                             <span>
-                                <span className="block text-sm font-bold text-foreground">
-                                    List me publicly
-                                </span>
+                                <span className="block text-sm font-bold text-foreground">List me publicly</span>
                                 <span className="mt-0.5 block text-xs text-muted-foreground">
                                     Show my name, blood group and area in the donor directory.
                                 </span>
@@ -290,29 +301,32 @@ const DonorProfile = () => {
                         <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-background p-4">
                             <input
                                 type="checkbox"
-                                checked={form.allowContactRequests}
-                                onChange={(e) => update("allowContactRequests", e.target.checked)}
+                                {...register("allowContactRequests", {
+                                    validate: (value) =>
+                                        !isPubliclyListed ||
+                                        value ||
+                                        "Public listing requires contact-request consent.",
+                                })}
                                 className="mt-0.5 size-4 accent-primary"
                             />
                             <span>
-                                <span className="block text-sm font-bold text-foreground">
-                                    Allow contact requests
-                                </span>
+                                <span className="block text-sm font-bold text-foreground">Allow contact requests</span>
                                 <span className="mt-0.5 block text-xs text-muted-foreground">
                                     Let people send me a contact request through the platform.
                                 </span>
                             </span>
                         </label>
+                        <FieldError message={errors.allowContactRequests?.message} />
                     </div>
                 </section>
 
                 <button
                     type="submit"
-                    disabled={saving || loading}
+                    disabled={isSubmitting || loading}
                     className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     <Save size={17} />
-                    {saving ? "Saving…" : "Save profile"}
+                    {isSubmitting ? "Saving…" : "Save profile"}
                 </button>
             </form>
         </>

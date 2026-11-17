@@ -8,17 +8,12 @@ export const getCampaigns = asyncHandler(async (req, res) => {
     req.user?.role && [ROLES.ADMIN, ROLES.MODERATOR].includes(req.user.role)
       ? {}
       : { status: "published" };
-  const items = await Campaign.find(filter)
-    .populate("location", "nameEn nameBn")
-    .sort({ startAt: 1 });
+  const items = await Campaign.find(filter).sort({ startAt: 1 });
   send(res, { items });
 });
 
 export const getCampaignById = asyncHandler(async (req, res) => {
-  const item = await Campaign.findById(req.params.id).populate(
-    "location",
-    "nameEn nameBn type"
-  );
+  const item = await Campaign.findById(req.params.id);
   if (!item) throw new AppError("Campaign not found.", 404);
   send(res, { item });
 });
