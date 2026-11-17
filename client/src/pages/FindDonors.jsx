@@ -141,8 +141,10 @@ const FindDonors = ({
         },
     });
 
+    const selectedBloodGroup = watch("bloodGroup");
     const selectedDivision = watch("division");
     const selectedDistrict = watch("district");
+    const selectedUpazila = watch("upazila");
 
     const filteredDistricts = useMemo(
         () =>
@@ -272,6 +274,7 @@ const FindDonors = ({
 
                                 <Select
                                     {...register("bloodGroup")}
+                                    value={selectedBloodGroup}
                                     size="lg"
                                 >
                                     <option value="">{content.allGroups}</option>
@@ -302,6 +305,7 @@ const FindDonors = ({
                                             );
                                         },
                                     })}
+                                    value={selectedDivision}
                                     size="lg"
                                 >
                                     <option value="">{content.selectDivision}</option>
@@ -331,6 +335,7 @@ const FindDonors = ({
                                             );
                                         },
                                     })}
+                                    value={selectedDistrict}
                                     disabled={!selectedDivision}
                                     size="lg"
                                 >
@@ -351,6 +356,7 @@ const FindDonors = ({
 
                                 <Select
                                     {...register("upazila")}
+                                    value={selectedUpazila}
                                     disabled={!selectedDistrict}
                                     size="lg"
                                 >
