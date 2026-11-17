@@ -425,7 +425,7 @@ const Home = () => {
 
                                         <div className="mt-auto flex gap-2.5 pt-6">
                                             <Link
-                                                to={r.verified ? "/dashboard/matching" : "/create-blood-requests"}
+                                                to={r.verified ? "/dashboard/matching" : "/blood-requests"}
                                                 className="inline-flex h-11 flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:brightness-95 active:scale-[0.98]"
                                             >
                                                 {r.verified
@@ -457,7 +457,7 @@ const Home = () => {
 
                     <div className="mt-8 text-center">
                         <Link
-                            to="/dashboard/matching"
+                            to="/blood-requests"
                             className="group inline-flex h-11 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-bold text-foreground transition hover:border-primary hover:text-primary"
                         >
                             {t("home.emergency.viewAll", "View all requests")}

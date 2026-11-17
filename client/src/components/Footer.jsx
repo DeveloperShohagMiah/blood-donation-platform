@@ -27,7 +27,7 @@ const Footer = () => {
     const platform = [
         { label: t("navigation.findDonors", "Find donors"), to: "/donors" },
         { label: t("navigation.becomeDonor", "Become a donor"), to: "/become-donor" },
-        { label: t("navigation.bloodRequests", "Blood requests"), to: "/create-blood-requests" },
+        { label: t("navigation.allRequests", "All requests"), to: "/blood-requests" },
         { label: t("navigation.campaigns", "Campaigns"), to: "/campaigns" },
         { label: t("navigation.login", "Log in"), to: "/login" },
     ];
@@ -41,12 +41,12 @@ const Footer = () => {
     ];
 
     return (
-        <footer className="relative bg-[#09090b] mt-32 text-neutral-400 border-t border-white/10 overflow-hidden">
+        <footer className="relative bg-[#09090b] mt-32 text-neutral-400 border-t border-white/10 ">
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent opacity-70 pointer-events-none"></div>
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 max-w-5xl h-40 bg-gradient-to-b from-primary/25 via-primary/5 to-transparent blur-3xl pointer-events-none"></div>
             {/* Emergency strip */}
-            <div className="mx-auto w-[calc(100%-2rem)] max-w-[1280px] md:w-[calc(100%-4rem)]">
-                <div className="-translate-y-1/2 rounded-3xl bg-gradient-to-r from-[#D6313F] to-[#B91F32] px-6 py-7 shadow-[0_24px_60px_rgba(185,31,50,0.35)] sm:px-10">
+            <div className="mx-auto w-[calc(100%-2rem)] max-w-6xl md:w-[calc(100%-4rem)] ">
+                <div className="-translate-y-1/2 rounded-3xl z-[999] bg-gradient-to-r from-[#D6313F] to-[#B91F32] px-6 py-7 shadow-[0_24px_60px_rgba(185,31,50,0.35)] sm:px-10">
                     <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
                         <div className="max-w-4xl">
                             <h2 className="text-2xl font-extrabold text-white tracking-tight sm:text-3xl">
