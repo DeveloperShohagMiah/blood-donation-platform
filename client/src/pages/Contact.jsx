@@ -54,6 +54,7 @@ const Contact = () => {
         register,
         handleSubmit,
         reset,
+        watch,
         formState: { errors, isSubmitting },
     } = useForm({
         defaultValues: {
@@ -279,6 +280,7 @@ const Contact = () => {
                                     {...register("subject", {
                                         required: "Please select a subject.",
                                     })}
+                                    value={watch("subject")}
                                     size="lg"
                                     defaultValue=""
                                 >
