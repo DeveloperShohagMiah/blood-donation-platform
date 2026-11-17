@@ -20,6 +20,23 @@ export const protect = asyncHandler(async (req, res, next) => {
   next();
 });
 
+/* Public routes that still want to know who is calling (e.g. campaign list). */
+export const optionalAuth = asyncHandler(async (req, res, next) => {
+  const token =
+    req.cookies?.[env.COOKIE_NAME] ||
+    (req.headers.authorization?.startsWith("Bearer ") ? req.headers.authorization.slice(7) : null);
+  if (!token) return next();
+
+  try {
+    const payload = jwt.verify(token, env.JWT_SECRET);
+    const user = await User.findById(payload.sub);
+    if (user && user.accountStatus === "approved") req.user = user;
+  } catch {
+    // An invalid or expired token simply means "anonymous" here.
+  }
+  next();
+});
+
 export const authorize =
   (...roles) =>
   (req, res, next) => {
