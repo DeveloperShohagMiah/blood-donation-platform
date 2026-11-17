@@ -8,6 +8,7 @@ import CreateBloodRequest from "./components/CreateBloodRequest";
 import FindDonorsPage from "./pages/FindDonorsPage";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import PublicCampaigns from "./pages/Campaigns";
 import { RequireAuth, RequireRole } from "./components/RequireRole";
 
 import DashboardLayout from "./pages/dashboard/DashboardLayout";
@@ -44,6 +45,7 @@ const App = () => {
                 <Route path="donors" element={<FindDonorsPage />} />
                 <Route path="about" element={<About />} />
                 <Route path="contact" element={<Contact />} />
+                <Route path="campaigns" element={<PublicCampaigns />} />
                 <Route path="*" element={<div className="grid min-h-[60vh] place-items-center text-xl font-bold">404 Not Found</div>} />
             </Route>
 
