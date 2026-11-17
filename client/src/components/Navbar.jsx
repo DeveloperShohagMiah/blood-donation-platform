@@ -12,6 +12,7 @@ import {
     LogIn,
     LogOut,
     Mail,
+    Megaphone,
     Menu,
     Search,
     X,
@@ -21,6 +22,7 @@ const navLinks = [
     { key: "home", path: "/", end: true, icon: Home },
     { key: "findDonors", path: "/donors", icon: Search },
     { key: "bloodRequests", path: "/create-blood-requests", icon: HeartPulse },
+    { key: "campaigns", path: "/campaigns", icon: Megaphone },
     { key: "about", path: "/about", icon: Info },
     { key: "contact", path: "/contact", icon: Mail },
 ];

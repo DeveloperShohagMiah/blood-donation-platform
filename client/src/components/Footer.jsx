@@ -28,6 +28,7 @@ const Footer = () => {
         { label: t("navigation.findDonors", "Find donors"), to: "/donors" },
         { label: t("navigation.becomeDonor", "Become a donor"), to: "/become-donor" },
         { label: t("navigation.bloodRequests", "Blood requests"), to: "/create-blood-requests" },
+        { label: t("navigation.campaigns", "Campaigns"), to: "/campaigns" },
         { label: t("navigation.login", "Log in"), to: "/login" },
     ];
 
