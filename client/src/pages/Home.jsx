@@ -503,7 +503,7 @@ const Home = () => {
                                             <h3 className="line-clamp-1 font-extrabold text-foreground">{item.title}</h3>
                                             <p className="mt-1.5 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
                                                 <MapPin size={13} className="text-primary" />
-                                                {item.venue || item.location?.nameEn || "Location to be announced"}
+                                                {item.venue || item.location || "Location to be announced"}
                                             </p>
                                             <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
                                                 {item.description}

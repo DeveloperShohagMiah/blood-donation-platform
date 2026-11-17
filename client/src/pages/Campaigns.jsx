@@ -204,9 +204,9 @@ const Campaigns = () => {
                                                     <MapPin size={13} className="text-primary" /> {item.venue}
                                                 </span>
                                             )}
-                                            {item.location?.nameEn && (
+                                            {item.location && (
                                                 <span className="inline-flex items-center gap-1.5">
-                                                    <MapPin size={13} className="text-primary" /> {item.location.nameEn}
+                                                    <MapPin size={13} className="text-primary" /> {item.location}
                                                 </span>
                                             )}
                                         </div>
@@ -270,7 +270,7 @@ const Campaigns = () => {
                                 </div>
                                 <div>
                                     <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Location</dt>
-                                    <dd className="mt-1 font-semibold text-foreground">{viewing.location?.nameEn || "—"}</dd>
+                                    <dd className="mt-1 font-semibold text-foreground">{viewing.location || "—"}</dd>
                                 </div>
                             </dl>
                             <div className="mt-6 flex flex-wrap gap-2">

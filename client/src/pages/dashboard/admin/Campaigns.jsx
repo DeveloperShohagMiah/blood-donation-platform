@@ -65,7 +65,6 @@ const StatusPill = ({ status }) => (
 
 const Campaigns = () => {
     const { data, loading, error, reload } = useApiData("/campaigns");
-    const locationsQuery = useApiData("/locations");
     const [editing, setEditing] = useState(null); // null = closed, "new" = create, object = edit
     const [viewing, setViewing] = useState(null);
     const [confirmDelete, setConfirmDelete] = useState(null);
@@ -85,12 +84,10 @@ const Campaigns = () => {
         mode: "onBlur",
     });
 
-    const selectedLocation = watch("location");
     const selectedStatus = watch("status");
     const startAtValue = watch("startAt");
 
     const items = data?.items || [];
-    const locations = locationsQuery.data?.items || [];
     const published = items.filter((item) => item.status === "published").length;
     const drafts = items.filter((item) => item.status === "draft").length;
 
@@ -112,7 +109,7 @@ const Campaigns = () => {
             startAt: item.startAt ? new Date(item.startAt).toISOString().slice(0, 16) : "",
             endAt: item.endAt ? new Date(item.endAt).toISOString().slice(0, 16) : "",
             venue: item.venue || "",
-            location: item.location?._id || item.location || "",
+            location: item.location || "",
             status: item.status || "draft",
         });
         setActionError("");
@@ -258,9 +255,9 @@ const Campaigns = () => {
                                                     <MapPin size={13} className="text-primary" /> {item.venue}
                                                 </span>
                                             )}
-                                            {item.location?.nameEn && (
+                                            {item.location && (
                                                 <span className="inline-flex items-center gap-1.5">
-                                                    <MapPin size={13} className="text-primary" /> {item.location.nameEn}
+                                                    <MapPin size={13} className="text-primary" /> {item.location}
                                                 </span>
                                             )}
                                         </div>
@@ -401,17 +398,11 @@ const Campaigns = () => {
 
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">Location</span>
-                                <Select
-                                    size="lg"
+                                <input
                                     {...register("location")}
-                                    value={selectedLocation ?? ""}
-                                    invalid={Boolean(errors.location)}
-                                >
-                                    <option value="">No specific location</option>
-                                    {locations.map((item) => (
-                                        <option key={item._id} value={item._id}>{item.nameEn}</option>
-                                    ))}
-                                </Select>
+                                    className={inputClass(errors.location)}
+                                    placeholder="e.g. 123 Main Street"
+                                />
                                 <FieldError message={errors.location?.message} />
                             </label>
 
@@ -488,7 +479,7 @@ const Campaigns = () => {
                                 </div>
                                 <div>
                                     <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Location</dt>
-                                    <dd className="mt-1 font-semibold text-foreground">{viewing.location?.nameEn || "—"}</dd>
+                                    <dd className="mt-1 font-semibold text-foreground">{viewing.location || "—"}</dd>
                                 </div>
                             </dl>
                             <div className="mt-6 flex gap-2">
