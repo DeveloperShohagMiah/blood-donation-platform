@@ -6,7 +6,11 @@ const opts = { timestamps: true, versionKey: false };
 const verificationCodeSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    channel: { type: String, enum: ["phone", "email"], required: true },
+    channel: {
+      type: String,
+      enum: ["phone", "email", "password_reset"],
+      required: true,
+    },
     target: { type: String, required: true },
     codeHash: { type: String, required: true },
     expiresAt: { type: Date, required: true },

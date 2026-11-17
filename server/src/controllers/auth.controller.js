@@ -94,3 +94,42 @@ export const postAuthLogout = (req, res) => {
 };
 
 export const getAuthMe = (req, res) => send(res, { user: publicUser(req.user) });
+
+export const postAuthForgotPassword = asyncHandler(async (req, res) => {
+  const identifier = normalizeBdPhone(String(req.body.identifier ?? "").trim());
+  if (!identifier) throw new AppError("Phone number or email is required.", 400);
+
+  const user = await User.findOne({
+    $or: [{ phone: identifier }, { email: identifier.toLowerCase() }],
+  });
+
+  // Always respond the same way so accounts cannot be enumerated.
+  const genericMessage = "If the account exists, a reset code has been issued.";
+  if (!user) return send(res, null, 200, genericMessage);
+
+  const target = identifier === user.phone ? user.phone : user.email;
+  const devCode = await issueVerificationCode(user, "password_reset", target);
+  send(res, devCode ? { developmentCode: devCode } : null, 200, genericMessage);
+});
+
+export const postAuthResetPassword = asyncHandler(async (req, res) => {
+  const identifier = normalizeBdPhone(String(req.body.identifier ?? "").trim());
+  const { code, newPassword } = req.body;
+
+  if (!identifier || !code || !newPassword)
+    throw new AppError("Identifier, code and new password are required.", 400);
+  if (String(newPassword).length < 8)
+    throw new AppError("Password must be at least 8 characters.", 400);
+
+  const user = await User.findOne({
+    $or: [{ phone: identifier }, { email: identifier.toLowerCase() }],
+  }).select("+password");
+  if (!user) throw new AppError("Invalid or expired reset code.", 400);
+
+  await verifyCode(user, "password_reset", String(code));
+
+  user.password = String(newPassword); // pre-save hook hashes it
+  await user.save();
+
+  send(res, null, 200, "Password reset. You can log in with your new password.");
+});

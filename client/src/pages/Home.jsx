@@ -32,14 +32,6 @@ import { apiFetch } from "../utils/api";
 const container =
     "mx-auto w-[calc(100%-2rem)] max-w-[1280px] md:w-[calc(100%-4rem)]";
 
-/* ---------- Sample data: replace with your API responses ---------- */
-const sampleEmergencies = [
-    { id: 1, group: "O-", patientName: "John Doe", units: 2, got: 1, hospital: "City General Hospital", place: "Dhaka", time: "12 min ago", contactPerson: "Alice Brown", phone: "+8801000000001", urgency: "urgent" },
-    { id: 2, group: "A+", patientName: "Jane Smith", units: 3, got: 0, hospital: "Sadar Hospital", place: "Rajshahi", time: "38 min ago", contactPerson: "John Davis", phone: "+8801000000002", urgency: "normal" },
-    { id: 3, group: "B-", patientName: "Alice Johnson", units: 1, got: 0, hospital: "Central Medical College", place: "Chattogram", time: "1 hr ago", contactPerson: "Bob Williams", phone: "+8801000000003", urgency: "normal" },
-    { id: 4, group: "AB+", patientName: "Michael Brown", units: 4, got: 2, hospital: "National Hospital", place: "Khulna", time: "2 hr ago", contactPerson: "Sarah Miller", phone: "+8801000000004", urgency: "critical" },
-];
-
 /* Map the public API response to the shape the emergency cards expect. */
 const mapPublicRequest = (item) => {
     const urgencyByStatus = {
@@ -67,8 +59,9 @@ const mapPublicRequest = (item) => {
         hospital: item.hospitalName,
         place: item.district?.nameEn || item.upazila?.nameEn || "",
         time,
-        contactPerson: item.contactName,
-        phone: item.contactPhone,
+        contactPerson: item.contactName || "",
+        phone: item.contactPhone || "",
+        verified: Boolean(item.isVerified),
         urgency: ["critical", "urgent", "normal"].includes(item.urgency)
             ? item.urgency
             : urgencyByStatus[item.status] || "normal",
@@ -132,18 +125,21 @@ const Home = () => {
 
     /* ---------------- Emergency requests ---------------- */
     const [urgencyFilter, setUrgencyFilter] = useState("all");
-    const [emergencies, setEmergencies] = useState(sampleEmergencies);
+    const [emergencies, setEmergencies] = useState([]);
+    const [requestsLoading, setRequestsLoading] = useState(true);
+    const [requestsError, setRequestsError] = useState("");
 
     useEffect(() => {
         let active = true;
         apiFetch("/blood-requests/public")
             .then((data) => {
-                if (active && data?.items?.length) {
-                    setEmergencies(data.items.map(mapPublicRequest));
-                }
+                if (active) setEmergencies((data?.items || []).map(mapPublicRequest));
             })
-            .catch(() => {
-                // Keep the sample feed visible when the API is unavailable.
+            .catch((error) => {
+                if (active) setRequestsError(error.message);
+            })
+            .finally(() => {
+                if (active) setRequestsLoading(false);
             });
         return () => {
             active = false;
@@ -298,7 +294,7 @@ const Home = () => {
                         title={t("home.emergency.title", "Emergency blood requests")}
                         subtitle={t(
                             "home.emergency.subtitle",
-                            "These patients need blood today. Call the hospital to confirm, then go if you match."
+                            "Real requests from people nearby. Verified requests show contact details; pending ones are awaiting volunteer review."
                         )}
                         label="Emergency requests"
                         icon={<Siren size={14} />}
@@ -331,7 +327,19 @@ const Home = () => {
                         })}
                     </div>
 
-                    {visibleRequests.length > 0 ? (
+                    {requestsError && (
+                        <p className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                            Requests could not be loaded right now ({requestsError}).
+                        </p>
+                    )}
+
+                    {requestsLoading ? (
+                        <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+                            {[1, 2, 3, 4].map((item) => (
+                                <div key={item} className="h-72 animate-pulse rounded-2xl border border-border bg-card" />
+                            ))}
+                        </div>
+                    ) : visibleRequests.length > 0 ? (
                         <ul className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
                             {visibleRequests.map((r) => {
                                 const level = levelOf(r.urgency);
@@ -369,7 +377,9 @@ const Home = () => {
                                             </p>
                                             <p className="text-sm font-bold text-primary">{r.patientName}</p>
                                             <p className="mt-0.5 text-xs text-muted-foreground">
-                                                {t("home.emergency.contact", "Contact")}: {r.contactPerson}
+                                                {r.verified
+                                                    ? `${t("home.emergency.contact", "Contact")}: ${r.contactPerson}`
+                                                    : t("home.emergency.pending", "Awaiting volunteer verification")}
                                             </p>
                                         </div>
 
@@ -398,19 +408,23 @@ const Home = () => {
 
                                         <div className="mt-auto flex gap-2.5 pt-6">
                                             <Link
-                                                to="/create-blood-requests"
+                                                to={r.verified ? "/dashboard/matching" : "/create-blood-requests"}
                                                 className="inline-flex h-11 flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:brightness-95 active:scale-[0.98]"
                                             >
-                                                {t("home.emergency.respond", "I can donate")}
+                                                {r.verified
+                                                    ? t("home.emergency.respond", "I can donate")
+                                                    : t("home.emergency.pendingShort", "Pending review")}
                                                 <ArrowRight size={15} />
                                             </Link>
-                                            <a
-                                                href={`tel:${r.phone}`}
-                                                aria-label={t("home.emergency.call", "Call requester")}
-                                                className="grid size-11 place-items-center rounded-xl border border-border text-foreground transition-colors hover:border-primary hover:bg-primary/5 hover:text-primary"
-                                            >
-                                                <Phone size={17} />
-                                            </a>
+                                            {r.verified && r.phone && (
+                                                <a
+                                                    href={`tel:${r.phone}`}
+                                                    aria-label={t("home.emergency.call", "Call requester")}
+                                                    className="grid size-11 place-items-center rounded-xl border border-border text-foreground transition-colors hover:border-primary hover:bg-primary/5 hover:text-primary"
+                                                >
+                                                    <Phone size={17} />
+                                                </a>
+                                            )}
                                         </div>
                                     </li>
                                 );
@@ -418,13 +432,15 @@ const Home = () => {
                         </ul>
                     ) : (
                         <p className="mt-8 rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center text-sm text-muted-foreground">
-                            {t("home.emergency.empty", "No requests at this urgency level right now.")}
+                            {urgencyFilter === "all"
+                                ? t("home.emergency.noRequests", "No blood requests have been posted yet. Check back soon.")
+                                : t("home.emergency.empty", "No requests at this urgency level right now.")}
                         </p>
                     )}
 
                     <div className="mt-8 text-center">
                         <Link
-                            to="/create-blood-requests"
+                            to="/dashboard/matching"
                             className="group inline-flex h-11 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-bold text-foreground transition hover:border-primary hover:text-primary"
                         >
                             {t("home.emergency.viewAll", "View all requests")}

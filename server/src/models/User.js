@@ -23,6 +23,7 @@ const userSchema = new Schema(
     approvedAt: { type: Date, default: null },
     rejectionReason: { type: String, maxlength: 500, default: "" },
     lastLoginAt: { type: Date, default: null },
+    deletedAt: { type: Date, default: null },
   },
   opts,
 );

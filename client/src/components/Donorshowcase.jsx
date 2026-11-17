@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
     CalendarDays,
-    ChevronDown,
     Filter,
     MapPin,
     Phone,
@@ -11,25 +10,11 @@ import {
     Users,
 } from "lucide-react";
 import SectionHeader from "../components/SectionHeader";
-import { bdLocations } from "../utils/BDLocations";
+import Select from "./Select";
 import { apiFetch } from "../utils/api";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
 const PREVIEW_LIMIT = 8;
-
-/* Sample data: replace with your API response (keep these field names) */
-const sampleDonors = [
-    { id: 1, name: "MD Sadhain", group: "O+", division: "Dhaka", district: "Dhaka", upazila: "Khilkhet", last: "Never", available: true, phone: "+8801000000001" },
-    { id: 2, name: "Shahariar Sohan", group: "O+", division: "Chattogram", district: "Cox's Bazar", upazila: "Chakaria", last: "Never", available: true, phone: "+8801000000002" },
-    { id: 3, name: "Anthic Kumar Singh", group: "O+", division: "Dhaka", district: "Dhaka", upazila: "Khilkhet", last: "Never", available: true, phone: "+8801000000003" },
-    { id: 4, name: "Shamim Hossain", group: "B+", division: "Dhaka", district: "Dhaka", upazila: "Uttara", last: "Never", available: true, phone: "+8801000000004" },
-    { id: 5, name: "Nusrat Jahan", group: "B+", division: "Chattogram", district: "Chattogram", upazila: "Kotwali", last: "4 months ago", available: true, phone: "+8801000000005" },
-    { id: 6, name: "Tanvir Hasan", group: "A+", division: "Dhaka", district: "Gazipur", upazila: "Tongi", last: "8 months ago", available: false, phone: "+8801000000006" },
-    { id: 7, name: "Mim Akter", group: "AB+", division: "Sylhet", district: "Sylhet", upazila: "Sylhet Sadar", last: "Never", available: true, phone: "+8801000000007" },
-    { id: 8, name: "Sabbir Hossain", group: "O-", division: "Rajshahi", district: "Rajshahi", upazila: "Boalia", last: "6 months ago", available: true, phone: "+8801000000008" },
-    { id: 9, name: "Farhana Islam", group: "A-", division: "Dhaka", district: "Dhaka", upazila: "Mirpur", last: "3 months ago", available: false, phone: "+8801000000009" },
-    { id: 10, name: "Imran Khan", group: "B-", division: "Khulna", district: "Khulna", upazila: "Khulna Sadar", last: "7 months ago", available: true, phone: "+8801000000010" },
-];
 
 const mapApiDonor = (item) => ({
     id: item._id,
@@ -64,31 +49,19 @@ const Field = ({ label, value, onChange, placeholder, options, disabled }) => (
         <span className="mb-2 block text-xs font-bold tracking-wide text-[#66736E] uppercase">
             {label}
         </span>
-        <span className="relative block">
-            <select
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                disabled={disabled}
-                className={[
-                    "h-12 w-full appearance-none rounded-xl border bg-[#F4F7F9] pr-10 pl-4 text-[15px] font-medium outline-none transition",
-                    "focus:border-[#C62838] focus:bg-white focus:ring-4 focus:ring-[#C62838]/10",
-                    disabled
-                        ? "cursor-not-allowed border-[#EDF0F2] text-[#B5BFBA] opacity-70"
-                        : "border-[#E4EBE7] text-[#192623]",
-                ].join(" ")}
-            >
-                <option value="">{placeholder}</option>
-                {options.map((o) => (
-                    <option key={o} value={o}>
-                        {o}
-                    </option>
-                ))}
-            </select>
-            <ChevronDown
-                size={18}
-                className="pointer-events-none absolute top-1/2 right-3.5 -translate-y-1/2 text-[#84918C]"
-            />
-        </span>
+        <Select
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            disabled={disabled}
+            size="lg"
+        >
+            <option value="">{placeholder}</option>
+            {options.map((o) => (
+                <option key={o} value={o}>
+                    {o}
+                </option>
+            ))}
+        </Select>
     </label>
 );
 
@@ -100,28 +73,51 @@ const DonorShowcase = () => {
     const empty = { group: "", division: "", district: "", upazila: "" };
     const [draft, setDraft] = useState(empty);
     const [applied, setApplied] = useState(empty);
-    const [donors, setDonors] = useState(sampleDonors);
+    const [donors, setDonors] = useState([]);
+    const [locations, setLocations] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         let active = true;
-        apiFetch("/donors/search?limit=8")
-            .then((data) => {
-                if (active && data?.items?.length) {
-                    setDonors(data.items.map(mapApiDonor));
-                }
+        Promise.all([
+            apiFetch("/donors/search?limit=8"),
+            apiFetch("/locations"),
+        ])
+            .then(([donorData, locationData]) => {
+                if (!active) return;
+                setDonors((donorData?.items || []).map(mapApiDonor));
+                setLocations(locationData?.items || []);
             })
-            .catch(() => {
-                // Keep the sample showcase when the API is unavailable.
+            .catch((err) => {
+                if (active) setError(err.message);
+            })
+            .finally(() => {
+                if (active) setLoading(false);
             });
         return () => {
             active = false;
         };
     }, []);
 
-    const divisions = Object.keys(bdLocations);
-    const districts = draft.division ? Object.keys(bdLocations[draft.division]) : [];
-    const upazilas =
-        draft.division && draft.district ? bdLocations[draft.division][draft.district] : [];
+    /* Build cascading filter options from the same locations the API uses. */
+    const nameById = useMemo(
+        () => Object.fromEntries(locations.map((item) => [item._id, item.nameEn])),
+        [locations]
+    );
+    const divisions = locations
+        .filter((item) => item.type === "division")
+        .map((item) => item.nameEn);
+    const districts = draft.division
+        ? locations
+            .filter((item) => item.type === "district" && nameById[item.parent] === draft.division)
+            .map((item) => item.nameEn)
+        : [];
+    const upazilas = draft.district
+        ? locations
+            .filter((item) => item.type === "upazila" && nameById[item.parent] === draft.district)
+            .map((item) => item.nameEn)
+        : [];
 
     const set = (key) => (value) =>
         setDraft((d) => {
@@ -218,8 +214,6 @@ const DonorShowcase = () => {
                             "home.donors.subtitle",
                             "Connecting voluntary blood donors from across the country. Find compatible blood groups and location matches instantly."
                         )}
-                        label={"Donor Network"}
-                        icon={<Users size={14} />}
                     />
                 </div>
 
@@ -242,8 +236,20 @@ const DonorShowcase = () => {
                     )}
                 </div>
 
+                {error && (
+                    <p className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                        Donors could not be loaded right now ({error}).
+                    </p>
+                )}
+
                 {/* Donor cards */}
-                {shown.length > 0 ? (
+                {loading ? (
+                    <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        {[1, 2, 3, 4].map((item) => (
+                            <div key={item} className="h-52 animate-pulse rounded-lg border border-border bg-card" />
+                        ))}
+                    </div>
+                ) : shown.length > 0 ? (
                     <ul className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         {shown.map((d) => (
                             <li
@@ -322,18 +328,24 @@ const DonorShowcase = () => {
                     <div className="mt-5 grid place-items-center rounded-2xl border border-dashed border-[#D9E3DD] bg-white px-6 py-14 text-center">
                         <SearchX size={32} className="text-[#84918C]" />
                         <p className="mt-3 font-bold text-[#192623]">
-                            {t("home.donors.emptyTitle", "No donors match these filters")}
+                            {hasFilters
+                                ? t("home.donors.emptyTitle", "No donors match these filters")
+                                : t("home.donors.noneTitle", "No donors listed yet")}
                         </p>
                         <p className="mt-1 text-sm text-[#66736E]">
-                            {t("home.donors.emptyText", "Try a wider area or a different blood group.")}
+                            {hasFilters
+                                ? t("home.donors.emptyText", "Try a wider area or a different blood group.")
+                                : t("home.donors.noneText", "Once donors opt in to be listed publicly, they will appear here.")}
                         </p>
-                        <button
-                            type="button"
-                            onClick={clearFilters}
-                            className="mt-4 rounded-full border border-[#E4EBE7] px-4 py-2 text-sm font-bold text-[#C62838] hover:bg-[#FDEEF0]"
-                        >
-                            {t("home.donors.reset", "Clear filters")}
-                        </button>
+                        {hasFilters && (
+                            <button
+                                type="button"
+                                onClick={clearFilters}
+                                className="mt-4 rounded-full border border-[#E4EBE7] px-4 py-2 text-sm font-bold text-[#C62838] hover:bg-[#FDEEF0]"
+                            >
+                                {t("home.donors.reset", "Clear filters")}
+                            </button>
+                        )}
                     </div>
                 )}
             </div>

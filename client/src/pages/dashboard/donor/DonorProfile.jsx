@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { CheckCircle2, Save } from "lucide-react";
 import { apiFetch } from "../../../utils/api";
+import Select from "../../../components/Select";
 import { ErrorBanner, PageHeader } from "../components/UI";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -170,16 +171,16 @@ const DonorProfile = () => {
                             <label htmlFor="availability" className="mb-2 block text-sm font-bold text-foreground">
                                 Availability
                             </label>
-                            <select
+                            <Select
                                 id="availability"
                                 value={form.availability}
                                 onChange={(e) => update("availability", e.target.value)}
-                                className={inputClass}
+                                size="lg"
                             >
                                 <option value="available">Available to donate</option>
                                 <option value="temporarily_unavailable">Temporarily unavailable</option>
                                 <option value="unavailable">Unavailable</option>
-                            </select>
+                            </Select>
                         </div>
 
                         <div>
@@ -218,51 +219,51 @@ const DonorProfile = () => {
                             <label htmlFor="division" className="mb-2 block text-sm font-bold text-foreground">
                                 Division *
                             </label>
-                            <select
+                            <Select
                                 id="division"
                                 value={form.division}
                                 onChange={(e) => update("division", e.target.value)}
-                                className={inputClass}
+                                size="lg"
                             >
                                 <option value="">Select division</option>
                                 {divisions.map((item) => (
                                     <option key={item._id} value={item._id}>{item.nameEn}</option>
                                 ))}
-                            </select>
+                            </Select>
                         </div>
                         <div>
                             <label htmlFor="district" className="mb-2 block text-sm font-bold text-foreground">
                                 District *
                             </label>
-                            <select
+                            <Select
                                 id="district"
                                 value={form.district}
                                 onChange={(e) => update("district", e.target.value)}
                                 disabled={!form.division}
-                                className={inputClass}
+                                size="lg"
                             >
                                 <option value="">Select district</option>
                                 {districts.map((item) => (
                                     <option key={item._id} value={item._id}>{item.nameEn}</option>
                                 ))}
-                            </select>
+                            </Select>
                         </div>
                         <div>
                             <label htmlFor="upazila" className="mb-2 block text-sm font-bold text-foreground">
                                 Upazila
                             </label>
-                            <select
+                            <Select
                                 id="upazila"
                                 value={form.upazila}
                                 onChange={(e) => update("upazila", e.target.value)}
                                 disabled={!form.district}
-                                className={inputClass}
+                                size="lg"
                             >
                                 <option value="">Select upazila</option>
                                 {upazilas.map((item) => (
                                     <option key={item._id} value={item._id}>{item.nameEn}</option>
                                 ))}
-                            </select>
+                            </Select>
                         </div>
                     </div>
                 </section>

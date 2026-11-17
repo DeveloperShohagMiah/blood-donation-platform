@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { apiFetch } from "../utils/api";
+import Select from "../components/Select";
 
 const contactMethods = [
     {
@@ -274,11 +275,11 @@ const Contact = () => {
                                 <label className="mb-2 block text-sm font-semibold">
                                     Subject *
                                 </label>
-                                <select
+                                <Select
                                     {...register("subject", {
                                         required: "Please select a subject.",
                                     })}
-                                    className={`${inputClass} h-12`}
+                                    size="lg"
                                     defaultValue=""
                                 >
                                     <option value="" disabled>
@@ -300,7 +301,7 @@ const Contact = () => {
                                         Partnership
                                     </option>
                                     <option value="Other">Other</option>
-                                </select>
+                                </Select>
                                 {errors.subject && (
                                     <p className="mt-1.5 text-xs text-primary">
                                         {errors.subject.message}

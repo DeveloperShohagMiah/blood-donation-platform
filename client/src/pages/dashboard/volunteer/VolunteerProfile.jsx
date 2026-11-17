@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { CheckCircle2, Save } from "lucide-react";
 import { apiFetch } from "../../../utils/api";
+import Select from "../../../components/Select";
 import { ErrorBanner, PageHeader } from "../components/UI";
 
 const inputClass =
@@ -96,15 +97,15 @@ const VolunteerProfile = () => {
                             <label htmlFor="availability" className="mb-2 block text-sm font-bold text-foreground">
                                 Availability
                             </label>
-                            <select
+                            <Select
                                 id="availability"
+                                size="lg"
                                 value={form.availability}
                                 onChange={(e) => setForm((f) => ({ ...f, availability: e.target.value }))}
-                                className={inputClass}
                             >
                                 <option value="available">Available</option>
                                 <option value="unavailable">Unavailable</option>
-                            </select>
+                            </Select>
                         </div>
                         <div>
                             <label htmlFor="max" className="mb-2 block text-sm font-bold text-foreground">

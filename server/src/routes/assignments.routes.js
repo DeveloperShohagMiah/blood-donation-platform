@@ -1,7 +1,9 @@
 import { Router } from "express";
 import * as controller from "../controllers/assignments.controller.js";
-import { volunteerOrStaff } from "./route-guards.js";
+import { admin, volunteerOrStaff } from "./route-guards.js";
 import { protect } from "../middlewares/auth.middleware.js";
+import { RequestAssignment } from "../models/index.js";
+import { deleteOne } from "../controllers/adminCrud.controller.js";
 
 const router = Router();
 
@@ -18,6 +20,7 @@ router.get(
   controller.getBloodRequestsByIdAssignments,
 );
 router.get("/assignments/me", protect, controller.getMyAssignments);
+router.delete("/assignments/:id", protect, admin, deleteOne(RequestAssignment));
 router.patch(
   "/assignments/:id/status",
   protect,

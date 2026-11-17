@@ -10,6 +10,14 @@ export const getVolunteersMe = asyncHandler(async (req, res) => {
   send(res, { profile });
 });
 
+export const getVolunteerById = asyncHandler(async (req, res) => {
+  const item = await VolunteerProfile.findById(req.params.id)
+    .populate("user", "fullName phone accountStatus")
+    .populate("serviceAreas", "nameEn nameBn type");
+  if (!item) throw new AppError("Volunteer profile not found.", 404);
+  send(res, { item });
+});
+
 export const putVolunteersMe = asyncHandler(async (req, res) => {
   const { serviceAreas = [], availability = "unavailable", maxActiveAssignments = 5 } = req.body;
   if (!Array.isArray(serviceAreas)) throw new AppError("serviceAreas must be an array.", 400);

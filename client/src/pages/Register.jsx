@@ -382,7 +382,7 @@ const BecomeDonor = () => {
                     <button
                         type="submit"
                         disabled={submitting}
-                        className="mt-8 inline-flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#DC2626] to-[#E11D48] text-[15px] font-extrabold text-white shadow-[0_12px_26px_rgba(220,38,38,0.3)] outline-none transition hover:brightness-95 focus-visible:ring-4 focus-visible:ring-[#C62838]/30 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
+                        className="btn-premium mt-8 h-14 w-full text-[15px] font-extrabold outline-none focus-visible:ring-4 focus-visible:ring-primary/30"
                     >
                         {submitting ? (
                             <><Loader2 size={20} className="animate-spin" /> {t("register.submitting", "Creating account…")}</>

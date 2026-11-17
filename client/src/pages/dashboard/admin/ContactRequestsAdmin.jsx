@@ -3,6 +3,7 @@ import { useState } from "react";
 import { HeartHandshake } from "lucide-react";
 import { apiFetch } from "../../../utils/api";
 import { useApiData } from "../hooks";
+import Select from "../../../components/Select";
 import {
     EmptyState,
     ErrorBanner,
@@ -80,17 +81,17 @@ const ContactRequestsAdmin = () => {
                                     <Td><StatusBadge value={item.status} /></Td>
                                     <Td>{formatDate(item.createdAt)}</Td>
                                     <Td>
-                                        <select
+                                        <Select
+                                            size="sm"
                                             value={item.status}
                                             disabled={busyId === item._id}
                                             onChange={(e) => setStatus(item._id, e.target.value)}
-                                            className="h-9 rounded-lg border border-border bg-background px-2 text-xs font-semibold outline-none focus:border-primary"
                                         >
                                             <option value="pending">pending</option>
                                             <option value="contacted">contacted</option>
                                             <option value="closed">closed</option>
                                             <option value="rejected">rejected</option>
-                                        </select>
+                                        </Select>
                                     </Td>
                                 </tr>
                             ))

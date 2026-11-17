@@ -37,6 +37,23 @@ export const getDonorsMe = asyncHandler(async (req, res) => {
   send(res, { profile });
 });
 
+/* Staff-facing full list (includes non-public and unavailable profiles). */
+export const getDonorsAdmin = asyncHandler(async (req, res) => {
+  const items = await DonorProfile.find()
+    .populate("user", "fullName phone")
+    .populate("division district upazila", "nameEn nameBn")
+    .sort({ createdAt: -1 });
+  send(res, { items });
+});
+
+export const getDonorById = asyncHandler(async (req, res) => {
+  const item = await DonorProfile.findById(req.params.id)
+    .populate("user", "fullName phone")
+    .populate("division district upazila", "nameEn nameBn");
+  if (!item) throw new AppError("Donor profile not found.", 404);
+  send(res, { item });
+});
+
 export const getDonorsSearch = asyncHandler(async (req, res) => {
   const filter = { isPubliclyListed: true, allowContactRequests: true, availability: "available" };
   if (req.query.bloodGroup) filter.bloodGroup = req.query.bloodGroup;

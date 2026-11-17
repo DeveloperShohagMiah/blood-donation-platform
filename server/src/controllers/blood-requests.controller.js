@@ -28,11 +28,15 @@ export const postBloodRequests = asyncHandler(async (req, res) => {
   startOfToday.setHours(0, 0, 0, 0);
   if (Number.isNaN(neededAt.getTime()) || neededAt < startOfToday)
     throw new AppError("neededAt must be today or a future date.", 400);
+  // A date-only input becomes 00:00 UTC; keep it visible through that whole day.
+  const expiresAt = new Date(neededAt);
+  expiresAt.setUTCHours(23, 59, 59, 999);
+
   const request = await BloodRequest.create({
     ...body,
     requester: req.user._id,
     status: REQUEST_STATUS.SUBMITTED,
-    expiresAt: neededAt,
+    expiresAt,
   });
   await audit(req, "blood_request.submitted", "BloodRequest", request._id);
   send(res, { request }, 201, "Request submitted for volunteer verification.");
@@ -79,14 +83,21 @@ export const getBloodRequests = asyncHandler(async (req, res) => {
   send(res, { items, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
 });
 
-/* Public, read-only feed for the home page. Verified + still-valid requests only. */
+/* Public, read-only feed for the home page, including pending requests.
+   Contact details are only exposed once a volunteer has verified the request. */
 export const getPublicBloodRequests = asyncHandler(async (req, res) => {
+  const verifiedStatuses = [
+    REQUEST_STATUS.VERIFIED,
+    REQUEST_STATUS.MATCHING,
+    REQUEST_STATUS.IN_PROGRESS,
+  ];
+
   const items = await BloodRequest.find({
     status: {
       $in: [
-        REQUEST_STATUS.VERIFIED,
-        REQUEST_STATUS.MATCHING,
-        REQUEST_STATUS.IN_PROGRESS,
+        REQUEST_STATUS.SUBMITTED,
+        REQUEST_STATUS.PENDING_VERIFICATION,
+        ...verifiedStatuses,
       ],
     },
     expiresAt: { $gt: new Date() },
@@ -98,7 +109,18 @@ export const getPublicBloodRequests = asyncHandler(async (req, res) => {
     .sort({ createdAt: -1 })
     .limit(20)
     .lean();
-  send(res, { items });
+
+  const publicItems = items.map((item) => {
+    const isVerified = verifiedStatuses.includes(item.status);
+    return {
+      ...item,
+      isVerified,
+      contactName: isVerified ? item.contactName : undefined,
+      contactPhone: isVerified ? item.contactPhone : undefined,
+    };
+  });
+
+  send(res, { items: publicItems });
 });
 
 export const getBloodRequestsById = asyncHandler(async (req, res) => {

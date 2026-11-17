@@ -12,8 +12,9 @@ async function deliverCode({ channel, target, code }) {
   throw new AppError("Verification delivery provider is not configured.", 503);
 }
 
-export async function issueVerificationCode(user, channel) {
-  const target = channel === "phone" ? user.phone : user.email;
+export async function issueVerificationCode(user, channel, targetOverride) {
+  const target =
+    targetOverride || (channel === "phone" ? user.phone : user.email);
   if (!target) throw new AppError(`User has no ${channel} address.`, 400);
   const code = String(crypto.randomInt(100000, 1000000));
   const codeHash = crypto.createHash("sha256").update(code).digest("hex");
@@ -46,6 +47,6 @@ export async function verifyCode(user, channel, code) {
   record.consumedAt = new Date();
   await record.save();
   if (channel === "phone") user.phoneVerified = true;
-  else user.emailVerified = true;
+  else if (channel === "email") user.emailVerified = true;
   await user.save();
 }

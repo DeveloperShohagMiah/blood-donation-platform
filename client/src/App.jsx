@@ -3,6 +3,7 @@ import Layout from "./layouts/Layout";
 import Home from "./pages/Home";
 import BecomeDonor from "./pages/Register";
 import Login from "./pages/Login";
+import ForgotPassword from "./pages/ForgotPassword";
 import CreateBloodRequest from "./components/CreateBloodRequest";
 import FindDonorsPage from "./pages/FindDonorsPage";
 import About from "./pages/About";
@@ -34,6 +35,7 @@ const App = () => {
     return (
         <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
             <Route path="/" element={<Layout />}>
                 <Route index element={<Home />} />

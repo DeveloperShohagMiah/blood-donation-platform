@@ -33,6 +33,7 @@ The client reads `VITE_API_URL` from `client/.env` (defaults to `http://localhos
 | Log in | `POST /auth/login` (cookie session) |
 | Register + phone verification | `POST /auth/register`, `POST /auth/verification/request`, `POST /auth/verification/confirm` |
 | Session restore / log out | `GET /auth/me`, `POST /auth/logout` |
+| Forgot password | `POST /auth/password/forgot`, `POST /auth/password/reset` |
 | Find donors + filters + pagination | `GET /donors/search`, `GET /locations` |
 | Request a donor's contact | `POST /contact-requests` |
 | Create a blood request (auth required) | `POST /blood-requests` |
@@ -49,7 +50,7 @@ After logging in, use the **Dashboard** link in the navbar (or go to `/dashboard
 - **Volunteer** (`volunteer`): my assignments, verification queue (claim a submitted request before verifying it), volunteer profile, notifications.
 - **Admin / Moderator** (`admin`, `moderator`): KPI overview, users & approvals, all requests, contact requests, campaigns, donations, audit log.
 
-Routes are protected by `RequireAuth` / `RequireRole` on the client and by matching guards on the API. To test another role, an admin can change a user's role from **Dashboard → Users & approvals**.
+Routes are protected by `RequireAuth` / `RequireRole` on the client and by matching guards on the API. To test another role, an admin can change a user's role from **Dashboard → Users & approvals**. Admins can also edit a user's name/phone/email and **deactivate** accounts there — deactivation is a soft delete (the account is signed out and hidden from normal lists, but its history is preserved) and can't be applied to your own account.
 
 ## Account approval
 

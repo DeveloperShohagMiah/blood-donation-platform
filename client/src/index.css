@@ -223,6 +223,10 @@
     min-height: 100vh;
     min-height: 100dvh;
     background-color: var(--background);
+    background-image:
+      radial-gradient(circle at 10% -10%, color-mix(in srgb, var(--primary) 6%, transparent), transparent 38%),
+      radial-gradient(circle at 92% 4%, color-mix(in srgb, var(--accent) 35%, transparent), transparent 32%);
+    background-attachment: fixed;
     color: var(--foreground);
     font-family: var(--font-display);
     font-size: 16px;
@@ -597,6 +601,102 @@
       transparent 70%);
 }
 
+/* ---------- Premium design-system utilities ---------- */
+@utility surface {
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  border: 1px solid var(--border);
+  box-shadow: var(--elev-md);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+@utility premium-card {
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--primary) 4%, var(--card)),
+    var(--card)
+  );
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  box-shadow: var(--elev-md);
+  transition:
+    transform 300ms var(--ease-premium),
+    box-shadow 300ms var(--ease-premium),
+    border-color 300ms var(--ease-premium);
+
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--elev-lg);
+      border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
+    }
+  }
+}
+
+@utility btn-premium {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.85rem;
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: var(--primary-foreground);
+  font-weight: 700;
+  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--primary) 65%, transparent);
+
+  @media (hover: hover) {
+    &:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+@utility input-premium {
+  height: 3rem;
+  width: 100%;
+  border-radius: 0.85rem;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--background) 60%, var(--card));
+  padding-inline: 0.9rem;
+  font-size: 0.875rem;
+  color: var(--foreground);
+  outline: none;
+  transition:
+    border-color 250ms var(--ease-premium),
+    box-shadow 250ms var(--ease-premium);
+
+  &::placeholder {
+    color: var(--muted-foreground);
+  }
+
+  &:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 12%, transparent);
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+@utility animate-rise {
+  animation: rise 650ms var(--ease-premium) backwards;
+}
+
 /* ==========================================================================
    Animations
    ========================================================================== */
@@ -655,6 +755,18 @@
 
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

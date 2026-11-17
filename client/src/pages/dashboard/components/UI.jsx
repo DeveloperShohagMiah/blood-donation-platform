@@ -1,26 +1,25 @@
 const toneClasses = {
-    primary: "bg-primary/10 text-primary",
-    success: "bg-emerald-500/10 text-emerald-600",
-    warning: "bg-amber-500/10 text-amber-600",
-    info: "bg-sky-500/10 text-sky-600",
-    violet: "bg-violet-500/10 text-violet-600",
+    primary: "bg-primary/10 text-primary ring-primary/15",
+    success: "bg-emerald-500/10 text-emerald-600 ring-emerald-500/15",
+    warning: "bg-amber-500/10 text-amber-600 ring-amber-500/15",
+    info: "bg-sky-500/10 text-sky-600 ring-sky-500/15",
+    violet: "bg-violet-500/10 text-violet-600 ring-violet-500/15",
 };
 
 export const StatCard = ({ icon: Icon, label, value, hint, tone = "primary" }) => (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-        <div className="flex items-start justify-between gap-3">
+    <div className="premium-card relative overflow-hidden p-5">
+        <div className="pointer-events-none absolute -top-8 -right-8 size-28 rounded-full bg-primary/10 blur-2xl" />
+        <div className="relative flex items-start justify-between gap-3">
             <div className="min-w-0">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                    {label}
-                </p>
-                <p className="mt-2 text-3xl font-extrabold tracking-tight text-foreground">
+                <p className="eyebrow text-[10px]">{label}</p>
+                <p className="mt-2 text-[2rem] leading-none font-extrabold tracking-[-0.045em] text-foreground">
                     {value ?? "—"}
                 </p>
-                {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
+                {hint && <p className="mt-2 text-xs text-muted-foreground">{hint}</p>}
             </div>
             {Icon && (
-                <span className={`grid size-11 shrink-0 place-items-center rounded-xl ${toneClasses[tone] || toneClasses.primary}`}>
-                    <Icon size={20} />
+                <span className={`grid size-12 shrink-0 place-items-center rounded-2xl ring-1 ring-inset ${toneClasses[tone] || toneClasses.primary}`}>
+                    <Icon size={21} strokeWidth={2.1} />
                 </span>
             )}
         </div>
@@ -57,21 +56,22 @@ export const StatusBadge = ({ value }) => {
 };
 
 export const PageHeader = ({ title, subtitle, actions }) => (
-    <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mb-7 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-            <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+            <h1 className="text-[clamp(1.6rem,2.6vw,2.15rem)] leading-tight font-extrabold tracking-[-0.04em] text-foreground">
                 {title}
             </h1>
-            {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
+            <span className="mt-2 block h-0.5 w-10 rounded-full bg-gradient-to-r from-primary to-transparent" />
+            {subtitle && <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>}
         </div>
         {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
     </div>
 );
 
 export const EmptyState = ({ icon: Icon, title, text, action }) => (
-    <div className="grid place-items-center rounded-2xl border border-dashed border-border bg-card px-6 py-14 text-center">
+    <div className="grid place-items-center rounded-3xl border border-dashed border-primary/25 bg-gradient-to-b from-primary/5 to-transparent px-6 py-14 text-center">
         {Icon && (
-            <span className="grid size-14 place-items-center rounded-2xl bg-primary/10 text-primary">
+            <span className="grid size-14 place-items-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/15">
                 <Icon size={26} />
             </span>
         )}

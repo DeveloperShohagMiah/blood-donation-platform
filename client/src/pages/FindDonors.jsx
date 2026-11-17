@@ -1,6 +1,7 @@
 
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import Select from "../components/Select";
 import {
     Search,
     MapPin,
@@ -269,9 +270,9 @@ const FindDonors = ({
                                     {content.bloodGroup}
                                 </label>
 
-                                <select
+                                <Select
                                     {...register("bloodGroup")}
-                                    className="h-12 w-full rounded-xl border border-[#E4EAE6] bg-white px-3 text-sm text-[#34423B] outline-none transition focus:border-[#C62838] focus:ring-4 focus:ring-red-500/5"
+                                    size="lg"
                                 >
                                     <option value="">{content.allGroups}</option>
                                     {bloodGroups.map((group) => (
@@ -279,7 +280,7 @@ const FindDonors = ({
                                             {group}
                                         </option>
                                     ))}
-                                </select>
+                                </Select>
                             </div>
 
                             {/* Division */}
@@ -288,7 +289,7 @@ const FindDonors = ({
                                     {content.division}
                                 </label>
 
-                                <select
+                                <Select
                                     {...register("division", {
                                         onChange: () => {
                                             reset(
@@ -301,7 +302,7 @@ const FindDonors = ({
                                             );
                                         },
                                     })}
-                                    className="h-12 w-full rounded-xl border border-[#E4EAE6] bg-white px-3 text-sm text-[#34423B] outline-none transition focus:border-[#C62838] focus:ring-4 focus:ring-red-500/5"
+                                    size="lg"
                                 >
                                     <option value="">{content.selectDivision}</option>
                                     {divisions.map((division) => (
@@ -309,7 +310,7 @@ const FindDonors = ({
                                             {isBn ? division.nameBn : division.nameEn}
                                         </option>
                                     ))}
-                                </select>
+                                </Select>
                             </div>
 
                             {/* District */}
@@ -318,7 +319,7 @@ const FindDonors = ({
                                     {content.district}
                                 </label>
 
-                                <select
+                                <Select
                                     {...register("district", {
                                         onChange: () => {
                                             reset(
@@ -331,7 +332,7 @@ const FindDonors = ({
                                         },
                                     })}
                                     disabled={!selectedDivision}
-                                    className="h-12 w-full rounded-xl border border-[#E4EAE6] bg-white px-3 text-sm text-[#34423B] outline-none transition focus:border-[#C62838] focus:ring-4 focus:ring-red-500/5 disabled:cursor-not-allowed disabled:bg-[#F5F7F6]"
+                                    size="lg"
                                 >
                                     <option value="">{content.selectDistrict}</option>
                                     {filteredDistricts.map((district) => (
@@ -339,7 +340,7 @@ const FindDonors = ({
                                             {isBn ? district.nameBn : district.nameEn}
                                         </option>
                                     ))}
-                                </select>
+                                </Select>
                             </div>
 
                             {/* Upazila */}
@@ -348,10 +349,10 @@ const FindDonors = ({
                                     {content.upazila}
                                 </label>
 
-                                <select
+                                <Select
                                     {...register("upazila")}
                                     disabled={!selectedDistrict}
-                                    className="h-12 w-full rounded-xl border border-[#E4EAE6] bg-white px-3 text-sm text-[#34423B] outline-none transition focus:border-[#C62838] focus:ring-4 focus:ring-red-500/5 disabled:cursor-not-allowed disabled:bg-[#F5F7F6]"
+                                    size="lg"
                                 >
                                     <option value="">{content.selectUpazila}</option>
                                     {filteredUpazilas.map((upazila) => (
@@ -359,7 +360,7 @@ const FindDonors = ({
                                             {isBn ? upazila.nameBn : upazila.nameEn}
                                         </option>
                                     ))}
-                                </select>
+                                </Select>
                             </div>
                         </div>
 

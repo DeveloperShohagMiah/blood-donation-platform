@@ -87,7 +87,7 @@ const Navbar = () => {
             "after:-translate-x-1/2 after:rounded-full after:bg-[#C62838]",
             "after:transition-all after:duration-300",
             isActive
-                ? "text-[#192623] after:scale-100 after:opacity-100"
+                ? "bg-primary/5 text-primary after:scale-100 after:opacity-100"
                 : "text-[#66736E] hover:text-[#192623] after:scale-0 after:opacity-0",
         ].join(" ");
 
@@ -107,7 +107,7 @@ const Navbar = () => {
                     "sticky top-0 z-50 w-full border-b backdrop-blur-xl",
                     "transition-[background-color,border-color,box-shadow] duration-300",
                     scrolled
-                        ? "border-border/70 bg-white/80 shadow-[0_8px_30px_rgba(29,55,44,0.07)]"
+                        ? "border-border/70 bg-white/75 shadow-[0_8px_30px_rgba(29,55,44,0.08)] supports-[backdrop-filter]:bg-white/70"
                         : "border-transparent bg-white/95",
                 ].join(" ")}
             >
@@ -131,7 +131,7 @@ const Navbar = () => {
                             className={[
                                 "relative grid place-items-center rounded-[14px]",
                                 "bg-linear-to-br from-primary to-primary/80 text-white",
-                                "shadow-[0_8px_18px_rgba(198,40,56,0.28),inset_0_1px_0_rgba(255,255,255,0.28)]",
+                                "shadow-[0_8px_18px_rgba(198,40,56,0.28),inset_0_1px_0_rgba(255,255,255,0.28)] ring-1 ring-white/25",
                                 "transition-all duration-300 group-hover:-rotate-6 group-hover:scale-105",
                                 scrolled ? "size-10" : "size-11",
                             ].join(" ")}

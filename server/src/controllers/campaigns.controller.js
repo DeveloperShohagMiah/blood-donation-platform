@@ -14,6 +14,15 @@ export const getCampaigns = asyncHandler(async (req, res) => {
   send(res, { items });
 });
 
+export const getCampaignById = asyncHandler(async (req, res) => {
+  const item = await Campaign.findById(req.params.id).populate(
+    "location",
+    "nameEn nameBn type"
+  );
+  if (!item) throw new AppError("Campaign not found.", 404);
+  send(res, { item });
+});
+
 export const postCampaigns = asyncHandler(async (req, res) => {
   const body = pick(req.body, [
     "title",

@@ -13,6 +13,7 @@ import {
     UserRound,
 } from "lucide-react";
 import { toInternationalPhone } from "../utils/api";
+import Select from "./Select";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
 
@@ -315,7 +316,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                     <span className={labelClass}>
                                         {t("bloodRequest.form.division", "Division")}
                                     </span>
-                                    <select
+                                    <Select
                                         {...register("division", {
                                             required: requiredRule("Division"),
                                             onChange: () => {
@@ -323,14 +324,14 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                                 setValue("upazila", "");
                                             },
                                         })}
-                                        className={inputClass}
-                                        aria-invalid={Boolean(errors.division)}
+                                        size="lg"
+                                        invalid={Boolean(errors.division)}
                                     >
                                         <option value="">Select division</option>
                                         {divisions.map((item) => (
                                             <option key={item._id} value={item._id}>{item.nameEn}</option>
                                         ))}
-                                    </select>
+                                    </Select>
                                     <FieldError error={errors.division} />
                                 </label>
 
@@ -338,20 +339,20 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                     <span className={labelClass}>
                                         {t("bloodRequest.form.district", "District")}
                                     </span>
-                                    <select
+                                    <Select
                                         {...register("district", {
                                             required: requiredRule("District"),
                                             onChange: () => setValue("upazila", ""),
                                         })}
-                                        className={inputClass}
+                                        size="lg"
                                         disabled={!selectedDivision}
-                                        aria-invalid={Boolean(errors.district)}
+                                        invalid={Boolean(errors.district)}
                                     >
                                         <option value="">Select district</option>
                                         {districts.map((item) => (
                                             <option key={item._id} value={item._id}>{item.nameEn}</option>
                                         ))}
-                                    </select>
+                                    </Select>
                                     <FieldError error={errors.district} />
                                 </label>
 
@@ -359,16 +360,16 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                     <span className={labelClass}>
                                         {t("bloodRequest.form.upazila", "Upazila (optional)")}
                                     </span>
-                                    <select
+                                    <Select
                                         {...register("upazila")}
-                                        className={inputClass}
+                                        size="lg"
                                         disabled={!selectedDistrict}
                                     >
                                         <option value="">Select upazila</option>
                                         {upazilas.map((item) => (
                                             <option key={item._id} value={item._id}>{item.nameEn}</option>
                                         ))}
-                                    </select>
+                                    </Select>
                                 </label>
 
                                 <label>

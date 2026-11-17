@@ -624,7 +624,7 @@ const Login = ({ onSuccess }) => {
                             type="submit"
                             disabled={isSubmitting}
                             aria-busy={isSubmitting}
-                            className="group inline-flex min-h-[54px] w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary/90 px-5 text-sm font-bold text-white shadow-lg shadow-primary/20 outline-none transition duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/25 focus-visible:ring-4 focus-visible:ring-primary/90/20 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+                            className="btn-premium group min-h-[54px] w-full px-5 text-sm outline-none focus-visible:ring-4 focus-visible:ring-primary/20 disabled:hover:translate-y-0"
                         >
                             {isSubmitting ? (
                                 <>
