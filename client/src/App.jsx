@@ -26,6 +26,7 @@ import UsersManagement from "./pages/dashboard/admin/UsersManagement";
 import RequestsManagement from "./pages/dashboard/admin/RequestsManagement";
 import ContactRequestsAdmin from "./pages/dashboard/admin/ContactRequestsAdmin";
 import Campaigns from "./pages/dashboard/admin/Campaigns";
+import Gallery from "./pages/dashboard/admin/Gallery";
 import DonationsAdmin from "./pages/dashboard/admin/DonationsAdmin";
 import AuditLogs from "./pages/dashboard/admin/AuditLogs";
 
@@ -75,6 +76,7 @@ const App = () => {
                 <Route path="admin/requests" element={<RequireRole roles={STAFF}><RequestsManagement /></RequireRole>} />
                 <Route path="admin/contact-requests" element={<RequireRole roles={STAFF}><ContactRequestsAdmin /></RequireRole>} />
                 <Route path="admin/campaigns" element={<RequireRole roles={STAFF}><Campaigns /></RequireRole>} />
+                <Route path="admin/gallery" element={<RequireRole roles={STAFF}><Gallery /></RequireRole>} />
                 <Route path="admin/donations" element={<RequireRole roles={STAFF}><DonationsAdmin /></RequireRole>} />
                 <Route path="admin/audit" element={<RequireRole roles={STAFF}><AuditLogs /></RequireRole>} />
             </Route>

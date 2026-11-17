@@ -70,16 +70,6 @@ const mapPublicRequest = (item) => {
     };
 };
 
-/* Leave src empty to show a placeholder tile */
-const galleryItems = [
-    { id: 1, src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D", caption: "Community blood drive, Dhaka", tall: true },
-    { id: 2, src: "https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D", caption: "Volunteers preparing donor kits" },
-    { id: 3, src: "https://plus.unsplash.com/premium_photo-1733306621909-1d63c088a93e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D", caption: "First-time donors with certificates" },
-    { id: 4, src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D", caption: "University donation camp", tall: true },
-    { id: 5, src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D", caption: "Thank-you day for regular donors" },
-    { id: 6, src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D", caption: "Health check before donating" },
-];
-
 /* Urgency styling. Values are matched case-insensitively. */
 const urgencyStyles = {
     critical: {
@@ -131,6 +121,7 @@ const Home = () => {
     const [requestsLoading, setRequestsLoading] = useState(true);
     const [requestsError, setRequestsError] = useState("");
     const [campaigns, setCampaigns] = useState([]);
+    const [galleryItems, setGalleryItems] = useState([]);
 
     useEffect(() => {
         let active = true;
@@ -157,6 +148,29 @@ const Home = () => {
             })
             .catch(() => {
                 // Campaigns are optional on the home page.
+            });
+        return () => {
+            active = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        let active = true;
+        apiFetch("/gallery")
+            .then((data) => {
+                if (active) {
+                    setGalleryItems(
+                        (data?.items || []).map((item) => ({
+                            id: item._id,
+                            src: item.url,
+                            caption: item.caption || "",
+                            tall: Boolean(item.tall),
+                        }))
+                    );
+                }
+            })
+            .catch(() => {
+                // Gallery is optional on the home page.
             });
         return () => {
             active = false;
@@ -691,6 +705,11 @@ const Home = () => {
                         icon={<Images size={14} />}
                     />
 
+                    {galleryItems.length === 0 ? (
+                        <p className="mt-10 rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center text-sm text-muted-foreground">
+                            {t("home.gallery.empty", "No photos have been added yet.")}
+                        </p>
+                    ) : (
                     <ul className="mt-10 grid auto-rows-[180px] grid-cols-2 gap-3 md:auto-rows-[220px] md:grid-cols-3 md:gap-4">
                         {galleryItems.map((item, i) => (
                             <li key={item.id} className={item.tall ? "row-span-2" : ""}>
@@ -715,9 +734,10 @@ const Home = () => {
                             </li>
                         ))}
                     </ul>
+                    )}
                 </div>
 
-                {lightbox !== null && (
+                {lightbox !== null && galleryItems[lightbox] && (
                     <div
                         role="dialog"
                         aria-modal="true"

@@ -14,6 +14,7 @@ import AuditLogsRoutes from "./audit-logs.routes.js";
 import ContactRequestsRoutes from "./contact-requests.routes.js";
 import ContactRoutes from "./contact.routes.js";
 import AdminRoutes from "./admin.routes.js";
+import GalleryRoutes from "./gallery.routes.js";
 
 const router = Router();
 router.use(AuthRoutes);
@@ -31,5 +32,6 @@ router.use(AuditLogsRoutes);
 router.use(ContactRequestsRoutes);
 router.use(ContactRoutes);
 router.use(AdminRoutes);
+router.use(GalleryRoutes);
 
 export default router;
