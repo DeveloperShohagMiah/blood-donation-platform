@@ -558,6 +558,130 @@
 }
 
 /* ==========================================================================
+   Data tables
+   Applied to every dashboard table through the shared <TableShell> wrapper.
+   Unlayered on purpose so these rules outrank Tailwind's layered utilities.
+   ========================================================================== */
+
+.bc-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+    font-size: 0.875rem;
+}
+
+.bc-table thead th {
+    position: relative;
+    background: color-mix(in srgb, var(--muted) 55%, var(--card));
+    border-bottom: 1px solid color-mix(in srgb, var(--primary) 18%, var(--border));
+    color: var(--muted-foreground);
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.bc-table tbody td {
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+    transition: background-color 180ms var(--ease-premium);
+}
+
+.bc-table tbody tr:last-child > td {
+    border-bottom: 0;
+}
+
+/* Soft zebra striping keeps wide tables easy to scan. */
+.bc-table tbody tr:nth-child(even) > td {
+    background: color-mix(in srgb, var(--muted) 18%, transparent);
+}
+
+.bc-table tbody tr:hover > td {
+    background: color-mix(in srgb, var(--primary) 5%, var(--card));
+}
+
+/* A subtle brand accent marks the active row. */
+.bc-table tbody tr:hover > td:first-child {
+    box-shadow: inset 3px 0 0 var(--primary);
+}
+
+/* --------------------------------------------------------------------------
+   Small screens: each row becomes a labelled card instead of a sideways
+   scrolling grid. Labels come from the matching <Th> via data-label.
+   -------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+    .bc-table thead {
+        display: none;
+    }
+
+    .bc-table tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0.65rem;
+        background: color-mix(in srgb, var(--muted) 25%, var(--card));
+    }
+
+    .bc-table tbody tr,
+    .bc-table tbody td {
+        display: block;
+        width: 100%;
+    }
+
+    .bc-table tbody tr {
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        background: var(--card);
+        box-shadow: var(--elev-sm);
+    }
+
+    .bc-table tbody tr:hover {
+        box-shadow: inset 3px 0 0 var(--primary), var(--elev-sm);
+    }
+
+    .bc-table tbody td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.6rem 0.9rem;
+        border-bottom: 1px dashed var(--border);
+    }
+
+    .bc-table tbody td:last-child {
+        border-bottom: 0;
+    }
+
+    .bc-table tbody tr:nth-child(even) > td,
+    .bc-table tbody tr:hover > td,
+    .bc-table tbody tr:hover > td:first-child {
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .bc-table tbody td[colspan] {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .bc-table tbody td[data-label]::before {
+        content: attr(data-label);
+        flex: 0 0 auto;
+        font-size: 0.62rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    .bc-table .table-actions {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        white-space: normal;
+    }
+}
+
+/* ==========================================================================
    Custom Utilities
    ========================================================================== */
 

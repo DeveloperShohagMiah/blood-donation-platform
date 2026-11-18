@@ -114,6 +114,14 @@ export const postBloodRequestsByIdAssignments = asyncHandler(async (req, res) =>
   send(res, { assignment }, 201);
 });
 
+/* All active assignments — used by admins to show who is handling a request. */
+export const getAllAssignments = asyncHandler(async (req, res) => {
+  const items = await RequestAssignment.find({ status: "active" })
+    .populate("volunteer", "fullName phone")
+    .populate("request", "patientName");
+  send(res, { items });
+});
+
 /* Assignments belonging to the signed-in volunteer. */
 export const getMyAssignments = asyncHandler(async (req, res) => {
   const items = await RequestAssignment.find({ volunteer: req.user._id })

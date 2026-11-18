@@ -5,6 +5,25 @@ import { apiFetch } from "../../../utils/api";
 import { useApiData } from "../hooks";
 import Select from "../../../components/Select";
 import {
+    TablePagination,
+    TableToolbar,
+} from "../components/TableControls";
+import { useTableControls } from "../components/useTableControls";
+
+const searchFields = [
+    "requesterName",
+    "requesterPhone",
+    "status",
+    (item) => item.donor?.user?.fullName,
+];
+const filterDefinitions = [
+    {
+        key: "status",
+        label: "Status",
+        options: ["pending", "contacted", "closed", "rejected"].map((value) => ({ value, label: value })),
+    },
+];
+import {
     EmptyState,
     ErrorBanner,
     LoadingRow,
@@ -20,6 +39,10 @@ const ContactRequestsAdmin = () => {
     const [busyId, setBusyId] = useState("");
     const [actionError, setActionError] = useState("");
     const items = data?.items || [];
+    const table = useTableControls(items, {
+        searchFields,
+        filters: filterDefinitions,
+    });
 
     const setStatus = async (id, status) => {
         setActionError("");
@@ -48,7 +71,9 @@ const ContactRequestsAdmin = () => {
             {!loading && !items.length ? (
                 <EmptyState icon={HeartHandshake} title="No contact requests" text="New requests will appear here." />
             ) : (
-                <TableShell>
+                <>
+                <TableToolbar controls={table} searchPlaceholder="Search requester or status" />
+                <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
                             <Th>Requester</Th>
@@ -62,8 +87,14 @@ const ContactRequestsAdmin = () => {
                     <tbody>
                         {loading ? (
                             <LoadingRow cols={6} />
+                        ) : table.rows.length === 0 ? (
+                            <tr>
+                                <Td colSpan={6} className="py-10 text-center text-muted-foreground">
+                                    No contact requests match your search or filters.
+                                </Td>
+                            </tr>
                         ) : (
-                            items.map((item) => (
+                            table.rows.map((item) => (
                                 <tr key={item._id} className="hover:bg-muted/30">
                                     <Td>
                                         <p className="font-bold">{item.requesterName}</p>
@@ -98,6 +129,7 @@ const ContactRequestsAdmin = () => {
                         )}
                     </tbody>
                 </TableShell>
+                </>
             )}
         </>
     );

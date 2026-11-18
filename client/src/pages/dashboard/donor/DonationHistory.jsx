@@ -1,5 +1,25 @@
 import { formatDate } from "../format";
 import { CalendarDays } from "lucide-react";
+import {
+    TablePagination,
+    TableToolbar,
+} from "../components/TableControls";
+import { useTableControls } from "../components/useTableControls";
+
+const searchFields = [
+    "request.patientName",
+    "request.bloodGroup",
+    "request.hospitalName",
+    "confirmedBy.fullName",
+];
+const filterDefinitions = [
+    {
+        key: "bloodGroup",
+        label: "Group",
+        options: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((value) => ({ value, label: value })),
+        match: (item, value) => (item.request?.bloodGroup || item.bloodGroup) === value,
+    },
+];
 import { useApiData } from "../hooks";
 import {
     EmptyState,
@@ -14,6 +34,10 @@ import {
 const DonationHistory = () => {
     const { data, loading, error } = useApiData("/donations/me");
     const items = data?.items || [];
+    const table = useTableControls(items, {
+        searchFields,
+        filters: filterDefinitions,
+    });
 
     return (
         <>
@@ -30,7 +54,9 @@ const DonationHistory = () => {
                     text="Once a volunteer confirms a donation, it will appear here."
                 />
             ) : (
-                <TableShell>
+                <>
+                <TableToolbar controls={table} searchPlaceholder="Search patient, hospital or group" />
+                <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
                             <Th>Date</Th>
@@ -44,8 +70,14 @@ const DonationHistory = () => {
                     <tbody>
                         {loading ? (
                             <LoadingRow cols={6} />
+                        ) : table.rows.length === 0 ? (
+                            <tr>
+                                <Td colSpan={6} className="py-10 text-center text-muted-foreground">
+                                    No donations match your search or filter.
+                                </Td>
+                            </tr>
                         ) : (
-                            items.map((item) => (
+                            table.rows.map((item) => (
                                 <tr key={item._id} className="hover:bg-muted/30">
                                     <Td className="font-bold">{formatDate(item.donatedAt)}</Td>
                                     <Td>{item.request?.patientName || "—"}</Td>
@@ -62,6 +94,7 @@ const DonationHistory = () => {
                         )}
                     </tbody>
                 </TableShell>
+                </>
             )}
         </>
     );

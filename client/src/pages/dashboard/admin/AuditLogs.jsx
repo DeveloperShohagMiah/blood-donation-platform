@@ -1,5 +1,13 @@
+import { useMemo } from "react";
 import { formatDate } from "../format";
 import { FileClock } from "lucide-react";
+import {
+    TablePagination,
+    TableToolbar,
+} from "../components/TableControls";
+import { useTableControls } from "../components/useTableControls";
+
+const searchFields = ["action", "resourceType", "ip", "actor.fullName", (item) => item.resourceId];
 import { useApiData } from "../hooks";
 import {
     EmptyState,
@@ -13,7 +21,17 @@ import {
 
 const AuditLogs = () => {
     const { data, loading, error } = useApiData("/audit-logs");
-    const items = data?.items || [];
+    const items = useMemo(() => data?.items || [], [data]);
+    const filters = useMemo(
+        () => [{
+            key: "resourceType",
+            label: "Resource",
+            options: [...new Set(items.map((item) => item.resourceType).filter(Boolean))]
+                .map((value) => ({ value, label: value })),
+        }],
+        [items]
+    );
+    const table = useTableControls(items, { searchFields, filters });
 
     return (
         <>
@@ -26,7 +44,9 @@ const AuditLogs = () => {
             {!loading && !items.length ? (
                 <EmptyState icon={FileClock} title="No activity yet" text="Actions will be logged here automatically." />
             ) : (
-                <TableShell>
+                <>
+                <TableToolbar controls={table} searchPlaceholder="Search action, actor or IP" />
+                <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
                             <Th>Time</Th>
@@ -39,8 +59,14 @@ const AuditLogs = () => {
                     <tbody>
                         {loading ? (
                             <LoadingRow cols={5} />
+                        ) : table.rows.length === 0 ? (
+                            <tr>
+                                <Td colSpan={5} className="py-10 text-center text-muted-foreground">
+                                    No activity matches your search or filter.
+                                </Td>
+                            </tr>
                         ) : (
-                            items.map((item) => (
+                            table.rows.map((item) => (
                                 <tr key={item._id} className="hover:bg-muted/30">
                                     <Td>{formatDate(item.createdAt)}</Td>
                                     <Td className="font-mono text-xs font-bold text-foreground">{item.action}</Td>
@@ -55,6 +81,7 @@ const AuditLogs = () => {
                         )}
                     </tbody>
                 </TableShell>
+                </>
             )}
         </>
     );

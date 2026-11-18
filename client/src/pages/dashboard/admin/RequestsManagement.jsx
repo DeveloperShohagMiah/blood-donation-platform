@@ -6,8 +6,15 @@ import { useApiData } from "../hooks";
 import Select from "../../../components/Select";
 import { formatDate } from "../format";
 import {
+    TablePagination,
+    TableToolbar,
+} from "../components/TableControls";
+import { useTableControls } from "../components/useTableControls";
+import {
+    ActionGroup,
     EmptyState,
     ErrorBanner,
+    IconButton,
     LoadingRow,
     PageHeader,
     StatusBadge,
@@ -27,6 +34,21 @@ const statuses = [
     "rejected",
     "cancelled",
     "expired",
+];
+
+const searchFields = ["patientName", "hospitalName", "status", "bloodGroup", "contactName"];
+const filterDefinitions = [
+    {
+        key: "status",
+        label: "Status",
+        options: statuses.map((value) => ({ value, label: value.replaceAll("_", " ") })),
+    },
+    {
+        key: "urgency",
+        label: "Urgency",
+        options: ["normal", "urgent", "critical"].map((value) => ({ value, label: value })),
+    },
+    { key: "bloodGroup", label: "Group", options: bloodGroups.map((value) => ({ value, label: value })) },
 ];
 
 const inputClass = (hasError) =>
@@ -64,11 +86,11 @@ const emptyForm = {
 const RequestsManagement = () => {
     const { data, loading, error, reload } = useApiData("/blood-requests?limit=100");
     const volunteersQuery = useApiData("/users?role=volunteer&limit=100");
+    const assignmentsQuery = useApiData("/assignments");
     const locationsQuery = useApiData("/locations");
     const [busyId, setBusyId] = useState("");
     const [actionError, setActionError] = useState("");
     const [notice, setNotice] = useState("");
-    const [filter, setFilter] = useState("");
     const [editing, setEditing] = useState(null);
     const [confirmDelete, setConfirmDelete] = useState(null);
 
@@ -85,15 +107,26 @@ const RequestsManagement = () => {
     const divisionValue = watch("division");
     const districtValue = watch("district");
 
-    const items = (data?.items || []).filter((item) =>
-        !filter ||
-        item.patientName.toLowerCase().includes(filter.toLowerCase()) ||
-        item.status.includes(filter.toLowerCase())
-    );
+    const items = data?.items || [];
+    const table = useTableControls(items, {
+        searchFields,
+        filters: filterDefinitions,
+    });
     const volunteers = (volunteersQuery.data?.items || []).filter(
         (user) => user.accountStatus === "approved"
     );
     const locations = locationsQuery.data?.items || [];
+
+    const assignedVolunteerByRequest = {};
+    (assignmentsQuery.data?.items || []).forEach((assignment) => {
+        const requestId =
+            typeof assignment.request === "string"
+                ? assignment.request
+                : assignment.request?._id;
+        if (requestId && assignment.volunteer?._id) {
+            assignedVolunteerByRequest[requestId] = assignment.volunteer._id;
+        }
+    });
 
     const closeForm = () => {
         setEditing(null);
@@ -172,6 +205,7 @@ const RequestsManagement = () => {
                 body: { volunteerUserId },
             });
             reload();
+            assignmentsQuery.reload();
         } catch (err) {
             setActionError(err.message);
         } finally {
@@ -188,6 +222,7 @@ const RequestsManagement = () => {
                 body: { mode: "automatic" },
             });
             reload();
+            assignmentsQuery.reload();
         } catch (err) {
             setActionError(err.message);
         } finally {
@@ -208,14 +243,6 @@ const RequestsManagement = () => {
             <PageHeader
                 title="All blood requests"
                 subtitle="Review, edit, assign and delete submitted requests."
-                actions={
-                    <input
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
-                        placeholder="Search patient or status"
-                        className="h-10 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none focus:border-primary sm:w-64"
-                    />
-                }
             />
             <ErrorBanner message={error || actionError} />
             {notice && (
@@ -234,7 +261,9 @@ const RequestsManagement = () => {
             {!loading && !items.length ? (
                 <EmptyState title="No requests found" text="Submitted requests will appear here." />
             ) : (
-                <TableShell>
+                <>
+                <TableToolbar controls={table} searchPlaceholder="Search patient, hospital or status" />
+                <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
                             <Th>Patient</Th>
@@ -249,8 +278,14 @@ const RequestsManagement = () => {
                     <tbody>
                         {loading ? (
                             <LoadingRow cols={7} />
+                        ) : table.rows.length === 0 ? (
+                            <tr>
+                                <Td colSpan={7} className="py-10 text-center text-muted-foreground">
+                                    No requests match your search or filters.
+                                </Td>
+                            </tr>
                         ) : (
-                            items.map((item) => (
+                            table.rows.map((item) => (
                                 <tr key={item._id} className="hover:bg-muted/30">
                                     <Td className="font-bold">{item.patientName}</Td>
                                     <Td>
@@ -273,21 +308,18 @@ const RequestsManagement = () => {
                                     <Td><StatusBadge value={item.status} /></Td>
                                     <Td>{formatDate(item.createdAt)}</Td>
                                     <Td>
-                                        <div className="flex flex-wrap justify-end gap-2">
-                                            <button
-                                                type="button"
-                                                title="Edit request"
+                                        <ActionGroup>
+                                            <IconButton
+                                                icon={Pencil}
+                                                label="Edit request"
                                                 onClick={() => openEdit(item)}
-                                                className="grid size-8 place-items-center rounded-lg border border-border text-muted-foreground transition hover:border-primary hover:text-primary"
-                                            >
-                                                <Pencil size={14} />
-                                            </button>
+                                            />
                                             <Select
                                                 size="sm"
-                                                defaultValue=""
+                                                value={assignedVolunteerByRequest[item._id] ?? ""}
                                                 disabled={busyId === item._id}
                                                 onChange={(e) => assign(item._id, e.target.value)}
-                                                className="w-32"
+                                                className="w-28 shrink-0"
                                             >
                                                 <option value="">Assign…</option>
                                                 {volunteers.map((volunteer) => (
@@ -296,30 +328,26 @@ const RequestsManagement = () => {
                                                     </option>
                                                 ))}
                                             </Select>
-                                            <button
-                                                type="button"
-                                                title="Auto-assign the least busy volunteer"
+                                            <IconButton
+                                                icon={UserPlus}
+                                                label="Auto-assign the least busy volunteer"
                                                 disabled={busyId === item._id}
                                                 onClick={() => autoAssign(item._id)}
-                                                className="grid size-8 place-items-center rounded-lg border border-border text-muted-foreground transition hover:border-primary hover:text-primary disabled:opacity-60"
-                                            >
-                                                <UserPlus size={14} />
-                                            </button>
-                                            <button
-                                                type="button"
-                                                title="Delete request"
+                                            />
+                                            <IconButton
+                                                icon={Trash2}
+                                                label="Delete request"
+                                                tone="danger"
                                                 onClick={() => setConfirmDelete(item)}
-                                                className="grid size-8 place-items-center rounded-lg border border-rose-200 text-rose-600 transition hover:bg-rose-50"
-                                            >
-                                                <Trash2 size={14} />
-                                            </button>
-                                        </div>
+                                            />
+                                        </ActionGroup>
                                     </Td>
                                 </tr>
                             ))
                         )}
                     </tbody>
                 </TableShell>
+                </>
             )}
 
             {editing && (

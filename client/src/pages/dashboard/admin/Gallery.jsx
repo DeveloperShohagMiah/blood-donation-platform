@@ -5,8 +5,15 @@ import { apiFetch } from "../../../utils/api";
 import { useApiData } from "../hooks";
 import { formatDate } from "../format";
 import {
+    TablePagination,
+    TableToolbar,
+} from "../components/TableControls";
+import { useTableControls } from "../components/useTableControls";
+import {
+    ActionGroup,
     EmptyState,
     ErrorBanner,
+    IconButton,
     LoadingRow,
     PageHeader,
     StatCard,
@@ -14,6 +21,19 @@ import {
     Td,
     Th,
 } from "../components/UI";
+
+const searchFields = ["caption", "url"];
+const filterDefinitions = [
+    {
+        key: "isActive",
+        label: "Visibility",
+        options: [
+            { value: "true", label: "Active" },
+            { value: "false", label: "Hidden" },
+        ],
+        match: (item, value) => String(Boolean(item.isActive)) === value,
+    },
+];
 
 const emptyForm = { url: "", caption: "", tall: false, order: 0, isActive: true };
 
@@ -50,6 +70,10 @@ const Gallery = () => {
 
     const items = data?.items || [];
     const activeCount = items.filter((item) => item.isActive).length;
+    const table = useTableControls(items, {
+        searchFields,
+        filters: filterDefinitions,
+    });
 
     const closeForm = () => {
         setEditing(null);
@@ -166,7 +190,9 @@ const Gallery = () => {
                     }
                 />
             ) : (
-                <TableShell>
+                <>
+                <TableToolbar controls={table} searchPlaceholder="Search caption or URL" />
+                <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
                             <Th>Image</Th>
@@ -180,8 +206,14 @@ const Gallery = () => {
                     <tbody>
                         {loading ? (
                             <LoadingRow cols={6} />
+                        ) : table.rows.length === 0 ? (
+                            <tr>
+                                <Td colSpan={6} className="py-10 text-center text-muted-foreground">
+                                    No images match your search or filters.
+                                </Td>
+                            </tr>
                         ) : (
-                            items.map((item) => (
+                            table.rows.map((item) => (
                                 <tr key={item._id} className="hover:bg-muted/30">
                                     <Td>
                                         <img
@@ -212,30 +244,26 @@ const Gallery = () => {
                                     </Td>
                                     <Td>{formatDate(item.createdAt)}</Td>
                                     <Td>
-                                        <div className="flex justify-end gap-2">
-                                            <button
-                                                type="button"
-                                                title="Edit image"
+                                        <ActionGroup>
+                                            <IconButton
+                                                icon={Pencil}
+                                                label="Edit image"
                                                 onClick={() => openEdit(item)}
-                                                className="grid size-8 place-items-center rounded-lg border border-border text-muted-foreground transition hover:border-primary hover:text-primary"
-                                            >
-                                                <Pencil size={14} />
-                                            </button>
-                                            <button
-                                                type="button"
-                                                title="Delete image"
+                                            />
+                                            <IconButton
+                                                icon={Trash2}
+                                                label="Delete image"
+                                                tone="danger"
                                                 onClick={() => setConfirmDelete(item)}
-                                                className="grid size-8 place-items-center rounded-lg border border-rose-200 text-rose-600 transition hover:bg-rose-50"
-                                            >
-                                                <Trash2 size={14} />
-                                            </button>
-                                        </div>
+                                            />
+                                        </ActionGroup>
                                     </Td>
                                 </tr>
                             ))
                         )}
                     </tbody>
                 </TableShell>
+                </>
             )}
 
             {editing && (

@@ -15,8 +15,15 @@ import { useApiData } from "../hooks";
 import Select from "../../../components/Select";
 import { formatDate } from "../format";
 import {
+    TablePagination,
+    TableToolbar,
+} from "../components/TableControls";
+import { useTableControls } from "../components/useTableControls";
+import {
+    ActionGroup,
     EmptyState,
     ErrorBanner,
+    IconButton,
     LoadingRow,
     PageHeader,
     StatusBadge,
@@ -24,6 +31,20 @@ import {
     Td,
     Th,
 } from "../components/UI";
+
+const searchFields = ["fullName", "email", "phone", "role", "accountStatus"];
+const filterDefinitions = [
+    {
+        key: "role",
+        label: "Role",
+        options: ["user", "volunteer", "moderator", "admin"].map((value) => ({ value, label: value })),
+    },
+    {
+        key: "accountStatus",
+        label: "Status",
+        options: ["pending", "approved", "rejected", "suspended"].map((value) => ({ value, label: value })),
+    },
+];
 
 const emptyForm = { fullName: "", phone: "", email: "" };
 const inputClass = (hasError) =>
@@ -47,7 +68,6 @@ const UsersManagement = () => {
     const [busyId, setBusyId] = useState("");
     const [actionError, setActionError] = useState("");
     const [notice, setNotice] = useState("");
-    const [filter, setFilter] = useState("");
     const [editing, setEditing] = useState(null);
     const [confirmDelete, setConfirmDelete] = useState(null);
 
@@ -59,11 +79,11 @@ const UsersManagement = () => {
         formState: { errors, isSubmitting },
     } = useForm({ defaultValues: emptyForm, mode: "onBlur" });
 
-    const items = (data?.items || []).filter((item) =>
-        !filter ||
-        item.fullName.toLowerCase().includes(filter.toLowerCase()) ||
-        item.phone.includes(filter)
-    );
+    const items = data?.items || [];
+    const table = useTableControls(items, {
+        searchFields,
+        filters: filterDefinitions,
+    });
 
     const closeForm = () => {
         setEditing(null);
@@ -145,14 +165,6 @@ const UsersManagement = () => {
             <PageHeader
                 title="Users & approvals"
                 subtitle={`${data?.pagination?.total || 0} active accounts`}
-                actions={
-                    <input
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
-                        placeholder="Search name or phone"
-                        className="h-10 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none focus:border-primary sm:w-64"
-                    />
-                }
             />
             <ErrorBanner message={error || actionError} />
             {notice && (
@@ -164,7 +176,9 @@ const UsersManagement = () => {
             {!loading && !items.length ? (
                 <EmptyState icon={Users} title="No users found" text="Registered accounts will appear here." />
             ) : (
-                <TableShell>
+                <>
+                <TableToolbar controls={table} searchPlaceholder="Search name, phone or email" />
+                <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
                             <Th>Name</Th>
@@ -178,8 +192,14 @@ const UsersManagement = () => {
                     <tbody>
                         {loading ? (
                             <LoadingRow cols={6} />
+                        ) : table.rows.length === 0 ? (
+                            <tr>
+                                <Td colSpan={6} className="py-10 text-center text-muted-foreground">
+                                    No users match your search or filters.
+                                </Td>
+                            </tr>
                         ) : (
-                            items.map((item) => (
+                            table.rows.map((item) => (
                                 <tr key={item._id} className="hover:bg-muted/30">
                                     <Td>
                                         <p className="font-bold">{item.fullName}</p>
@@ -202,21 +222,18 @@ const UsersManagement = () => {
                                     <Td><StatusBadge value={item.accountStatus} /></Td>
                                     <Td>{formatDate(item.createdAt)}</Td>
                                     <Td>
-                                        <div className="flex justify-end gap-2">
-                                            <button
-                                                type="button"
-                                                title="Edit user"
+                                        <ActionGroup>
+                                            <IconButton
+                                                icon={Pencil}
+                                                label="Edit user"
                                                 onClick={() => openEdit(item)}
-                                                className="grid size-8 place-items-center rounded-lg border border-border text-muted-foreground transition hover:border-primary hover:text-primary"
-                                            >
-                                                <Pencil size={14} />
-                                            </button>
+                                            />
                                             {item.accountStatus !== "approved" ? (
                                                 <button
                                                     type="button"
                                                     disabled={busyId === item._id}
                                                     onClick={() => act(item._id, { decision: "approve" })}
-                                                    className="inline-flex h-8 items-center gap-1 rounded-lg bg-primary px-2.5 text-xs font-bold text-white disabled:opacity-60"
+                                                    className="inline-flex h-8 items-center gap-1 rounded-lg bg-primary px-2.5 text-xs font-bold text-white transition hover:bg-primary-hover disabled:opacity-60"
                                                 >
                                                     <CheckCircle2 size={13} /> Approve
                                                 </button>
@@ -225,28 +242,27 @@ const UsersManagement = () => {
                                                     type="button"
                                                     disabled={busyId === item._id}
                                                     onClick={() => act(item._id, { decision: "suspend" })}
-                                                    className="inline-flex h-8 items-center gap-1 rounded-lg border border-border px-2.5 text-xs font-bold text-muted-foreground disabled:opacity-60"
+                                                    className="inline-flex h-8 items-center gap-1 rounded-lg border border-border px-2.5 text-xs font-bold text-muted-foreground transition hover:border-primary hover:text-primary disabled:opacity-60"
                                                 >
                                                     <XCircle size={13} /> Suspend
                                                 </button>
                                             )}
                                             {item._id !== currentUser?._id && (
-                                                <button
-                                                    type="button"
-                                                    title="Deactivate account"
+                                                <IconButton
+                                                    icon={Trash2}
+                                                    label="Deactivate account"
+                                                    tone="danger"
                                                     onClick={() => setConfirmDelete(item)}
-                                                    className="grid size-8 place-items-center rounded-lg border border-rose-200 text-rose-600 transition hover:bg-rose-50"
-                                                >
-                                                    <Trash2 size={14} />
-                                                </button>
+                                                />
                                             )}
-                                        </div>
+                                        </ActionGroup>
                                     </Td>
                                 </tr>
                             ))
                         )}
                     </tbody>
                 </TableShell>
+                </>
             )}
 
             {editing && (

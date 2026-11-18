@@ -1,3 +1,5 @@
+import { Children, cloneElement, isValidElement } from "react";
+
 const toneClasses = {
     primary: "bg-primary/10 text-primary ring-primary/15",
     success: "bg-emerald-500/10 text-emerald-600 ring-emerald-500/15",
@@ -81,22 +83,97 @@ export const EmptyState = ({ icon: Icon, title, text, action }) => (
     </div>
 );
 
-export const TableShell = ({ children }) => (
-    <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-sm">
-        <table className="w-full text-left text-sm">{children}</table>
-    </div>
-);
+/* --------------------------------------------------------------------------
+   Tables
+   Header labels are copied onto matching cells so the exact same markup can
+   collapse into labelled cards on small screens.
+   -------------------------------------------------------------------------- */
+
+const nodeText = (node) => {
+    if (typeof node === "string" || typeof node === "number") return String(node);
+    if (Array.isArray(node)) return node.map(nodeText).join(" ").trim();
+    if (isValidElement(node)) return nodeText(node.props.children);
+    return "";
+};
+
+const headerLabels = (children) => {
+    const labels = [];
+    Children.forEach(children, (child) => {
+        if (!isValidElement(child)) return;
+        if (child.type === "th" || child.type === Th) {
+            labels.push(nodeText(child.props.children));
+        } else if (child.props.children) {
+            labels.push(...headerLabels(child.props.children));
+        }
+    });
+    return labels;
+};
+
+const withCellLabels = (children, labels) =>
+    Children.map(children, (child, index) => {
+        if (!isValidElement(child)) return child;
+        if (child.type === "td" || child.type === Td) {
+            const label = child.props.colSpan
+                ? undefined
+                : child.props.label ?? labels[index] ?? "";
+            return cloneElement(child, { label });
+        }
+        if (!child.props.children) return child;
+        return cloneElement(child, {}, withCellLabels(child.props.children, labels));
+    });
+
+export const TableShell = ({ children, footer, className = "" }) => {
+    const labels = headerLabels(children);
+
+    return (
+        <div className={`overflow-hidden rounded-2xl border border-border bg-card shadow-sm ${className}`}>
+            <div className="overflow-x-auto">
+                <table className="bc-table w-full text-left text-sm">
+                    {withCellLabels(children, labels)}
+                </table>
+            </div>
+            {footer && <div className="border-t border-border">{footer}</div>}
+        </div>
+    );
+};
 
 export const Th = ({ children, className = "" }) => (
-    <th className={`border-b border-border bg-muted/40 px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground ${className}`}>
+    <th scope="col" className={`px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground ${className}`}>
         {children}
     </th>
 );
 
-export const Td = ({ children, className = "" }) => (
-    <td className={`border-b border-border px-4 py-3 align-middle text-foreground ${className}`}>
+export const Td = ({ children, className = "", label, ...props }) => (
+    <td data-label={label} className={`px-4 py-3.5 align-middle text-foreground ${className}`} {...props}>
         {children}
     </td>
+);
+
+const iconButtonTones = {
+    default: "border-border bg-card text-muted-foreground hover:border-primary/50 hover:bg-primary/5 hover:text-primary",
+    danger: "border-rose-200 bg-card text-rose-600 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700",
+    success: "border-emerald-200 bg-card text-emerald-600 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700",
+};
+
+/** Consistent, accessible icon button for table row actions. */
+export const IconButton = ({ icon: Icon, label, tone = "default", className = "", disabled, ...props }) => (
+    <button
+        type="button"
+        title={label}
+        aria-label={label}
+        disabled={disabled}
+        className={`inline-grid size-8 shrink-0 place-items-center rounded-lg border transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 ${iconButtonTones[tone] || iconButtonTones.default} ${className}`}
+        {...props}
+    >
+        <Icon size={14} strokeWidth={2} />
+    </button>
+);
+
+/** Keeps row actions on a single, tidy line instead of wrapping. */
+export const ActionGroup = ({ children, className = "" }) => (
+    <div className={`table-actions flex items-center justify-end gap-1.5 whitespace-nowrap ${className}`}>
+        {children}
+    </div>
 );
 
 export const ErrorBanner = ({ message }) =>

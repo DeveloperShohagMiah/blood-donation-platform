@@ -1,5 +1,25 @@
 import { formatDate } from "../format";
 import { CalendarDays } from "lucide-react";
+import {
+    TablePagination,
+    TableToolbar,
+} from "../components/TableControls";
+import { useTableControls } from "../components/useTableControls";
+
+const searchFields = [
+    "donor.user.fullName",
+    "donor.bloodGroup",
+    "request.patientName",
+    "request.bloodGroup",
+    "confirmedBy.fullName",
+];
+const filterDefinitions = [
+    {
+        key: "request.bloodGroup",
+        label: "Group",
+        options: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((value) => ({ value, label: value })),
+    },
+];
 import { useApiData } from "../hooks";
 import {
     EmptyState,
@@ -14,6 +34,10 @@ import {
 const DonationsAdmin = () => {
     const { data, loading, error } = useApiData("/donations");
     const items = data?.items || [];
+    const table = useTableControls(items, {
+        searchFields,
+        filters: filterDefinitions,
+    });
 
     return (
         <>
@@ -26,7 +50,9 @@ const DonationsAdmin = () => {
             {!loading && !items.length ? (
                 <EmptyState icon={CalendarDays} title="No donations recorded" text="Confirmed donations will appear here." />
             ) : (
-                <TableShell>
+                <>
+                <TableToolbar controls={table} searchPlaceholder="Search donor, patient or group" />
+                <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
                             <Th>Date</Th>
@@ -40,8 +66,14 @@ const DonationsAdmin = () => {
                     <tbody>
                         {loading ? (
                             <LoadingRow cols={6} />
+                        ) : table.rows.length === 0 ? (
+                            <tr>
+                                <Td colSpan={6} className="py-10 text-center text-muted-foreground">
+                                    No donations match your search or filter.
+                                </Td>
+                            </tr>
                         ) : (
-                            items.map((item) => (
+                            table.rows.map((item) => (
                                 <tr key={item._id} className="hover:bg-muted/30">
                                     <Td className="font-bold">{formatDate(item.donatedAt)}</Td>
                                     <Td>{item.donor?.user?.fullName || item.donor?.bloodGroup || "—"}</Td>
@@ -58,6 +90,7 @@ const DonationsAdmin = () => {
                         )}
                     </tbody>
                 </TableShell>
+                </>
             )}
         </>
     );

@@ -5,6 +5,23 @@ import { Droplets, Plus, XCircle } from "lucide-react";
 import { apiFetch } from "../../../utils/api";
 import { useApiData } from "../hooks";
 import {
+    TablePagination,
+    TableToolbar,
+} from "../components/TableControls";
+import { useTableControls } from "../components/useTableControls";
+
+const searchFields = ["patientName", "hospitalName", "status", "bloodGroup"];
+const filterDefinitions = [
+    {
+        key: "status",
+        label: "Status",
+        options: [
+            "submitted", "pending_verification", "verified", "matching",
+            "in_progress", "fulfilled", "rejected", "cancelled", "expired",
+        ].map((value) => ({ value, label: value.replaceAll("_", " ") })),
+    },
+];
+import {
     EmptyState,
     ErrorBanner,
     LoadingRow,
@@ -20,6 +37,10 @@ const MyRequests = () => {
     const [busyId, setBusyId] = useState("");
     const [actionError, setActionError] = useState("");
     const items = data?.items || [];
+    const table = useTableControls(items, {
+        searchFields,
+        filters: filterDefinitions,
+    });
 
     const cancel = async (id) => {
         setActionError("");
@@ -63,7 +84,9 @@ const MyRequests = () => {
                     }
                 />
             ) : (
-                <TableShell>
+                <>
+                <TableToolbar controls={table} searchPlaceholder="Search patient, hospital or status" />
+                <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
                             <Th>Patient</Th>
@@ -78,8 +101,14 @@ const MyRequests = () => {
                     <tbody>
                         {loading ? (
                             <LoadingRow cols={7} />
+                        ) : table.rows.length === 0 ? (
+                            <tr>
+                                <Td colSpan={7} className="py-10 text-center text-muted-foreground">
+                                    No requests match your search or filter.
+                                </Td>
+                            </tr>
                         ) : (
-                            items.map((item) => (
+                            table.rows.map((item) => (
                                 <tr key={item._id} className="hover:bg-muted/30">
                                     <Td className="font-bold">{item.patientName}</Td>
                                     <Td>
@@ -121,6 +150,7 @@ const MyRequests = () => {
                         )}
                     </tbody>
                 </TableShell>
+                </>
             )}
         </>
     );

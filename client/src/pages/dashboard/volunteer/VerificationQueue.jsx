@@ -4,6 +4,20 @@ import { apiFetch } from "../../../utils/api";
 import { useApiData } from "../hooks";
 import { formatDate } from "../format";
 import {
+    TablePagination,
+    TableToolbar,
+} from "../components/TableControls";
+import { useTableControls } from "../components/useTableControls";
+
+const searchFields = ["patientName", "hospitalName", "bloodGroup", "status"];
+const filterDefinitions = [
+    {
+        key: "bloodGroup",
+        label: "Group",
+        options: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((value) => ({ value, label: value })),
+    },
+];
+import {
     EmptyState,
     ErrorBanner,
     PageHeader,
@@ -27,6 +41,10 @@ const VerificationQueue = () => {
             .filter((item) => item.status === "active")
             .map((item) => (typeof item.request === "string" ? item.request : item.request?._id))
     );
+    const table = useTableControls(items, {
+        searchFields,
+        filters: filterDefinitions,
+    });
 
     const claim = async (id) => {
         setActionError("");
@@ -86,7 +104,9 @@ const VerificationQueue = () => {
                     text="There are no submitted requests waiting for verification."
                 />
             ) : (
-                <TableShell>
+                <>
+                <TableToolbar controls={table} searchPlaceholder="Search patient, hospital or group" />
+                <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
                             <Th>Patient</Th>
@@ -99,8 +119,14 @@ const VerificationQueue = () => {
                     <tbody>
                         {queueQuery.loading ? (
                             <tr><Td colSpan={5}>Loading…</Td></tr>
+                        ) : table.rows.length === 0 ? (
+                            <tr>
+                                <Td colSpan={5} className="py-10 text-center text-muted-foreground">
+                                    No requests match your search or filter.
+                                </Td>
+                            </tr>
                         ) : (
-                            items.map((item) => {
+                            table.rows.map((item) => {
                                 const canVerify = assignedIds.has(item._id);
                                 return (
                                     <tr key={item._id} className="hover:bg-muted/30">
@@ -152,6 +178,7 @@ const VerificationQueue = () => {
                         )}
                     </tbody>
                 </TableShell>
+                </>
             )}
         </>
     );
