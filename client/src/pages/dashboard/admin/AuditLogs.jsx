@@ -1,3 +1,4 @@
+import { t } from "../../../utils/tr.js";
 import { useMemo } from "react";
 import { formatDate } from "../format";
 import { FileClock } from "lucide-react";
@@ -49,11 +50,11 @@ const AuditLogs = () => {
                 <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
-                            <Th>Time</Th>
-                            <Th>Action</Th>
-                            <Th>Resource</Th>
-                            <Th>Actor</Th>
-                            <Th>IP</Th>
+                            <Th>{t("text.Time")}</Th>
+                            <Th>{t("text.Action")}</Th>
+                            <Th>{t("text.Resource")}</Th>
+                            <Th>{t("text.Actor")}</Th>
+                            <Th>{t("text.IP")}</Th>
                         </tr>
                     </thead>
                     <tbody>

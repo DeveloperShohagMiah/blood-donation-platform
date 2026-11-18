@@ -1,3 +1,4 @@
+import { t } from "../../../utils/tr.js";
 import { formatDate } from "../format";
 import { CalendarDays } from "lucide-react";
 import {
@@ -55,12 +56,12 @@ const DonationsAdmin = () => {
                 <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
-                            <Th>Date</Th>
-                            <Th>Donor</Th>
-                            <Th>Patient</Th>
-                            <Th>Group</Th>
-                            <Th>Units</Th>
-                            <Th>Confirmed by</Th>
+                            <Th>{t("text.Date")}</Th>
+                            <Th>{t("text.Donor")}</Th>
+                            <Th>{t("text.Patient")}</Th>
+                            <Th>{t("text.Group")}</Th>
+                            <Th>{t("text.Units")}</Th>
+                            <Th>{t("text.Confirmed by")}</Th>
                         </tr>
                     </thead>
                     <tbody>

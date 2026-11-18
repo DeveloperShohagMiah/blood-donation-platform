@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { t } from "../utils/tr";
 import {
     AlertCircle,
     ArrowRight,
@@ -42,7 +43,7 @@ const Field = ({ id, label, required, hint, error, children, className = "" }) =
             {required ? (
                 <span className="text-[#C62838]" aria-hidden="true"> *</span>
             ) : (
-                <span className="ml-1.5 text-xs font-medium text-[#84918C]">(optional)</span>
+                <span className="ml-1.5 text-xs font-medium text-[#84918C]">{t("text.(optional)")}</span>
             )}
         </label>
         {children}

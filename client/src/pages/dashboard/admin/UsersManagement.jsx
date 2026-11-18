@@ -1,3 +1,4 @@
+import { t } from "../../../utils/tr.js";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -181,12 +182,12 @@ const UsersManagement = () => {
                 <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
-                            <Th>Name</Th>
-                            <Th>Phone</Th>
-                            <Th>Role</Th>
-                            <Th>Status</Th>
-                            <Th>Joined</Th>
-                            <Th className="text-right">Actions</Th>
+                            <Th>{t("text.Name")}</Th>
+                            <Th>{t("text.Phone")}</Th>
+                            <Th>{t("text.Role")}</Th>
+                            <Th>{t("text.Status")}</Th>
+                            <Th>{t("text.Joined")}</Th>
+                            <Th className="text-right">{t("text.Actions")}</Th>
                         </tr>
                     </thead>
                     <tbody>
@@ -213,10 +214,10 @@ const UsersManagement = () => {
                                             disabled={busyId === item._id}
                                             onChange={(e) => changeRole(item._id, e.target.value)}
                                         >
-                                            <option value="user">user</option>
-                                            <option value="volunteer">volunteer</option>
-                                            <option value="moderator">moderator</option>
-                                            <option value="admin">admin</option>
+                                            <option value="user">{t("text.user")}</option>
+                                            <option value="volunteer">{t("text.volunteer")}</option>
+                                            <option value="moderator">{t("text.moderator")}</option>
+                                            <option value="admin">{t("text.admin")}</option>
                                         </Select>
                                     </Td>
                                     <Td><StatusBadge value={item.accountStatus} /></Td>
@@ -274,14 +275,14 @@ const UsersManagement = () => {
                         className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-2xl"
                     >
                         <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-extrabold text-foreground">Edit user</h2>
+                            <h2 className="text-lg font-extrabold text-foreground">{t("text.Edit user")}</h2>
                             <button type="button" onClick={closeForm} aria-label="Close" className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-muted">
                                 <X size={18} />
                             </button>
                         </div>
                         <div className="mt-5 space-y-4">
                             <div>
-                                <label htmlFor="edit-name" className="mb-1.5 block text-sm font-bold text-foreground">Full name</label>
+                                <label htmlFor="edit-name" className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Full name")}</label>
                                 <input
                                     id="edit-name"
                                     {...register("fullName", {
@@ -293,7 +294,7 @@ const UsersManagement = () => {
                                 <FieldError message={errors.fullName?.message} />
                             </div>
                             <div>
-                                <label htmlFor="edit-phone" className="mb-1.5 block text-sm font-bold text-foreground">Phone number</label>
+                                <label htmlFor="edit-phone" className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Phone number")}</label>
                                 <input
                                     id="edit-phone"
                                     {...register("phone", {
@@ -308,7 +309,7 @@ const UsersManagement = () => {
                                 <FieldError message={errors.phone?.message} />
                             </div>
                             <div>
-                                <label htmlFor="edit-email" className="mb-1.5 block text-sm font-bold text-foreground">Email</label>
+                                <label htmlFor="edit-email" className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Email")}</label>
                                 <input
                                     id="edit-email"
                                     type="email"

@@ -333,7 +333,7 @@ const Login = ({ onSuccess }) => {
                         </span>
 
                         <span className="text-xl font-extrabold tracking-tight">
-                            Blood <span className="text-primary">Connect</span>
+                            Blood <span className="text-primary">{t("text.Connect")}</span>
                         </span>
                     </Link>
 
@@ -398,7 +398,7 @@ const Login = ({ onSuccess }) => {
                     </span>
 
                     <span className="text-lg font-extrabold tracking-tight text-slate-900">
-                        Blood <span className="text-primary">Connect</span>
+                        Blood <span className="text-primary">{t("text.Connect")}</span>
                     </span>
                 </Link>
 

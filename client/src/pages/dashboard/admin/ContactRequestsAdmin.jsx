@@ -1,3 +1,4 @@
+import { t } from "../../../utils/tr.js";
 import { formatDate } from "../format";
 import { useState } from "react";
 import { HeartHandshake } from "lucide-react";
@@ -76,12 +77,12 @@ const ContactRequestsAdmin = () => {
                 <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
-                            <Th>Requester</Th>
-                            <Th>Donor</Th>
-                            <Th>Message</Th>
-                            <Th>Status</Th>
-                            <Th>Date</Th>
-                            <Th className="text-right">Action</Th>
+                            <Th>{t("text.Requester")}</Th>
+                            <Th>{t("text.Donor")}</Th>
+                            <Th>{t("text.Message")}</Th>
+                            <Th>{t("text.Status")}</Th>
+                            <Th>{t("text.Date")}</Th>
+                            <Th className="text-right">{t("text.Action")}</Th>
                         </tr>
                     </thead>
                     <tbody>
@@ -118,10 +119,10 @@ const ContactRequestsAdmin = () => {
                                             disabled={busyId === item._id}
                                             onChange={(e) => setStatus(item._id, e.target.value)}
                                         >
-                                            <option value="pending">pending</option>
-                                            <option value="contacted">contacted</option>
-                                            <option value="closed">closed</option>
-                                            <option value="rejected">rejected</option>
+                                            <option value="pending">{t("text.pending")}</option>
+                                            <option value="contacted">{t("text.contacted")}</option>
+                                            <option value="closed">{t("text.closed")}</option>
+                                            <option value="rejected">{t("text.rejected")}</option>
                                         </Select>
                                     </Td>
                                 </tr>

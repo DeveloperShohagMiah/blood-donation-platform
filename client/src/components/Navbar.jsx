@@ -40,7 +40,14 @@ const Navbar = () => {
     const closeMenu = () => setMenuOpen(false);
 
     const changeLanguage = (language) => {
-        i18n.changeLanguage(language === "BN" ? "bn" : "en");
+        const next = language === "BN" ? "bn" : "en";
+        if (next === i18n.language) return;
+        try {
+            localStorage.setItem("bc:language", next);
+        } catch {
+            // Private browsing may block storage; the switch still applies this session.
+        }
+        i18n.changeLanguage(next).then(() => window.location.reload());
     };
 
     /* Condense the bar once the page scrolls */
@@ -147,7 +154,7 @@ const Navbar = () => {
 
                         <span className="flex flex-col">
                             <span className="text-[20px] leading-none font-extrabold tracking-tight text-[#192623]">
-                                Blood <span className="text-[#C62838]">Connect</span>
+                                Blood <span className="text-[#C62838]">{t("text.Connect")}</span>
                             </span>
                             <span
                                 className={[

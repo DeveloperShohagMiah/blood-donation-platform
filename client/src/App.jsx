@@ -1,3 +1,4 @@
+import { t } from "./utils/tr.js";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./layouts/Layout";
 import Home from "./pages/Home";
@@ -49,7 +50,7 @@ const App = () => {
                 <Route path="contact" element={<Contact />} />
                 <Route path="campaigns" element={<PublicCampaigns />} />
                 <Route path="blood-requests" element={<BloodRequests />} />
-                <Route path="*" element={<div className="grid min-h-[60vh] place-items-center text-xl font-bold">404 Not Found</div>} />
+                <Route path="*" element={<div className="grid min-h-[60vh] place-items-center text-xl font-bold">{t("text.404 Not Found")}</div>} />
             </Route>
 
             <Route

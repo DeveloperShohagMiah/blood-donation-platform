@@ -86,7 +86,7 @@ const Footer = () => {
                                 <Droplets size={22} strokeWidth={2.5} fill="rgba(255,255,255,0.18)" />
                             </span>
                             <span className="text-[21px] leading-none font-extrabold tracking-tight">
-                                Blood <span className="text-[#F26A77]">Connect</span>
+                                Blood <span className="text-[#F26A77]">{t("text.Connect")}</span>
                             </span>
                             <span></span>
                         </Link>

@@ -1,3 +1,4 @@
+import { t } from "../../../utils/tr.js";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CheckCircle2, Save } from "lucide-react";
@@ -116,8 +117,8 @@ const VolunteerProfile = () => {
                                 {...register("availability")}
                                 value={watch("availability")}
                             >
-                                <option value="available">Available</option>
-                                <option value="unavailable">Unavailable</option>
+                                <option value="available">{t("text.Available")}</option>
+                                <option value="unavailable">{t("text.Unavailable")}</option>
                             </Select>
                         </div>
                         <div>
@@ -146,7 +147,7 @@ const VolunteerProfile = () => {
                 </section>
 
                 <section className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6">
-                    <h2 className="font-extrabold text-foreground">Service areas</h2>
+                    <h2 className="font-extrabold text-foreground">{t("text.Service areas")}</h2>
                     <p className="mt-1 text-sm text-muted-foreground">
                         Select the districts and upazilas you can cover.
                     </p>

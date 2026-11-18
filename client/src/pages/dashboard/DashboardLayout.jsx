@@ -1,8 +1,10 @@
+import { t } from "../../utils/tr.js";
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
     Bell,
     CalendarDays,
+    ExternalLink,
     ChevronLeft,
     ClipboardList,
     Droplets,
@@ -102,7 +104,7 @@ const DashboardLayout = () => {
                 </span>
                 {(!collapsed || mobile) && (
                     <span className="text-[17px] font-extrabold tracking-tight whitespace-nowrap">
-                        Blood <span className="text-[#F26A77]">Connect</span>
+                        Blood <span className="text-[#F26A77]">{t("text.Connect")}</span>
                     </span>
                 )}
                 {mobile && (
@@ -157,6 +159,16 @@ const DashboardLayout = () => {
             </nav>
 
             <div className="border-t border-white/10 p-3">
+                <a
+                    href="/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={collapsed && !mobile ? "View website" : undefined}
+                    className="mb-2 flex items-center gap-2.5 rounded-xl border border-white/10 px-3 py-2.5 text-sm font-semibold text-white/75 transition hover:border-primary/40 hover:bg-white/5 hover:text-white"
+                >
+                    <ExternalLink size={16} className="shrink-0" />
+                    {(!collapsed || mobile) && "View website"}
+                </a>
                 <div className="flex items-center gap-3 rounded-xl bg-white/5 p-2.5">
                     <span className="grid size-9 shrink-0 place-items-center rounded-full bg-white/10 text-xs font-bold text-white">
                         {user?.fullName?.slice(0, 2).toUpperCase() || "BC"}
@@ -246,6 +258,16 @@ const DashboardLayout = () => {
                                 </span>
                             )}
                         </Link>
+                        <a
+                            href="/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="View website (opens in new tab)"
+                            title="View website"
+                            className="hidden size-10 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-primary sm:grid"
+                        >
+                            <ExternalLink size={18} />
+                        </a>
                         <UserMenu />
                     </div>
                 </header>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Geist+Mono:wght@400;500;600;700&family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Geist+Mono:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 @import "tailwindcss";
 
@@ -63,9 +63,10 @@
 
 /* Static values */
 @theme {
-  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Philosopher", ui-serif, Georgia, serif;
-  --font-code: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-display: "Bricolage Grotesque", "Hind Siliguri", "Noto Sans Bengali", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Philosopher", "Hind Siliguri", "Noto Sans Bengali", ui-serif, Georgia, serif;
+  --font-code: "Geist Mono", "Hind Siliguri", "Noto Sans Bengali", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-bangla: "Hind Siliguri", "Noto Sans Bengali", ui-sans-serif, system-ui, sans-serif;
 
   --radius-sm: 0.375rem;
   --radius-md: 0.75rem;
@@ -937,4 +938,21 @@
   .btn {
     display: none !important;
   }
+}
+
+/* Bangla mode: use the dedicated Bengali typeface across the whole UI. */
+html[lang="bn"] body,
+html[lang="bn"] h1,
+html[lang="bn"] h2,
+html[lang="bn"] h3,
+html[lang="bn"] h4,
+html[lang="bn"] h5,
+html[lang="bn"] h6,
+html[lang="bn"] button,
+html[lang="bn"] input,
+html[lang="bn"] select,
+html[lang="bn"] textarea,
+html[lang="bn"] .bc-select__trigger {
+  font-family: var(--font-bangla);
+  letter-spacing: 0;
 }

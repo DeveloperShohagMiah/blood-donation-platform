@@ -1,3 +1,4 @@
+import { t } from "../utils/tr.js";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -91,7 +92,7 @@ const ForgotPassword = () => {
                         <Droplets size={21} />
                     </span>
                     <span className="text-lg font-extrabold tracking-tight text-slate-900">
-                        Blood <span className="text-primary">Connect</span>
+                        Blood <span className="text-primary">{t("text.Connect")}</span>
                     </span>
                 </Link>
 

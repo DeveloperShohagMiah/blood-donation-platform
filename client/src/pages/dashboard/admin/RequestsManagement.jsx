@@ -1,3 +1,4 @@
+import { t } from "../../../utils/tr.js";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AlertCircle, Check, Pencil, Trash2, UserPlus, X } from "lucide-react";
@@ -253,7 +254,7 @@ const RequestsManagement = () => {
 
             {!volunteersQuery.loading && !volunteers.length && (
                 <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                    No approved volunteers yet. Set a user's role to <strong>volunteer</strong> and
+                    No approved volunteers yet. Set a user's role to <strong>{t("text.volunteer")}</strong> and
                     approve them in <strong>Users &amp; approvals</strong> before assigning.
                 </div>
             )}
@@ -266,13 +267,13 @@ const RequestsManagement = () => {
                 <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
-                            <Th>Patient</Th>
-                            <Th>Group</Th>
-                            <Th>Urgency</Th>
-                            <Th>Hospital</Th>
-                            <Th>Status</Th>
-                            <Th>Date</Th>
-                            <Th className="text-right">Actions</Th>
+                            <Th>{t("text.Patient")}</Th>
+                            <Th>{t("text.Group")}</Th>
+                            <Th>{t("text.Urgency")}</Th>
+                            <Th>{t("text.Hospital")}</Th>
+                            <Th>{t("text.Status")}</Th>
+                            <Th>{t("text.Date")}</Th>
+                            <Th className="text-right">{t("text.Actions")}</Th>
                         </tr>
                     </thead>
                     <tbody>
@@ -359,7 +360,7 @@ const RequestsManagement = () => {
                         className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-2xl"
                     >
                         <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-extrabold text-foreground">Edit request</h2>
+                            <h2 className="text-lg font-extrabold text-foreground">{t("text.Edit request")}</h2>
                             <button type="button" onClick={closeForm} aria-label="Close" className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-muted">
                                 <X size={18} />
                             </button>
@@ -367,7 +368,7 @@ const RequestsManagement = () => {
 
                         <div className="mt-5 grid gap-4 sm:grid-cols-2">
                             <label className="sm:col-span-2">
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Patient name</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Patient name")}</span>
                                 <input
                                     {...register("patientName", {
                                         required: "Patient name is required.",
@@ -378,21 +379,21 @@ const RequestsManagement = () => {
                                 <FieldError message={errors.patientName?.message} />
                             </label>
                             <label>
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Blood group</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Blood group")}</span>
                                 <Select size="lg" {...register("bloodGroup", { required: true })} value={watch("bloodGroup")} invalid={Boolean(errors.bloodGroup)}>
                                     {bloodGroups.map((group) => <option key={group} value={group}>{group}</option>)}
                                 </Select>
                             </label>
                             <label>
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Urgency</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Urgency")}</span>
                                 <Select size="lg" {...register("urgency")} value={watch("urgency")}>
-                                    <option value="normal">Normal</option>
-                                    <option value="urgent">Urgent</option>
-                                    <option value="critical">Critical</option>
+                                    <option value="normal">{t("text.Normal")}</option>
+                                    <option value="urgent">{t("text.Urgent")}</option>
+                                    <option value="critical">{t("text.Critical")}</option>
                                 </Select>
                             </label>
                             <label>
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Units</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Units")}</span>
                                 <input
                                     type="number"
                                     min="1"
@@ -407,12 +408,12 @@ const RequestsManagement = () => {
                                 <FieldError message={errors.units?.message} />
                             </label>
                             <label>
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Needed by</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Needed by")}</span>
                                 <input type="date" {...register("neededAt")} className={inputClass(errors.neededAt)} />
                                 <FieldError message={errors.neededAt?.message} />
                             </label>
                             <label className="sm:col-span-2">
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Hospital</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Hospital")}</span>
                                 <input
                                     {...register("hospitalName", { required: "Hospital is required." })}
                                     className={inputClass(errors.hospitalName)}
@@ -420,11 +421,11 @@ const RequestsManagement = () => {
                                 <FieldError message={errors.hospitalName?.message} />
                             </label>
                             <label className="sm:col-span-2">
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Hospital address</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Hospital address")}</span>
                                 <input {...register("hospitalAddress")} className={inputClass(errors.hospitalAddress)} />
                             </label>
                             <label>
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Division</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Division")}</span>
                                 <Select
                                     size="lg"
                                     {...register("division", {
@@ -435,12 +436,12 @@ const RequestsManagement = () => {
                                     })}
                                     value={divisionValue}
                                 >
-                                    <option value="">Select division</option>
+                                    <option value="">{t("text.Select division")}</option>
                                     {divisions.map((item) => <option key={item._id} value={item._id}>{item.nameEn}</option>)}
                                 </Select>
                             </label>
                             <label>
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">District</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.District")}</span>
                                 <Select
                                     size="lg"
                                     {...register("district", {
@@ -449,33 +450,33 @@ const RequestsManagement = () => {
                                     value={districtValue}
                                     disabled={!divisionValue}
                                 >
-                                    <option value="">Select district</option>
+                                    <option value="">{t("text.Select district")}</option>
                                     {districts.map((item) => <option key={item._id} value={item._id}>{item.nameEn}</option>)}
                                 </Select>
                             </label>
                             <label>
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Upazila</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Upazila")}</span>
                                 <Select size="lg" {...register("upazila")} value={watch("upazila")} disabled={!districtValue}>
-                                    <option value="">Select upazila</option>
+                                    <option value="">{t("text.Select upazila")}</option>
                                     {upazilas.map((item) => <option key={item._id} value={item._id}>{item.nameEn}</option>)}
                                 </Select>
                             </label>
                             <label>
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Status</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Status")}</span>
                                 <Select size="lg" {...register("status")} value={watch("status")}>
                                     {statuses.map((status) => <option key={status} value={status}>{status.replaceAll("_", " ")}</option>)}
                                 </Select>
                             </label>
                             <label>
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Contact name</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Contact name")}</span>
                                 <input {...register("contactName")} className={inputClass(errors.contactName)} />
                             </label>
                             <label>
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Contact phone</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Contact phone")}</span>
                                 <input {...register("contactPhone")} className={inputClass(errors.contactPhone)} />
                             </label>
                             <label className="sm:col-span-2">
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Details</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Details")}</span>
                                 <textarea rows={2} {...register("details")} className="w-full resize-y rounded-xl border border-border bg-background px-3.5 py-3 text-sm outline-none focus:border-primary" />
                             </label>
                         </div>
@@ -490,7 +491,7 @@ const RequestsManagement = () => {
                             <button type="submit" disabled={isSubmitting || busyId === editing._id} className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-white disabled:opacity-60">
                                 {isSubmitting || busyId === editing._id ? "Saving…" : "Save changes"}
                             </button>
-                            <button type="button" onClick={closeForm} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">Cancel</button>
+                            <button type="button" onClick={closeForm} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">{t("text.Cancel")}</button>
                         </div>
                     </form>
                 </div>
@@ -507,7 +508,7 @@ const RequestsManagement = () => {
                             <button type="button" disabled={busyId === confirmDelete._id} onClick={remove} className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-rose-600 px-4 text-sm font-bold text-white disabled:opacity-60">
                                 {busyId === confirmDelete._id ? "Deleting…" : "Delete"}
                             </button>
-                            <button type="button" onClick={() => setConfirmDelete(null)} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">Cancel</button>
+                            <button type="button" onClick={() => setConfirmDelete(null)} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">{t("text.Cancel")}</button>
                         </div>
                     </div>
                 </div>

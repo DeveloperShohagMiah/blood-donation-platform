@@ -1,3 +1,4 @@
+import { t } from "../../../utils/tr.js";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AlertCircle, Check, Images, Pencil, Plus, Trash2, X } from "lucide-react";
@@ -195,12 +196,12 @@ const Gallery = () => {
                 <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
-                            <Th>Image</Th>
-                            <Th>Caption</Th>
-                            <Th>Order</Th>
-                            <Th>Status</Th>
-                            <Th>Added</Th>
-                            <Th className="text-right">Actions</Th>
+                            <Th>{t("text.Image")}</Th>
+                            <Th>{t("text.Caption")}</Th>
+                            <Th>{t("text.Order")}</Th>
+                            <Th>{t("text.Status")}</Th>
+                            <Th>{t("text.Added")}</Th>
+                            <Th className="text-right">{t("text.Actions")}</Th>
                         </tr>
                     </thead>
                     <tbody>
@@ -285,7 +286,7 @@ const Gallery = () => {
 
                         <div className="mt-5 space-y-4">
                             <div>
-                                <label htmlFor="gallery-url" className="mb-1.5 block text-sm font-bold text-foreground">Image URL</label>
+                                <label htmlFor="gallery-url" className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Image URL")}</label>
                                 <input
                                     id="gallery-url"
                                     {...register("url", {
@@ -301,7 +302,7 @@ const Gallery = () => {
                                 <FieldError message={errors.url?.message} />
                             </div>
                             <div>
-                                <label htmlFor="gallery-caption" className="mb-1.5 block text-sm font-bold text-foreground">Caption</label>
+                                <label htmlFor="gallery-caption" className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Caption")}</label>
                                 <input
                                     id="gallery-caption"
                                     {...register("caption", {
@@ -314,7 +315,7 @@ const Gallery = () => {
                             </div>
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div>
-                                    <label htmlFor="gallery-order" className="mb-1.5 block text-sm font-bold text-foreground">Order</label>
+                                    <label htmlFor="gallery-order" className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Order")}</label>
                                     <input
                                         id="gallery-order"
                                         type="number"
@@ -343,7 +344,7 @@ const Gallery = () => {
                             <button type="submit" disabled={isSubmitting || busyId === "new"} className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-white disabled:opacity-60">
                                 {isSubmitting || busyId === "new" ? "Saving…" : editing === "new" ? "Add image" : "Save changes"}
                             </button>
-                            <button type="button" onClick={closeForm} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">Cancel</button>
+                            <button type="button" onClick={closeForm} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">{t("text.Cancel")}</button>
                         </div>
                     </form>
                 </div>
@@ -360,7 +361,7 @@ const Gallery = () => {
                             <button type="button" disabled={busyId === confirmDelete._id} onClick={remove} className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-rose-600 px-4 text-sm font-bold text-white disabled:opacity-60">
                                 {busyId === confirmDelete._id ? "Deleting…" : "Delete"}
                             </button>
-                            <button type="button" onClick={() => setConfirmDelete(null)} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">Cancel</button>
+                            <button type="button" onClick={() => setConfirmDelete(null)} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">{t("text.Cancel")}</button>
                         </div>
                     </div>
                 </div>

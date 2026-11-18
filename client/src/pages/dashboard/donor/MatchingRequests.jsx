@@ -1,3 +1,4 @@
+import { t } from "../../../utils/tr.js";
 import { formatDate } from "../format";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -62,7 +63,7 @@ const MatchingRequests = () => {
 
             {unavailable && (
                 <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                    Set your profile to <strong>Available</strong> before responding to requests.{" "}
+                    Set your profile to <strong>{t("text.Available")}</strong> before responding to requests.{" "}
                     <Link to="/dashboard/profile" className="font-bold underline">
                         Update profile
                     </Link>

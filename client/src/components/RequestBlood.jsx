@@ -329,7 +329,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                         size="lg"
                                         invalid={Boolean(errors.division)}
                                     >
-                                        <option value="">Select division</option>
+                                        <option value="">{t("text.Select division")}</option>
                                         {divisions.map((item) => (
                                             <option key={item._id} value={item._id}>{item.nameEn}</option>
                                         ))}
@@ -351,7 +351,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                         disabled={!selectedDivision}
                                         invalid={Boolean(errors.district)}
                                     >
-                                        <option value="">Select district</option>
+                                        <option value="">{t("text.Select district")}</option>
                                         {districts.map((item) => (
                                             <option key={item._id} value={item._id}>{item.nameEn}</option>
                                         ))}
@@ -369,7 +369,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                         size="lg"
                                         disabled={!selectedDistrict}
                                     >
-                                        <option value="">Select upazila</option>
+                                        <option value="">{t("text.Select upazila")}</option>
                                         {upazilas.map((item) => (
                                             <option key={item._id} value={item._id}>{item.nameEn}</option>
                                         ))}

@@ -1,3 +1,4 @@
+import { t } from "../../../utils/tr.js";
 import { formatDate } from "../format";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -89,13 +90,13 @@ const MyRequests = () => {
                 <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
-                            <Th>Patient</Th>
-                            <Th>Blood group</Th>
-                            <Th>Urgency</Th>
-                            <Th>Hospital</Th>
-                            <Th>Needed by</Th>
-                            <Th>Status</Th>
-                            <Th className="text-right">Action</Th>
+                            <Th>{t("text.Patient")}</Th>
+                            <Th>{t("text.Blood group")}</Th>
+                            <Th>{t("text.Urgency")}</Th>
+                            <Th>{t("text.Hospital")}</Th>
+                            <Th>{t("text.Needed by")}</Th>
+                            <Th>{t("text.Status")}</Th>
+                            <Th className="text-right">{t("text.Action")}</Th>
                         </tr>
                     </thead>
                     <tbody>

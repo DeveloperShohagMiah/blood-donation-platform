@@ -1,3 +1,4 @@
+import { t } from "../utils/tr.js";
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -191,7 +192,7 @@ const Contact = () => {
                 {/* Right side: Form */}
                 <div className="rounded-3xl bg-linear-to-b from-primary/2 to-white border border-primary/10 shadow-xs hover:shadow-md transition-shadow sm:p-9 h-fit">
                     <div className="mb-8">
-                        <h2 className="text-2xl font-bold">Send Us a Message</h2>
+                        <h2 className="text-2xl font-bold">{t("text.Send Us a Message")}</h2>
                         <p className="mt-2 text-sm text-muted-foreground">
                             Complete the form below and our team will get back
                             to you.
@@ -302,7 +303,7 @@ const Contact = () => {
                                     <option value="Partnership">
                                         Partnership
                                     </option>
-                                    <option value="Other">Other</option>
+                                    <option value="Other">{t("text.Other")}</option>
                                 </Select>
                                 {errors.subject && (
                                     <p className="mt-1.5 text-xs text-primary">

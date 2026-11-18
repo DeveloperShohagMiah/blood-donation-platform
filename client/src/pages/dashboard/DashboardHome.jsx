@@ -1,3 +1,4 @@
+import { t } from "../../utils/tr.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -181,7 +182,7 @@ const DashboardHome = () => {
             {showProfileWarning && (
                 <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-5 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <p className="font-bold text-amber-900">Complete your donor profile</p>
+                        <p className="font-bold text-amber-900">{t("text.Complete your donor profile")}</p>
                         <p className="mt-1 text-sm text-amber-800">
                             Add your blood group and location so people nearby can find you.
                         </p>
@@ -203,7 +204,7 @@ const DashboardHome = () => {
 
             <div className="mt-6 grid gap-6 xl:grid-cols-[1.4fr_1fr]">
                 <section className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6">
-                    <h3 className="font-extrabold text-foreground">Quick actions</h3>
+                    <h3 className="font-extrabold text-foreground">{t("text.Quick actions")}</h3>
                     <div className="mt-4 grid gap-3 sm:grid-cols-3">
                         {quickLinks[role].map((link) => {
                             const Icon = link.icon;
@@ -231,7 +232,7 @@ const DashboardHome = () => {
 
                 <section className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6">
                     <div className="flex items-center justify-between">
-                        <h3 className="font-extrabold text-foreground">Recent activity</h3>
+                        <h3 className="font-extrabold text-foreground">{t("text.Recent activity")}</h3>
                         <Link
                             to="/dashboard/notifications"
                             className="text-xs font-bold text-primary hover:underline"

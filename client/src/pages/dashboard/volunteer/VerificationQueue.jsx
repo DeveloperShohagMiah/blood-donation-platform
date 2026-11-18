@@ -1,3 +1,4 @@
+import { t } from "../../../utils/tr.js";
 import { useState } from "react";
 import { CheckCircle2, Hand, ShieldCheck, XCircle } from "lucide-react";
 import { apiFetch } from "../../../utils/api";
@@ -109,11 +110,11 @@ const VerificationQueue = () => {
                 <TableShell footer={<TablePagination controls={table} />}>
                     <thead>
                         <tr>
-                            <Th>Patient</Th>
-                            <Th>Group</Th>
-                            <Th>Hospital</Th>
-                            <Th>Submitted</Th>
-                            <Th className="text-right">Action</Th>
+                            <Th>{t("text.Patient")}</Th>
+                            <Th>{t("text.Group")}</Th>
+                            <Th>{t("text.Hospital")}</Th>
+                            <Th>{t("text.Submitted")}</Th>
+                            <Th className="text-right">{t("text.Action")}</Th>
                         </tr>
                     </thead>
                     <tbody>

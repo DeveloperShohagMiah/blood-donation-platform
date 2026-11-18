@@ -1,3 +1,4 @@
+import { t } from "../../../utils/tr.js";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -269,7 +270,7 @@ const Campaigns = () => {
                                         </p>
 
                                         <div className="mt-4 rounded-xl bg-muted/50 px-3.5 py-2.5 text-xs text-muted-foreground">
-                                            <span className="font-semibold text-foreground">Duration:</span>{" "}
+                                            <span className="font-semibold text-foreground">{t("text.Duration:")}</span>{" "}
                                             {formatDateTime(item.startAt)} — {formatDateTime(item.endAt)}
                                         </div>
 
@@ -335,7 +336,7 @@ const Campaigns = () => {
 
                         <div className="mt-5 grid gap-4 sm:grid-cols-2">
                             <label className="sm:col-span-2">
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Title</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Title")}</span>
                                 <input
                                     {...register("title", {
                                         required: "Title is required.",
@@ -348,7 +349,7 @@ const Campaigns = () => {
                             </label>
 
                             <label className="sm:col-span-2">
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Description</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Description")}</span>
                                 <textarea
                                     rows={3}
                                     {...register("description", {
@@ -362,7 +363,7 @@ const Campaigns = () => {
                             </label>
 
                             <label>
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Starts</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Starts")}</span>
                                 <input
                                     type="datetime-local"
                                     {...register("startAt", { required: "Start date is required." })}
@@ -372,7 +373,7 @@ const Campaigns = () => {
                             </label>
 
                             <label>
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Ends</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Ends")}</span>
                                 <input
                                     type="datetime-local"
                                     {...register("endAt", {
@@ -389,7 +390,7 @@ const Campaigns = () => {
                             </label>
 
                             <label>
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Venue</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Venue")}</span>
                                 <input
                                     {...register("venue")}
                                     className={inputClass(errors.venue)}
@@ -399,7 +400,7 @@ const Campaigns = () => {
                             </label>
 
                             <label>
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Location</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Location")}</span>
                                 <input
                                     {...register("location")}
                                     className={inputClass(errors.location)}
@@ -409,17 +410,17 @@ const Campaigns = () => {
                             </label>
 
                             <label className="sm:col-span-2">
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">Status</span>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Status")}</span>
                                 <Select
                                     size="lg"
                                     {...register("status", { required: "Status is required." })}
                                     value={selectedStatus ?? "draft"}
                                     invalid={Boolean(errors.status)}
                                 >
-                                    <option value="draft">Draft</option>
-                                    <option value="published">Published</option>
-                                    <option value="cancelled">Cancelled</option>
-                                    <option value="completed">Completed</option>
+                                    <option value="draft">{t("text.Draft")}</option>
+                                    <option value="published">{t("text.Published")}</option>
+                                    <option value="cancelled">{t("text.Cancelled")}</option>
+                                    <option value="completed">{t("text.Completed")}</option>
                                 </Select>
                                 <FieldError message={errors.status?.message} />
                             </label>
@@ -443,7 +444,7 @@ const Campaigns = () => {
                                         ? "Create campaign"
                                         : "Save changes"}
                             </button>
-                            <button type="button" onClick={closeForm} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">Cancel</button>
+                            <button type="button" onClick={closeForm} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">{t("text.Cancel")}</button>
                         </div>
                     </form>
                 </div>
@@ -457,7 +458,7 @@ const Campaigns = () => {
                             <div className="absolute -top-8 -right-6 size-32 rounded-full border-4 border-white/10" />
                             <div className="absolute bottom-3 left-5 flex items-center gap-2 text-white">
                                 <Megaphone size={18} />
-                                <span className="text-xs font-bold uppercase tracking-wider">Campaign details</span>
+                                <span className="text-xs font-bold uppercase tracking-wider">{t("text.Campaign details")}</span>
                             </div>
                         </div>
                         <div className="p-6">
@@ -468,19 +469,19 @@ const Campaigns = () => {
                             <p className="mt-3 leading-7 text-muted-foreground">{viewing.description}</p>
                             <dl className="mt-5 grid gap-3 rounded-xl bg-muted/50 p-4 text-sm sm:grid-cols-2">
                                 <div>
-                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Starts</dt>
+                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("text.Starts")}</dt>
                                     <dd className="mt-1 font-semibold text-foreground">{formatDate(viewing.startAt)}</dd>
                                 </div>
                                 <div>
-                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Ends</dt>
+                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("text.Ends")}</dt>
                                     <dd className="mt-1 font-semibold text-foreground">{formatDate(viewing.endAt)}</dd>
                                 </div>
                                 <div>
-                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Venue</dt>
+                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("text.Venue")}</dt>
                                     <dd className="mt-1 font-semibold text-foreground">{viewing.venue || "—"}</dd>
                                 </div>
                                 <div>
-                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Location</dt>
+                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("text.Location")}</dt>
                                     <dd className="mt-1 font-semibold text-foreground">{viewing.location || "—"}</dd>
                                 </div>
                             </dl>
@@ -495,7 +496,7 @@ const Campaigns = () => {
                                 >
                                     <Pencil size={15} /> Edit campaign
                                 </button>
-                                <button type="button" onClick={() => setViewing(null)} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">Close</button>
+                                <button type="button" onClick={() => setViewing(null)} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">{t("text.Close")}</button>
                             </div>
                         </div>
                     </div>
@@ -514,7 +515,7 @@ const Campaigns = () => {
                             <button type="button" disabled={busy} onClick={remove} className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-rose-600 px-4 text-sm font-bold text-white disabled:opacity-60">
                                 {busy ? "Deleting…" : "Delete"}
                             </button>
-                            <button type="button" onClick={() => setConfirmDelete(null)} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">Cancel</button>
+                            <button type="button" onClick={() => setConfirmDelete(null)} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">{t("text.Cancel")}</button>
                         </div>
                     </div>
                 </div>

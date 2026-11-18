@@ -1,3 +1,4 @@
+import { t } from "../utils/tr.js";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -91,17 +92,17 @@ const Campaigns = () => {
     );
 
     return (
-        <main className="min-h-screen bg-[#F8FAF9]">
+        <main className="min-h-screen bg-[#F8FAF9] ">
             {/* Hero */}
             <section className="relative isolate overflow-hidden bg-gradient-to-br from-[#FFF3F3] via-white to-[#FFF8F5] py-16 sm:py-20">
                 <div className="pointer-events-none absolute -top-24 -right-20 size-80 rounded-full bg-primary/10 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-32 -left-20 size-80 rounded-full bg-accent/40 blur-3xl" />
-                <div className="container relative text-center">
+                <div className="container relative text-center max-w-7xl mx-auto">
                     <span className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-card px-4 py-2 text-xs font-bold tracking-wide text-primary uppercase shadow-sm">
                         <Megaphone size={15} /> Blood Connect Community
                     </span>
                     <h1 className="mt-6 text-4xl leading-tight font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-                        Donation <span className="text-gradient">campaigns</span>
+                        Donation <span className="text-gradient">{t("text.campaigns")}</span>
                     </h1>
                     <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
                         Join a blood drive near you, or find out when our volunteers will be
@@ -111,7 +112,7 @@ const Campaigns = () => {
             </section>
 
             {/* Content */}
-            <section className="container py-14">
+            <section className="container py-14 max-w-7xl mx-auto">
                 <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
                     <div>
                         <h2 className="text-2xl font-extrabold tracking-tight text-foreground">
@@ -135,8 +136,8 @@ const Campaigns = () => {
                                 onClick={() => setFilter(tab.key)}
                                 aria-pressed={filter === tab.key}
                                 className={`inline-flex h-9 items-center gap-2 rounded-full border px-4 text-xs font-bold transition ${filter === tab.key
-                                        ? "border-primary bg-primary text-white shadow-md shadow-primary/25"
-                                        : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-primary"
+                                    ? "border-primary bg-primary text-white shadow-md shadow-primary/25"
+                                    : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-primary"
                                     }`}
                             >
                                 {tab.label}
@@ -228,7 +229,7 @@ const Campaigns = () => {
                                         </p>
                                         <div className="mt-4 rounded-xl bg-muted/50 px-3.5 py-2.5 text-xs text-muted-foreground">
                                             <Clock size={12} className="mr-1 inline text-primary" />
-                                            <span className="font-semibold text-foreground">Duration:</span>{" "}
+                                            <span className="font-semibold text-foreground">{t("text.Duration:")}</span>{" "}
                                             {formatDateTime(item.startAt)} — {formatDateTime(item.endAt)}
                                         </div>
                                         <button
@@ -254,7 +255,7 @@ const Campaigns = () => {
                             <div className="absolute -top-8 -right-6 size-32 rounded-full border-4 border-white/10" />
                             <div className="absolute bottom-3 left-5 flex items-center gap-2 text-white">
                                 <Megaphone size={18} />
-                                <span className="text-xs font-bold uppercase tracking-wider">Campaign details</span>
+                                <span className="text-xs font-bold uppercase tracking-wider">{t("text.Campaign details")}</span>
                             </div>
                             <button
                                 type="button"
@@ -270,19 +271,19 @@ const Campaigns = () => {
                             <p className="mt-3 leading-7 text-muted-foreground">{viewing.description}</p>
                             <dl className="mt-5 grid gap-3 rounded-xl bg-muted/50 p-4 text-sm sm:grid-cols-2">
                                 <div>
-                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Starts</dt>
+                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("text.Starts")}</dt>
                                     <dd className="mt-1 font-semibold text-foreground">{formatDateTime(viewing.startAt)}</dd>
                                 </div>
                                 <div>
-                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Ends</dt>
+                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("text.Ends")}</dt>
                                     <dd className="mt-1 font-semibold text-foreground">{formatDateTime(viewing.endAt)}</dd>
                                 </div>
                                 <div>
-                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Venue</dt>
+                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("text.Venue")}</dt>
                                     <dd className="mt-1 font-semibold text-foreground">{viewing.venue || "—"}</dd>
                                 </div>
                                 <div>
-                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Location</dt>
+                                    <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("text.Location")}</dt>
                                     <dd className="mt-1 font-semibold text-foreground">{viewing.location || "—"}</dd>
                                 </div>
                             </dl>

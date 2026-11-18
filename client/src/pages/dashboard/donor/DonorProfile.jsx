@@ -1,3 +1,4 @@
+import { t } from "../../../utils/tr.js";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AlertCircle, CheckCircle2, Save } from "lucide-react";
@@ -136,7 +137,7 @@ const DonorProfile = () => {
 
             <form onSubmit={handleSubmit(submit)} noValidate className="max-w-3xl space-y-6">
                 <section className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6">
-                    <h2 className="font-extrabold text-foreground">Donation details</h2>
+                    <h2 className="font-extrabold text-foreground">{t("text.Donation details")}</h2>
                     <div className="mt-5 grid gap-5 sm:grid-cols-2">
                         <div>
                             <label className="mb-2 block text-sm font-bold text-foreground">
@@ -172,9 +173,9 @@ const DonorProfile = () => {
                                 {...register("availability")}
                                 value={watch("availability")}
                             >
-                                <option value="available">Available to donate</option>
-                                <option value="temporarily_unavailable">Temporarily unavailable</option>
-                                <option value="unavailable">Unavailable</option>
+                                <option value="available">{t("text.Available to donate")}</option>
+                                <option value="temporarily_unavailable">{t("text.Temporarily unavailable")}</option>
+                                <option value="unavailable">{t("text.Unavailable")}</option>
                             </Select>
                         </div>
 
@@ -208,7 +209,7 @@ const DonorProfile = () => {
                 </section>
 
                 <section className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6">
-                    <h2 className="font-extrabold text-foreground">Location</h2>
+                    <h2 className="font-extrabold text-foreground">{t("text.Location")}</h2>
                     <div className="mt-5 grid gap-5 sm:grid-cols-3">
                         <div>
                             <label htmlFor="division" className="mb-2 block text-sm font-bold text-foreground">
@@ -227,7 +228,7 @@ const DonorProfile = () => {
                                 value={selectedDivision}
                                 invalid={Boolean(errors.division)}
                             >
-                                <option value="">Select division</option>
+                                <option value="">{t("text.Select division")}</option>
                                 {divisions.map((item) => (
                                     <option key={item._id} value={item._id}>{item.nameEn}</option>
                                 ))}
@@ -249,7 +250,7 @@ const DonorProfile = () => {
                                 disabled={!selectedDivision}
                                 invalid={Boolean(errors.district)}
                             >
-                                <option value="">Select district</option>
+                                <option value="">{t("text.Select district")}</option>
                                 {districts.map((item) => (
                                     <option key={item._id} value={item._id}>{item.nameEn}</option>
                                 ))}
@@ -267,7 +268,7 @@ const DonorProfile = () => {
                                 value={watch("upazila")}
                                 disabled={!selectedDistrict}
                             >
-                                <option value="">Select upazila</option>
+                                <option value="">{t("text.Select upazila")}</option>
                                 {upazilas.map((item) => (
                                     <option key={item._id} value={item._id}>{item.nameEn}</option>
                                 ))}
@@ -292,7 +293,7 @@ const DonorProfile = () => {
                                 className="mt-0.5 size-4 accent-primary"
                             />
                             <span>
-                                <span className="block text-sm font-bold text-foreground">List me publicly</span>
+                                <span className="block text-sm font-bold text-foreground">{t("text.List me publicly")}</span>
                                 <span className="mt-0.5 block text-xs text-muted-foreground">
                                     Show my name, blood group and area in the donor directory.
                                 </span>
@@ -310,7 +311,7 @@ const DonorProfile = () => {
                                 className="mt-0.5 size-4 accent-primary"
                             />
                             <span>
-                                <span className="block text-sm font-bold text-foreground">Allow contact requests</span>
+                                <span className="block text-sm font-bold text-foreground">{t("text.Allow contact requests")}</span>
                                 <span className="mt-0.5 block text-xs text-muted-foreground">
                                     Let people send me a contact request through the platform.
                                 </span>

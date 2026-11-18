@@ -1,3 +1,4 @@
+import { t } from "../utils/tr.js";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -72,15 +73,15 @@ const BloodRequests = () => {
     return (
         <main className="min-h-screen bg-[#F8FAF9]">
             {/* Hero */}
-            <section className="relative isolate overflow-hidden bg-gradient-to-br from-[#FFF3F3] via-white to-[#FFF8F5] py-16 sm:py-20">
+            <section className="relative isolate overflow-hidden bg-gradient-to-br text-center from-[#FFF3F3] via-white to-[#FFF8F5] py-16 sm:py-20">
                 <div className="pointer-events-none absolute -top-24 -right-20 size-80 rounded-full bg-primary/10 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-32 -left-20 size-80 rounded-full bg-accent/40 blur-3xl" />
-                <div className="container relative">
+                <div className="container relative max-w-7xl mx-auto flex flex-col items-center justify-center gap-3 px-4">
                     <span className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-card px-4 py-2 text-xs font-bold tracking-wide text-primary uppercase shadow-sm">
                         <Droplets size={15} /> Community requests
                     </span>
                     <h1 className="mt-6 text-4xl leading-tight font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-                        All <span className="text-gradient">blood requests</span>
+                        All <span className="text-gradient">{t("text.blood requests")}</span>
                     </h1>
                     <p className="mt-5 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
                         Browse open requests from people who need blood. Verified requests show
@@ -104,7 +105,7 @@ const BloodRequests = () => {
             </section>
 
             {/* List */}
-            <section className="container py-14">
+            <section className="container py-14 max-w-7xl mx-auto">
                 <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
                     <div>
                         <h2 className="text-2xl font-extrabold tracking-tight text-foreground">
@@ -127,11 +128,10 @@ const BloodRequests = () => {
                                 type="button"
                                 onClick={() => setUrgency(tab.key)}
                                 aria-pressed={urgency === tab.key}
-                                className={`inline-flex h-9 items-center gap-2 rounded-full border px-4 text-xs font-bold transition ${
-                                    urgency === tab.key
-                                        ? "border-primary bg-primary text-white shadow-md shadow-primary/25"
-                                        : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-primary"
-                                }`}
+                                className={`inline-flex h-9 items-center gap-2 rounded-full border px-4 text-xs font-bold transition ${urgency === tab.key
+                                    ? "border-primary bg-primary text-white shadow-md shadow-primary/25"
+                                    : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-primary"
+                                    }`}
                             >
                                 {tab.label}
                                 <span className={`grid min-w-5 place-items-center rounded-full px-1.5 text-[10px] ${urgency === tab.key ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"}`}>
@@ -143,11 +143,10 @@ const BloodRequests = () => {
                             type="button"
                             onClick={() => setVerifiedOnly((value) => !value)}
                             aria-pressed={verifiedOnly}
-                            className={`inline-flex h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-bold transition ${
-                                verifiedOnly
-                                    ? "border-primary bg-primary/10 text-primary"
-                                    : "border-border bg-card text-muted-foreground hover:border-primary/40"
-                            }`}
+                            className={`inline-flex h-9 items-center gap-1.5 rounded-full border px-4 text-xs font-bold transition ${verifiedOnly
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "border-border bg-card text-muted-foreground hover:border-primary/40"
+                                }`}
                         >
                             <ShieldCheck size={14} /> Verified only
                         </button>
@@ -218,7 +217,7 @@ const BloodRequests = () => {
                                         </p>
 
                                         <div className="mt-4 rounded-xl border-l-2 border-primary bg-primary/5 px-3.5 py-2.5">
-                                            <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Patient</p>
+                                            <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{t("text.Patient")}</p>
                                             <p className="text-sm font-bold text-primary">{item.patientName}</p>
                                             <p className="mt-0.5 text-xs text-muted-foreground">
                                                 {item.isVerified

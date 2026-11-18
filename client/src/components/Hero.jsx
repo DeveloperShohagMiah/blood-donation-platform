@@ -253,7 +253,7 @@ const Hero = ({ stats }) => {
                                 </span>
                             </div>
                             <div className="mt-4 flex items-center gap-3.5">
-                                <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#E64B5A] to-[#B91F32] text-xl font-extrabold text-white shadow-[0_8px_16px_rgba(198,40,56,0.3)]">O-</span>
+                                <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#E64B5A] to-[#B91F32] text-xl font-extrabold text-white shadow-[0_8px_16px_rgba(198,40,56,0.3)]">{t("text.O-")}</span>
                                 <div>
                                     <p className="text-[15px] font-bold text-[#14201C]">{t("hero.sampleUnits", "2 units needed today")}</p>
                                     <p className="mt-0.5 inline-flex items-center gap-1 text-xs text-[#66736E]">
@@ -270,7 +270,7 @@ const Hero = ({ stats }) => {
 
                         {/* Donor match card */}
                         <div className="bc-float-slow absolute bottom-10 left-0 flex w-[280px] items-center gap-3 rounded-2xl border border-white bg-white/85 p-4 shadow-[0_24px_54px_rgba(29,55,44,0.15)] backdrop-blur-xl">
-                            <span className="grid size-11 shrink-0 place-items-center rounded-full bg-[#E8F3EE] text-sm font-bold text-[#2F6B52]">RA</span>
+                            <span className="grid size-11 shrink-0 place-items-center rounded-full bg-[#E8F3EE] text-sm font-bold text-[#2F6B52]">{t("text.RA")}</span>
                             <div className="min-w-0 flex-1">
                                 <p className="flex items-center gap-1 text-sm font-bold text-[#14201C]">
                                     {t("hero.sampleDonor", "Rafi A.")}
@@ -278,7 +278,7 @@ const Hero = ({ stats }) => {
                                 </p>
                                 <p className="text-xs text-[#66736E]">{t("hero.sampleDonorMeta", "Available now · 2 km away")}</p>
                             </div>
-                            <span className="rounded-lg bg-[#FDEEF0] px-2.5 py-1 text-sm font-extrabold text-[#C62838]">O-</span>
+                            <span className="rounded-lg bg-[#FDEEF0] px-2.5 py-1 text-sm font-extrabold text-[#C62838]">{t("text.O-")}</span>
                         </div>
 
                         {/* Impact pill */}
