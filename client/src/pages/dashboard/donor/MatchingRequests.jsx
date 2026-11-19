@@ -182,10 +182,10 @@ const MatchingRequests = () => {
                                               type="button"
                                               disabled={done || busyId === item._id || unavailable}
                                               onClick={() => respond(item._id)}
-                                              className={`inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-60 ${
+                                              className={`inline-flex h-10 flex-1 items-center justify-center gap-2 px-4 text-sm font-bold disabled:cursor-not-allowed ${
                                                   done
-                                                      ? "bg-success/15 text-success-deep ring-1 ring-success/30"
-                                                      : "bg-primary text-primary-foreground hover:brightness-95"
+                                                      ? "rounded-xl bg-success/15 text-success-deep ring-1 ring-success/30"
+                                                      : "btn-premium"
                                               }`}
                                           >
                                               {done ? (

@@ -147,7 +147,7 @@ const VerificationQueue = () => {
                                                             type="button"
                                                             disabled={busyId === item._id}
                                                             onClick={() => decide(item._id, "verify")}
-                                                            className="inline-flex h-9 items-center gap-1 rounded-lg bg-primary px-3 text-xs font-bold text-primary-foreground transition hover:brightness-95 disabled:opacity-60"
+                                                            className="btn-premium h-9 px-3 text-xs"
                                                         >
                                                             <CheckCircle2 size={14} /> Verify
                                                         </button>

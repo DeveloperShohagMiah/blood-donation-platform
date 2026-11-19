@@ -69,7 +69,7 @@ const CreateBloodRequest = () => {
                     <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
                         <Link
                             to="/donors"
-                            className="inline-flex h-12 items-center justify-center rounded-full bg-primary px-6 text-sm font-bold text-primary-foreground transition hover:brightness-95"
+                            className="btn-premium h-12 px-6 text-sm"
                         >
                             Find donors
                         </Link>

@@ -1,9 +1,9 @@
 import { t } from "../../../utils/tr.js";
 import { formatDate } from "../format";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { Droplets, Plus, XCircle } from "lucide-react";
 import { apiFetch } from "../../../utils/api";
+import RequestBloodModal from "../../../components/RequestBloodModal";
 import { useApiData } from "../hooks";
 import {
     TablePagination,
@@ -37,6 +37,7 @@ const MyRequests = () => {
     const { data, loading, error, reload } = useApiData("/blood-requests");
     const [busyId, setBusyId] = useState("");
     const [actionError, setActionError] = useState("");
+    const [createOpen, setCreateOpen] = useState(false);
     const items = data?.items || [];
     const table = useTableControls(items, {
         searchFields,
@@ -62,12 +63,13 @@ const MyRequests = () => {
                 title="My blood requests"
                 subtitle="Track the requests you have submitted."
                 actions={
-                    <Link
-                        to="/create-blood-requests"
-                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground transition hover:brightness-95"
+                    <button
+                        type="button"
+                        onClick={() => setCreateOpen(true)}
+                        className="btn-premium h-10 px-4 text-sm"
                     >
                         <Plus size={16} /> New request
-                    </Link>
+                    </button>
                 }
             />
 
@@ -79,9 +81,13 @@ const MyRequests = () => {
                     title="No requests yet"
                     text="When you submit a blood request, you can follow its status here."
                     action={
-                        <Link to="/create-blood-requests" className="inline-flex h-10 items-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground">
+                        <button
+                            type="button"
+                            onClick={() => setCreateOpen(true)}
+                            className="btn-premium h-10 px-4 text-sm"
+                        >
                             Create a request
-                        </Link>
+                        </button>
                     }
                 />
             ) : (
@@ -169,6 +175,12 @@ const MyRequests = () => {
                 </TableShell>
                 </>
             )}
+
+            <RequestBloodModal
+                open={createOpen}
+                onClose={() => setCreateOpen(false)}
+                onSuccess={reload}
+            />
         </>
     );
 };

@@ -174,7 +174,7 @@ const Campaigns = () => {
                         </p>
                         <Link
                             to="/donors"
-                            className="mt-5 inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground"
+                            className="btn-premium mt-5 h-10 px-4 text-sm"
                         >
                             Find donors instead <ArrowRight size={15} />
                         </Link>

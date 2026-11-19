@@ -245,7 +245,7 @@ const Navbar = () => {
                         ) : (
                             <Link
                                 to="/login"
-                                className="hidden btn-premium rounded-full px-3.5 py-2 text-[13.5px] font-semibold text-primary-foreground transition-colors bg-primary md:inline-flex"
+                                className="btn-premium hidden rounded-full px-3.5 py-2 text-[13.5px] font-semibold md:inline-flex"
                             >
                                 {t("navigation.login")}
                             </Link>
@@ -357,7 +357,7 @@ const Navbar = () => {
                                 <button
                                     type="button"
                                     onClick={() => { logout(); closeMenu(); }}
-                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/70 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/70 text-sm font-semibold text-foreground transition-colors hover:bg-primary/5"
                                 >
                                     <LogOut size={16} />
                                     {t("navigation.logout", "Log out")}
@@ -366,7 +366,7 @@ const Navbar = () => {
                                 <Link
                                     to="/login"
                                     onClick={closeMenu}
-                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/70 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/70 text-sm font-semibold text-foreground transition-colors hover:bg-primary/5"
                                 >
                                     <LogIn size={16} />
                                     {t("navigation.login")}
@@ -376,7 +376,7 @@ const Navbar = () => {
                             <Link
                                 to="/become-donor"
                                 onClick={closeMenu}
-                                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-primary to-primary-hover text-sm font-bold text-primary-foreground shadow-md transition hover:brightness-95"
+                                className="btn-premium min-h-11 text-sm"
                             >
                                 {t("navigation.becomeDonor")}
                                 <ArrowUpRight size={16} />

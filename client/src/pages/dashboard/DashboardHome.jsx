@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../context/useAuth";
 import { apiFetch } from "../../utils/api";
+import RequestBloodModal from "../../components/RequestBloodModal";
 import { EmptyState, ErrorBanner, PageHeader, StatCard } from "./components/UI";
 import { formatDate } from "./format";
 
@@ -21,7 +22,7 @@ const quickLinks = {
     donor: [
         { to: "/dashboard/profile", label: "Edit my profile", icon: UserRound },
         { to: "/dashboard/matching", label: "Find matching requests", icon: HeartHandshake },
-        { to: "/create-blood-requests", label: "Create a request", icon: Droplets },
+        { id: "create-request", label: "Create a request", icon: Droplets, popup: true },
     ],
     volunteer: [
         { to: "/dashboard/assignments", label: "My assignments", icon: ClipboardList },
@@ -40,6 +41,7 @@ const DashboardHome = () => {
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [createOpen, setCreateOpen] = useState(false);
 
     const isAdmin = user?.role === "admin" || user?.role === "moderator";
     const isVolunteer = user?.role === "volunteer";
@@ -208,12 +210,8 @@ const DashboardHome = () => {
                     <div className="mt-4 grid gap-3 sm:grid-cols-3">
                         {quickLinks[role].map((link) => {
                             const Icon = link.icon;
-                            return (
-                                <Link
-                                    key={link.to}
-                                    to={link.to}
-                                    className="group flex flex-col gap-3 rounded-2xl border border-border bg-background p-4 transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
-                                >
+                            const content = (
+                                <>
                                     <span className="grid size-10 place-items-center rounded-xl bg-primary/10 text-primary">
                                         <Icon size={19} />
                                     </span>
@@ -224,6 +222,22 @@ const DashboardHome = () => {
                                         size={15}
                                         className="text-muted-foreground transition-transform group-hover:translate-x-1"
                                     />
+                                </>
+                            );
+                            const classes =
+                                "group flex flex-col gap-3 rounded-2xl border border-border bg-background p-4 text-left transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md";
+                            return link.popup ? (
+                                <button
+                                    key={link.id}
+                                    type="button"
+                                    onClick={() => setCreateOpen(true)}
+                                    className={classes}
+                                >
+                                    {content}
+                                </button>
+                            ) : (
+                                <Link key={link.to} to={link.to} className={classes}>
+                                    {content}
                                 </Link>
                             );
                         })}
@@ -271,6 +285,11 @@ const DashboardHome = () => {
                     )}
                 </section>
             </div>
+
+            <RequestBloodModal
+                open={createOpen}
+                onClose={() => setCreateOpen(false)}
+            />
         </>
     );
 };

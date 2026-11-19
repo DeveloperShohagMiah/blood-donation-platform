@@ -536,7 +536,7 @@ const RequestsManagement = () => {
                         )}
 
                         <div className="mt-6 flex gap-2">
-                            <button type="submit" disabled={isSubmitting || busyId === editing._id} className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground disabled:opacity-60">
+                            <button type="submit" disabled={isSubmitting || busyId === editing._id} className="btn-premium h-10 flex-1 px-4 text-sm">
                                 {isSubmitting || busyId === editing._id ? "Saving…" : "Save changes"}
                             </button>
                             <button type="button" onClick={closeForm} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">{t("text.Cancel")}</button>
@@ -612,7 +612,7 @@ const RequestsManagement = () => {
                                     setResponsesRequest(null);
                                     navigate(`/dashboard/admin/donations?request=${id}`);
                                 }}
-                                className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground"
+                                className="btn-premium h-10 flex-1 px-4 text-sm"
                             >
                                 Record a donation
                             </button>

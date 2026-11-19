@@ -180,7 +180,7 @@ const VolunteerProfile = () => {
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-bold text-primary-foreground shadow-md shadow-primary/25 transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="btn-premium h-12 px-6 text-sm"
                 >
                     <Save size={17} /> {isSubmitting ? "Saving…" : "Save profile"}
                 </button>

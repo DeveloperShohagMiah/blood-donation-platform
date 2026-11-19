@@ -182,7 +182,7 @@ const Campaigns = () => {
                     <button
                         type="button"
                         onClick={openCreate}
-                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-hover px-4 text-sm font-bold text-primary-foreground shadow-md shadow-primary/25 transition hover:brightness-105"
+                        className="btn-premium h-10 px-4 text-sm"
                     >
                         <Plus size={16} /> New campaign
                     </button>
@@ -208,7 +208,7 @@ const Campaigns = () => {
                     title="No campaigns yet"
                     text="Create a campaign to promote an upcoming blood drive."
                     action={
-                        <button type="button" onClick={openCreate} className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground">
+                        <button type="button" onClick={openCreate} className="btn-premium h-10 px-4 text-sm">
                             <Plus size={15} /> New campaign
                         </button>
                     }
@@ -436,7 +436,7 @@ const Campaigns = () => {
                             <button
                                 type="submit"
                                 disabled={isSubmitting || busy}
-                                className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground disabled:opacity-60"
+                                className="btn-premium h-10 flex-1 px-4 text-sm"
                             >
                                 {isSubmitting || busy
                                     ? "Saving…"
@@ -492,7 +492,7 @@ const Campaigns = () => {
                                         setViewing(null);
                                         openEdit(viewing);
                                     }}
-                                    className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground"
+                                    className="btn-premium h-10 flex-1 px-4 text-sm"
                                 >
                                     <Pencil size={15} /> Edit campaign
                                 </button>

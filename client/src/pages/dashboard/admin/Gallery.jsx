@@ -161,7 +161,7 @@ const Gallery = () => {
                 title="Gallery"
                 subtitle="Manage the photos shown on the home page."
                 actions={
-                    <button type="button" onClick={openCreate} className="inline-flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-hover px-4 text-sm font-bold text-primary-foreground shadow-md shadow-primary/25 transition hover:brightness-105">
+                    <button type="button" onClick={openCreate} className="btn-premium h-10 px-4 text-sm">
                         <Plus size={16} /> Add image
                     </button>
                 }
@@ -185,7 +185,7 @@ const Gallery = () => {
                     title="No gallery images yet"
                     text="Add image URLs to show photos in the home gallery."
                     action={
-                        <button type="button" onClick={openCreate} className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground">
+                        <button type="button" onClick={openCreate} className="btn-premium h-10 px-4 text-sm">
                             <Plus size={15} /> Add image
                         </button>
                     }
@@ -341,7 +341,7 @@ const Gallery = () => {
                         )}
 
                         <div className="mt-6 flex gap-2">
-                            <button type="submit" disabled={isSubmitting || busyId === "new"} className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground disabled:opacity-60">
+                            <button type="submit" disabled={isSubmitting || busyId === "new"} className="btn-premium h-10 flex-1 px-4 text-sm">
                                 {isSubmitting || busyId === "new" ? "Saving…" : editing === "new" ? "Add image" : "Save changes"}
                             </button>
                             <button type="button" onClick={closeForm} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">{t("text.Cancel")}</button>

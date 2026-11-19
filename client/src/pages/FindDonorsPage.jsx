@@ -256,7 +256,7 @@ const FindDonorsPage = () => {
                                 <button
                                     type="submit"
                                     disabled={contactSending}
-                                    className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+                                    className="btn-premium h-12 w-full px-5 text-sm"
                                 >
                                     {contactSending ? "Sending…" : "Send request"}
                                 </button>

@@ -77,7 +77,7 @@
   },
   "footer": {
     "about": "A voluntary network that connects blood donors with people who need blood, quickly and safely.",
-    "address": "House 00, Road 00, Dhaka, Bangladesh",
+    "address": "Tangail, Bangladesh",
     "copyright": "© {{year}} Blood Connect. All rights reserved.",
     "ctaButton": "Request blood",
     "ctaText": "Post a request and nearby donors with a matching blood group will see it right away.",
@@ -89,7 +89,10 @@
     "safety": "Safety and advisory",
     "terms": "Terms of use",
     "tips": "Donation tips and guidelines",
-    "top": "Back to top"
+    "top": "Back to top",
+    "ctaBadge": "Every second counts",
+    "location": "Proudly serving Tangail, Bangladesh",
+    "follow": "Follow our journey"
   },
   "hero": {
     "badge": "Voluntary donors, ready to help",
@@ -578,6 +581,60 @@
       "coordinate": {
         "title": "Coordinate Support",
         "text": "Volunteers coordinate with donors and blood seekers to support the donation process."
+      }
+    }
+  },
+  "contact": {
+    "badge": "Get in Touch",
+    "heading1": "Let's Start a",
+    "heading2": "Conversation.",
+    "intro": "Have a question, want to volunteer, or need information about Blood Connect? Send us a message — our team will do its best to assist you.",
+    "infoEyebrow": "Contact Information",
+    "infoTitle": "We'd Love to Hear From You",
+    "infoText": "Whether you are a blood donor, volunteer, patient, or someone who wants to support our initiative, feel free to reach out.",
+    "urgentTitle": "Need Blood Urgently?",
+    "urgentText": "If someone needs blood, submit a blood request through our dedicated system so volunteers can review and coordinate it.",
+    "submitRequest": "Submit Blood Request",
+    "formSubtitle": "Complete the form below and our team will get back to you.",
+    "fullName": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "subject": "Subject",
+    "message": "Your Message",
+    "sending": "Sending...",
+    "send": "Send Message",
+    "privacyNote": "Your contact information will only be used to respond to your inquiry.",
+    "placeholders": {
+      "name": "Enter your full name",
+      "subject": "Select a subject",
+      "message": "Write your message here..."
+    },
+    "errors": {
+      "nameRequired": "Full name is required.",
+      "nameLength": "Name must contain at least 2 characters.",
+      "emailInvalid": "Enter a valid email address.",
+      "phoneInvalid": "Enter a valid phone number.",
+      "subjectRequired": "Please select a subject.",
+      "messageRequired": "Please enter your message.",
+      "messageLength": "Message must contain at least 10 characters.",
+      "messageMax": "Message cannot exceed 2000 characters."
+    },
+    "methods": {
+      "phone": {
+        "title": "Phone Support",
+        "description": "For direct communication and coordination."
+      },
+      "email": {
+        "title": "Email Support",
+        "description": "Send us your questions and inquiries."
+      },
+      "location": {
+        "title": "Our Location",
+        "description": "Our initial service area."
+      },
+      "availability": {
+        "title": "Availability",
+        "description": "Contact our volunteer coordination team."
       }
     }
   }

@@ -23,7 +23,7 @@ const labelClass = "text-[13px] font-bold text-foreground";
 const errorClass = "mt-1.5 text-xs font-medium text-destructive";
 const today = () => new Date().toISOString().split("T")[0];
 
-export default function BloodRequestForm({ onSubmit, onCancel, locations = [] }) {
+export default function BloodRequestForm({ onSubmit, onCancel, locations = [], embedded = false }) {
     const { t } = useTranslation();
 
     const {
@@ -113,28 +113,30 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
         t("bloodRequest.form.validation.required", `${field} is required`);
 
     return (
-        <section className="relative isolate overflow-hidden px-4 py-12 sm:px-6 sm:py-16">
+        <section className={embedded ? "relative isolate overflow-hidden" : "relative isolate overflow-hidden px-4 py-12 sm:px-6 sm:py-16"}>
             <div
                 aria-hidden="true"
                 className="pointer-events-none absolute -right-40 -top-40 -z-10 size-[500px] rounded-full bg-primary/10 blur-3xl"
             />
 
             <div className="mx-auto max-w-5xl">
-                <header className="mb-8 max-w-2xl">
-                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-2 text-xs font-bold text-muted-foreground shadow-sm">
-                        <span className="size-2 rounded-full bg-primary" />
-                        {t("bloodRequest.form.eyebrow", "HELP SOMEONE IN NEED")}
-                    </div>
-                    <h1 className="text-3xl leading-tight font-extrabold tracking-[-0.045em] sm:text-4xl lg:text-5xl">
-                        {t("bloodRequest.form.title", "Create a blood request")}
-                    </h1>
-                    <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground/70 sm:text-base">
-                        {t(
-                            "bloodRequest.form.subtitle",
-                            "Share the essential details so nearby donors can understand how and when to help."
-                        )}
-                    </p>
-                </header>
+                {!embedded && (
+                    <header className="mb-8 max-w-2xl">
+                        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-2 text-xs font-bold text-muted-foreground shadow-sm">
+                            <span className="size-2 rounded-full bg-primary" />
+                            {t("bloodRequest.form.eyebrow", "HELP SOMEONE IN NEED")}
+                        </div>
+                        <h1 className="text-3xl leading-tight font-extrabold tracking-[-0.045em] sm:text-4xl lg:text-5xl">
+                            {t("bloodRequest.form.title", "Create a blood request")}
+                        </h1>
+                        <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground/70 sm:text-base">
+                            {t(
+                                "bloodRequest.form.subtitle",
+                                "Share the essential details so nearby donors can understand how and when to help."
+                            )}
+                        </p>
+                    </header>
+                )}
 
                 <form
                     noValidate
@@ -525,7 +527,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-primary to-primary/80 px-6 text-sm font-extrabold text-primary-foreground shadow-md transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60"
+                                    className="btn-premium h-12 px-6 text-sm font-extrabold"
                                 >
                                     {isSubmitting
                                         ? t("bloodRequest.form.submitting", "Submitting...")

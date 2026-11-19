@@ -234,7 +234,7 @@ const UsersManagement = () => {
                                                     type="button"
                                                     disabled={busyId === item._id}
                                                     onClick={() => act(item._id, { decision: "approve" })}
-                                                    className="inline-flex h-8 items-center gap-1 rounded-lg bg-primary px-2.5 text-xs font-bold text-primary-foreground transition hover:bg-primary-hover disabled:opacity-60"
+                                                    className="btn-premium h-8 px-2.5 text-xs"
                                                 >
                                                     <CheckCircle2 size={13} /> Approve
                                                 </button>
@@ -330,7 +330,7 @@ const UsersManagement = () => {
                             </p>
                         )}
                         <div className="mt-6 flex gap-2">
-                            <button type="submit" disabled={isSubmitting || busyId === editing._id} className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground disabled:opacity-60">
+                            <button type="submit" disabled={isSubmitting || busyId === editing._id} className="btn-premium h-10 flex-1 px-4 text-sm">
                                 {isSubmitting || busyId === editing._id ? "Saving…" : "Save changes"}
                             </button>
                             <button type="button" onClick={closeForm} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">

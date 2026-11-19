@@ -110,7 +110,7 @@ const ForgotPassword = () => {
                             </p>
                             <Link
                                 to="/login"
-                                className="mt-7 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground shadow-md shadow-primary/25 transition hover:brightness-95"
+                                className="btn-premium mt-7 h-12 w-full px-5 text-sm"
                             >
                                 Go to log in <ArrowRight size={16} />
                             </Link>
@@ -149,7 +149,7 @@ const ForgotPassword = () => {
                             <button
                                 type="submit"
                                 disabled={busy}
-                                className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground shadow-md shadow-primary/25 transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+                                className="btn-premium mt-6 h-12 w-full px-5 text-sm"
                             >
                                 {busy ? <><Loader2 size={17} className="animate-spin" /> Sending…</> : "Send reset code"}
                             </button>
@@ -222,7 +222,7 @@ const ForgotPassword = () => {
                             <button
                                 type="submit"
                                 disabled={busy}
-                                className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground shadow-md shadow-primary/25 transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+                                className="btn-premium mt-6 h-12 w-full px-5 text-sm"
                             >
                                 {busy ? <><Loader2 size={17} className="animate-spin" /> Resetting…</> : "Reset password"}
                             </button>

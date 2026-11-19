@@ -191,7 +191,7 @@ const DonationsAdmin = () => {
                     <button
                         type="button"
                         onClick={openCreate}
-                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-hover px-4 text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:brightness-105"
+                        className="btn-premium h-10 px-4 text-sm"
                     >
                         <Plus size={16} /> Record donation
                     </button>
@@ -223,7 +223,7 @@ const DonationsAdmin = () => {
                     title="No donations recorded"
                     text="Record a donation to update a request's progress and notify its requester."
                     action={
-                        <button type="button" onClick={openCreate} className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-white">
+                        <button type="button" onClick={openCreate} className="btn-premium h-10 px-4 text-sm">
                             <Plus size={15} /> Record donation
                         </button>
                     }
@@ -367,7 +367,7 @@ const DonationsAdmin = () => {
                         )}
 
                         <div className="mt-6 flex gap-2">
-                            <button type="submit" disabled={isSubmitting || busy} className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-white disabled:opacity-60">
+                            <button type="submit" disabled={isSubmitting || busy} className="btn-premium h-10 flex-1 px-4 text-sm">
                                 {isSubmitting || busy ? "Saving…" : editing === "new" ? "Record donation" : "Save changes"}
                             </button>
                             <button type="button" onClick={closeForm} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">Cancel</button>

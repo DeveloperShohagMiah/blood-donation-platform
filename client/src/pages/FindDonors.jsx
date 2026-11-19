@@ -238,7 +238,7 @@ const FindDonors = ({
                         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                             <a
                                 href="#donor-search"
-                                className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/10 transition hover:-translate-y-0.5 hover:bg-primary-hover"
+                                className="btn-premium min-h-12 px-6 text-sm"
                             >
                                 <Search size={17} />
                                 {content.search}
@@ -420,7 +420,7 @@ const FindDonors = ({
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-primary px-8 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/10 transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+                                className="btn-premium min-h-12 px-8 text-sm"
                             >
                                 <Search size={17} />
                                 {isLoading ? content.loading : content.search}

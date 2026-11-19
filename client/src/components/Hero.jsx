@@ -178,7 +178,7 @@ const Hero = ({ stats }) => {
 
                                 <button
                                     type="submit"
-                                    className="group inline-flex h-[52px] items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-primary to-primary-hover px-7 text-[15px] font-bold text-primary-foreground shadow-md outline-none transition hover:brightness-95 focus-visible:ring-4 focus-visible:ring-primary/30 active:scale-[0.98]"
+                                    className="btn-premium group h-[52px] px-7 text-[15px] outline-none focus-visible:ring-4 focus-visible:ring-primary/30"
                                 >
                                     <Search size={18} strokeWidth={2.4} />
                                     {t("hero.search", "Find donors")}

@@ -41,7 +41,7 @@ const AssignedRequests = () => {
                 actions={
                     <Link
                         to="/dashboard/queue"
-                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground transition hover:brightness-95"
+                        className="btn-premium h-10 px-4 text-sm"
                     >
                         <ShieldCheck size={16} /> Verification queue
                     </Link>
@@ -98,7 +98,7 @@ const AssignedRequests = () => {
                                                   type="button"
                                                   disabled={busyId === item._id}
                                                   onClick={() => updateStatus(item._id, "completed")}
-                                                  className="inline-flex h-9 items-center rounded-lg bg-primary px-4 text-xs font-bold text-primary-foreground transition hover:brightness-95 disabled:opacity-60"
+                                                  className="btn-premium h-9 px-4 text-xs"
                                               >
                                                   Mark completed
                                               </button>

@@ -70,11 +70,11 @@ const DonateButton = ({
                 onClick={respond}
                 disabled={busy || done}
                 className={[
-                    "inline-flex w-full items-center justify-center gap-1.5 rounded-xl font-bold transition disabled:cursor-default",
+                    "inline-flex w-full items-center justify-center gap-1.5 font-bold disabled:cursor-default",
                     compact ? "h-10 px-4 text-xs" : "h-11 px-4 text-sm",
                     done
-                        ? "bg-success/15 text-success-deep ring-1 ring-success/30"
-                        : "bg-primary text-primary-foreground shadow-md shadow-primary/25 hover:brightness-95 active:scale-[0.98]",
+                        ? "rounded-xl bg-success/15 text-success-deep ring-1 ring-success/30"
+                        : "btn-premium",
                     className,
                 ].join(" ")}
             >

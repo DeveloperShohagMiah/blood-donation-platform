@@ -47,18 +47,18 @@ const UserMenu = ({ onNavigate, align = "right" }) => {
         { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
         ...(isStaff
             ? [
-                  { to: "/dashboard/admin/users", label: "Users & approvals", icon: Users },
-                  { to: "/dashboard/admin/requests", label: "All requests", icon: ShieldCheck },
-              ]
+                { to: "/dashboard/admin/users", label: "Users & approvals", icon: Users },
+                { to: "/dashboard/admin/requests", label: "All requests", icon: ShieldCheck },
+            ]
             : isVolunteer
                 ? [
-                      { to: "/dashboard/assignments", label: "My assignments", icon: ClipboardList },
-                      { to: "/dashboard/queue", label: "Verification queue", icon: ShieldCheck },
-                  ]
+                    { to: "/dashboard/assignments", label: "My assignments", icon: ClipboardList },
+                    { to: "/dashboard/queue", label: "Verification queue", icon: ShieldCheck },
+                ]
                 : [
-                      { to: "/dashboard/profile", label: "My profile", icon: UserRound },
-                      { to: "/dashboard/my-requests", label: "My requests", icon: ClipboardList },
-                  ]),
+                    { to: "/dashboard/profile", label: "My profile", icon: UserRound },
+                    { to: "/dashboard/my-requests", label: "My requests", icon: ClipboardList },
+                ]),
         { to: "/dashboard/notifications", label: "Notifications", icon: Bell },
     ];
 
@@ -98,9 +98,8 @@ const UserMenu = ({ onNavigate, align = "right" }) => {
             {open && (
                 <div
                     role="menu"
-                    className={`absolute top-[calc(100%+0.6rem)] z-50 w-60 rounded-2xl border border-border bg-card p-2 shadow-xl ${
-                        align === "left" ? "left-0" : "right-0"
-                    }`}
+                    className={`absolute top-[calc(100%+0.6rem)] z-50 w-60 rounded-2xl border border-border bg-card p-2 shadow-xl ${align === "left" ? "left-0" : "right-0"
+                        }`}
                 >
                     <div className="border-b border-border px-3 py-2.5">
                         <p className="truncate text-sm font-bold text-foreground">{user.fullName}</p>
@@ -116,7 +115,7 @@ const UserMenu = ({ onNavigate, align = "right" }) => {
                                 to={to}
                                 role="menuitem"
                                 onClick={close}
-                                className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold text-foreground transition hover:bg-muted"
+                                className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold text-foreground transition hover:bg-primary/10"
                             >
                                 <Icon size={16} className="text-primary" />
                                 {label}

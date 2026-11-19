@@ -228,7 +228,7 @@ const BecomeDonor = () => {
                                 <button
                                     type="submit"
                                     disabled={verifying || code.trim().length !== 6}
-                                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-brand-vivid to-primary text-[15px] font-extrabold text-primary-foreground transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+                                    className="btn-premium h-12 w-full text-[15px] font-extrabold"
                                 >
                                     {verifying ? (
                                         <><Loader2 size={18} className="animate-spin" /> Verifying…</>
