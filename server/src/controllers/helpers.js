@@ -45,11 +45,12 @@ export const normalizeBdPhone = (value) => {
   if (/^01\d{9}$/.test(digits)) return `+88${digits}`;
   return raw;
 };
-export const validateLocation = async ({ division, district, upazila }) => {
-  const [div, dist, upa] = await Promise.all([
+export const validateLocation = async ({ division, district, upazila, union }) => {
+  const [div, dist, upa, uni] = await Promise.all([
     Location.findById(division),
     Location.findById(district),
     upazila ? Location.findById(upazila) : null,
+    union ? Location.findById(union) : null,
   ]);
   if (
     !div ||
@@ -61,6 +62,11 @@ export const validateLocation = async ({ division, district, upazila }) => {
     throw new AppError("Invalid division/district hierarchy.", 400);
   if (upa && (upa.type !== "upazila" || String(upa.parent) !== String(dist._id)))
     throw new AppError("Invalid upazila hierarchy.", 400);
+  if (uni) {
+    const parentId = upa ? upa._id : dist._id;
+    if (uni.type !== "union" || String(uni.parent) !== String(parentId))
+      throw new AppError("Invalid union hierarchy.", 400);
+  }
 };
 export const activeAssignmentCount = (volunteerId) =>
   RequestAssignment.countDocuments({ volunteer: volunteerId, status: "active" });

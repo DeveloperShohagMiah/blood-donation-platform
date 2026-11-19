@@ -104,11 +104,11 @@ const Hero = ({ stats }) => {
                         </p>
 
                         <h1 className="mt-6 text-[42px] leading-[1.04] font-extrabold tracking-tight text-[#14201C] sm:text-[54px] lg:text-[62px]">
-                            {t("hero.title1", "Find a")}{" "}
+                            {t("hero.title1", "Connecting Donors")}{" "}
                             <span className="bg-gradient-to-r from-[#DC2626] to-[#E11D48] bg-clip-text text-transparent">
-                                {t("hero.titleAccent", "blood donor")}
+                                {t("hero.titleAccent", "Saving Lives")}
                             </span>{" "}
-                            {t("hero.title2", "before it’s too late.")}
+
                         </h1>
 
                         <p className="mt-6 max-w-[540px] text-base leading-relaxed text-[#5B6862] sm:text-lg">

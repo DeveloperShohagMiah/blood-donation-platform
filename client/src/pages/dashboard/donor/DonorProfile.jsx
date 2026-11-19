@@ -14,6 +14,7 @@ const emptyForm = {
     division: "",
     district: "",
     upazila: "",
+    union: "",
     area: "",
     isPubliclyListed: true,
     allowContactRequests: true,
@@ -75,6 +76,7 @@ const DonorProfile = () => {
                         division: profile.division?._id || profile.division || "",
                         district: profile.district?._id || profile.district || "",
                         upazila: profile.upazila?._id || profile.upazila || "",
+                        union: profile.union?._id || profile.union || "",
                         area: profile.area || "",
                         isPubliclyListed: Boolean(profile.isPubliclyListed),
                         allowContactRequests: Boolean(profile.allowContactRequests),
@@ -91,7 +93,9 @@ const DonorProfile = () => {
         };
     }, [reset]);
 
-    const { divisions, districts, upazilas } = useMemo(
+    const selectedUpazila = watch("upazila");
+
+    const { divisions, districts, upazilas, unions } = useMemo(
         () => ({
             divisions: locations.filter((i) => i.type === "division"),
             districts: locations.filter(
@@ -100,8 +104,11 @@ const DonorProfile = () => {
             upazilas: locations.filter(
                 (i) => i.type === "upazila" && String(i.parent) === selectedDistrict
             ),
+            unions: locations.filter(
+                (i) => i.type === "union" && String(i.parent) === selectedUpazila
+            ),
         }),
-        [locations, selectedDivision, selectedDistrict]
+        [locations, selectedDivision, selectedDistrict, selectedUpazila]
     );
 
     const submit = async (values) => {
@@ -114,6 +121,7 @@ const DonorProfile = () => {
                     ...values,
                     lastDonationDate: values.lastDonationDate || null,
                     upazila: values.upazila || undefined,
+                    union: values.union || undefined,
                 },
             });
             setMessage("Your donor profile has been saved.");
@@ -223,6 +231,7 @@ const DonorProfile = () => {
                                     onChange: () => {
                                         setValue("district", "");
                                         setValue("upazila", "");
+                                        setValue("union", "");
                                     },
                                 })}
                                 value={selectedDivision}
@@ -244,7 +253,10 @@ const DonorProfile = () => {
                                 size="lg"
                                 {...register("district", {
                                     required: "District is required.",
-                                    onChange: () => setValue("upazila", ""),
+                                    onChange: () => {
+                                        setValue("upazila", "");
+                                        setValue("union", "");
+                                    },
                                 })}
                                 value={selectedDistrict}
                                 disabled={!selectedDivision}
@@ -264,12 +276,31 @@ const DonorProfile = () => {
                             <Select
                                 id="upazila"
                                 size="lg"
-                                {...register("upazila")}
-                                value={watch("upazila")}
+                                {...register("upazila", {
+                                    onChange: () => setValue("union", ""),
+                                })}
+                                value={selectedUpazila}
                                 disabled={!selectedDistrict}
                             >
                                 <option value="">{t("text.Select upazila")}</option>
                                 {upazilas.map((item) => (
+                                    <option key={item._id} value={item._id}>{item.nameEn}</option>
+                                ))}
+                            </Select>
+                        </div>
+                        <div>
+                            <label htmlFor="union" className="mb-2 block text-sm font-bold text-foreground">
+                                Union
+                            </label>
+                            <Select
+                                id="union"
+                                size="lg"
+                                {...register("union")}
+                                value={watch("union")}
+                                disabled={!selectedUpazila}
+                            >
+                                <option value="">{t("text.Select union", "Select union")}</option>
+                                {unions.map((item) => (
                                     <option key={item._id} value={item._id}>{item.nameEn}</option>
                                 ))}
                             </Select>

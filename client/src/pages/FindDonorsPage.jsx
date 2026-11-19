@@ -9,6 +9,7 @@ const emptyFilters = {
     division: "",
     district: "",
     upazila: "",
+    union: "",
 };
 
 const FindDonorsPage = () => {
@@ -77,7 +78,7 @@ const FindDonorsPage = () => {
         };
     }, [filters, page]);
 
-    const { divisions, districts, upazilas } = useMemo(() => {
+    const { divisions, districts, upazilas, unions } = useMemo(() => {
         return {
             divisions: locations.filter((item) => item.type === "division"),
             districts: locations
@@ -86,6 +87,9 @@ const FindDonorsPage = () => {
             upazilas: locations
                 .filter((item) => item.type === "upazila")
                 .map((item) => ({ ...item, districtId: item.parent })),
+            unions: locations
+                .filter((item) => item.type === "union")
+                .map((item) => ({ ...item, upazilaId: item.parent })),
         };
     }, [locations]);
 
@@ -145,6 +149,7 @@ const FindDonorsPage = () => {
                 divisions={divisions}
                 districts={districts}
                 upazilas={upazilas}
+                unions={unions}
                 isLoading={isLoading}
                 error={error}
                 totalDonors={pagination.total}

@@ -12,14 +12,58 @@ export const getLocations = asyncHandler(async (req, res) => {
   send(res, { items });
 });
 
+export const getLocationById = asyncHandler(async (req, res) => {
+  const item = await Location.findById(req.params.id);
+  if (!item) throw new AppError("Location not found.", 404);
+  send(res, { item });
+});
+
+/* Full Tangail tree: division -> district -> upazilas -> unions. */
+export const getTangailTree = asyncHandler(async (req, res) => {
+  const items = await Location.find({ isActive: true }).sort({ nameEn: 1 }).lean();
+  const childrenOf = (parentId) =>
+    items
+      .filter((item) => String(item.parent || "") === String(parentId || ""))
+      .map((item) => ({
+        _id: item._id,
+        nameEn: item.nameEn,
+        nameBn: item.nameBn,
+        type: item.type,
+        path: item.path,
+        code: item.code,
+        children: item.type !== "union" ? childrenOf(item._id) : undefined,
+      }));
+
+  const division = items.find((item) => item.path === "dhaka");
+  const district =
+    items.find((item) => item.path === "dhaka/tangail") ||
+    items.find((item) => item.type === "district" && item.nameEn === "Tangail");
+
+  const tree = district
+    ? {
+        _id: district._id,
+        nameEn: district.nameEn,
+        nameBn: district.nameBn,
+        type: "district",
+        path: district.path,
+        division: division
+          ? { _id: division._id, nameEn: division.nameEn, nameBn: division.nameBn }
+          : null,
+        upazilas: childrenOf(district._id),
+      }
+    : null;
+
+  send(res, { tree });
+});
+
 export const postLocations = asyncHandler(async (req, res) => {
   const { nameEn, nameBn, type, parent, path, code } = req.body;
-  if (!["division", "district", "upazila"].includes(type))
+  if (!["division", "district", "upazila", "union"].includes(type))
     throw new AppError("Invalid location type.", 400);
   if (type === "division" && parent) throw new AppError("A division cannot have a parent.", 400);
   if (type !== "division") {
     const parentDoc = await Location.findById(parent);
-    const expected = type === "district" ? "division" : "district";
+    const expected = { district: "division", upazila: "district", union: "upazila" }[type];
     if (!parentDoc || parentDoc.type !== expected)
       throw new AppError(`A ${type} must belong to a ${expected}.`, 400);
   }

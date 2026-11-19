@@ -42,6 +42,21 @@ The client reads `VITE_API_URL` from `client/.env` (defaults to `http://localhos
 
 All responses use `{ success, message, data }`; the client unwraps `data` automatically.
 
+## Tangail location API
+
+The location tree is **Tangail-only**: one division (Dhaka), one district (Tangail), all **12 upazilas** and their unions. No other divisions/districts are seeded. All donor, request and filter location pickers read from this API (no hardcoded lists).
+
+```bash
+cd server
+npm run seed:tangail   # upserts Dhaka -> Tangail -> 12 upazilas -> unions
+```
+
+Endpoints:
+- `GET /api/v1/locations` — flat active list; supports `?type=division|district|upazila|union` and `?parent=<id>`
+- `GET /api/v1/locations/tree` — nested Tangail tree with upazilas and their unions
+- `GET /api/v1/locations/:id` — single location
+- `POST /api/v1/locations`, `PATCH /api/v1/locations/:id`, `DELETE /api/v1/locations/:id` — staff/admin
+
 ## Dashboards
 
 After logging in, use the **Dashboard** link in the navbar (or go to `/dashboard`). The layout and navigation adapt to the signed-in role:

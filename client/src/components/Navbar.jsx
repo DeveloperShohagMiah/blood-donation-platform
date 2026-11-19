@@ -154,7 +154,7 @@ const Navbar = () => {
 
                         <span className="flex flex-col">
                             <span className="text-[20px] leading-none font-extrabold tracking-tight text-[#192623]">
-                                Blood <span className="text-[#C62838]">{t("text.Connect")}</span>
+                                Blood <span className="text-primary">{t("text.Connect")}</span>
                             </span>
                             <span
                                 className={[
@@ -245,14 +245,14 @@ const Navbar = () => {
                         ) : (
                             <Link
                                 to="/login"
-                                className="hidden rounded-full px-3.5 py-2 text-[13.5px] font-semibold text-[#475650] transition-colors bg-muted md:inline-flex"
+                                className="hidden rounded-full px-3.5 py-2 text-[13.5px] font-semibold text-white transition-colors bg-primary md:inline-flex"
                             >
                                 {t("navigation.login")}
                             </Link>
                         )}
 
                         {/* Desktop CTA */}
-                        <Link
+                        {/* <Link
                             to="/become-donor"
                             className={[
                                 "group/cta relative hidden px-3.5 py-2 items-center justify-center gap-1.5 overflow-hidden",
@@ -269,7 +269,7 @@ const Navbar = () => {
                                 strokeWidth={2.4}
                                 className="transition-transform duration-200 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5"
                             />
-                        </Link>
+                        </Link> */}
                     </div>
 
                     {/* Mobile menu button */}

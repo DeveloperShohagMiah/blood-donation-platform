@@ -8,6 +8,7 @@
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "seed": "node src/scripts/seedLocations.js",
+    "seed:tangail": "node src/scripts/seedLocations.js",
     "seed:admin": "node src/scripts/seedAdmin.js",
     "approve": "node src/scripts/approveUser.js"
   },

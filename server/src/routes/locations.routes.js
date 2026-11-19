@@ -8,6 +8,8 @@ import { deleteOne, updateOne } from "../controllers/adminCrud.controller.js";
 const router = Router();
 
 router.get("/locations", controller.getLocations);
+router.get("/locations/tree", controller.getTangailTree);
+router.get("/locations/:id", controller.getLocationById);
 router.post("/locations", protect, admin, controller.postLocations);
 router.post("/locations/seed-tangail", protect, admin, controller.postLocationsSeedTangail);
 router.patch(

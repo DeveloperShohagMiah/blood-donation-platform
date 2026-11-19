@@ -23,6 +23,7 @@ const mapApiDonor = (item) => ({
     division: item.division?.nameEn || "",
     district: item.district?.nameEn || "",
     upazila: item.upazila?.nameEn || item.area || "",
+    union: item.union?.nameEn || "",
     last: item.lastDonationDate
         ? new Date(item.lastDonationDate).toLocaleDateString("en-GB", {
             day: "numeric",
@@ -70,7 +71,7 @@ const DonorShowcase = () => {
     const filterRef = useRef(null);
 
     /* Draft values (what the person is picking) vs applied (what the list uses) */
-    const empty = { group: "", division: "", district: "", upazila: "" };
+    const empty = { group: "", division: "", district: "", upazila: "", union: "" };
     const [draft, setDraft] = useState(empty);
     const [applied, setApplied] = useState(empty);
     const [donors, setDonors] = useState([]);
@@ -118,6 +119,11 @@ const DonorShowcase = () => {
             .filter((item) => item.type === "upazila" && nameById[item.parent] === draft.district)
             .map((item) => item.nameEn)
         : [];
+    const unions = draft.upazila
+        ? locations
+            .filter((item) => item.type === "union" && nameById[item.parent] === draft.upazila)
+            .map((item) => item.nameEn)
+        : [];
 
     const set = (key) => (value) =>
         setDraft((d) => {
@@ -125,8 +131,13 @@ const DonorShowcase = () => {
             if (key === "division") {
                 next.district = "";
                 next.upazila = "";
+                next.union = "";
             }
-            if (key === "district") next.upazila = "";
+            if (key === "district") {
+                next.upazila = "";
+                next.union = "";
+            }
+            if (key === "upazila") next.union = "";
             return next;
         });
 
@@ -137,7 +148,8 @@ const DonorShowcase = () => {
                     (!applied.group || d.group === applied.group) &&
                     (!applied.division || d.division === applied.division) &&
                     (!applied.district || d.district === applied.district) &&
-                    (!applied.upazila || d.upazila === applied.upazila)
+                    (!applied.upazila || d.upazila === applied.upazila) &&
+                    (!applied.union || d.union === applied.union)
             ),
         [applied, donors]
     );
@@ -163,7 +175,7 @@ const DonorShowcase = () => {
                     ref={filterRef}
                     onSubmit={applyFilters}
                     aria-label={t("home.donors.filterLabel", "Filter donors")}
-                    className="relative z-20 mx-auto md:-mt-40 grid w-full gap-4 rounded-2xl border border-border/70 bg-white p-5 shadow-[0_24px_60px_rgba(11,16,32,0.14)] sm:grid-cols-2 sm:p-6 lg:grid-cols-5 lg:items-end">
+                    className="relative z-20 mx-auto md:-mt-40 grid w-full gap-4 rounded-2xl border border-border/70 bg-white p-5 shadow-[0_24px_60px_rgba(11,16,32,0.14)] sm:grid-cols-2 sm:p-6 lg:grid-cols-6 lg:items-end">
                     <Field
                         label={t("home.donors.group", "Blood group")}
                         placeholder={t("home.donors.selectGroup", "Select Blood Group")}
@@ -193,6 +205,14 @@ const DonorShowcase = () => {
                         onChange={set("upazila")}
                         options={upazilas}
                         disabled={!draft.district}
+                    />
+                    <Field
+                        label={t("home.donors.union", "Union")}
+                        placeholder={t("home.donors.selectUnion", "Select Union")}
+                        value={draft.union}
+                        onChange={set("union")}
+                        options={unions}
+                        disabled={!draft.upazila}
                     />
 
                     <button
@@ -282,7 +302,7 @@ const DonorShowcase = () => {
 
                                 <p className="mt-3 flex items-start gap-2 text-xs font-medium text-[#475650]">
                                     <MapPin size={14} className="mt-0.5 shrink-0 text-primary" />
-                                    {d.upazila}, {d.district}, {d.division}
+                                    {d.union && <>{d.union}, </>}{d.upazila}, {d.district}, {d.division}
                                 </p>
 
                                 <div className="mt-4 flex items-center justify-between border-t border-[#EEF1F4] pt-4">

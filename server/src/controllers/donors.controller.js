@@ -11,6 +11,7 @@ export const putDonorsMe = asyncHandler(async (req, res) => {
     "division",
     "district",
     "upazila",
+    "union",
     "area",
     "isPubliclyListed",
     "allowContactRequests",
@@ -31,7 +32,7 @@ export const putDonorsMe = asyncHandler(async (req, res) => {
 
 export const getDonorsMe = asyncHandler(async (req, res) => {
   const profile = await DonorProfile.findOne({ user: req.user._id }).populate(
-    "division district upazila",
+    "division district upazila union",
     "nameEn nameBn type",
   );
   send(res, { profile });
@@ -41,7 +42,7 @@ export const getDonorsMe = asyncHandler(async (req, res) => {
 export const getDonorsAdmin = asyncHandler(async (req, res) => {
   const items = await DonorProfile.find()
     .populate("user", "fullName phone")
-    .populate("division district upazila", "nameEn nameBn")
+    .populate("division district upazila union", "nameEn nameBn")
     .sort({ createdAt: -1 });
   send(res, { items });
 });
@@ -49,7 +50,7 @@ export const getDonorsAdmin = asyncHandler(async (req, res) => {
 export const getDonorById = asyncHandler(async (req, res) => {
   const item = await DonorProfile.findById(req.params.id)
     .populate("user", "fullName phone")
-    .populate("division district upazila", "nameEn nameBn");
+    .populate("division district upazila union", "nameEn nameBn");
   if (!item) throw new AppError("Donor profile not found.", 404);
   send(res, { item });
 });
@@ -59,13 +60,14 @@ export const getDonorsSearch = asyncHandler(async (req, res) => {
   if (req.query.bloodGroup) filter.bloodGroup = req.query.bloodGroup;
   if (req.query.district) filter.district = req.query.district;
   if (req.query.upazila) filter.upazila = req.query.upazila;
+  if (req.query.union) filter.union = req.query.union;
   if (req.query.division) filter.division = req.query.division;
   const page = Math.max(1, Number(req.query.page) || 1);
   const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 20));
   const [items, total] = await Promise.all([
     DonorProfile.find(filter)
-      .select("bloodGroup availability division district upazila area lastDonationDate user")
-      .populate("division district upazila", "nameEn nameBn")
+      .select("bloodGroup availability division district upazila union area lastDonationDate user")
+      .populate("division district upazila union", "nameEn nameBn")
       .populate("user", "fullName phoneVerified")
       .skip((page - 1) * limit)
       .limit(limit)

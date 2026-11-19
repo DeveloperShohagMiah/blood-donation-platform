@@ -14,6 +14,7 @@ export const postBloodRequests = asyncHandler(async (req, res) => {
     "division",
     "district",
     "upazila",
+    "union",
     "neededAt",
     "contactName",
     "contactPhone",
@@ -69,12 +70,14 @@ export const getBloodRequests = asyncHandler(async (req, res) => {
   if (req.user.role === ROLES.USER) filter.requester = req.user._id;
   if (req.query.status) filter.status = req.query.status;
   if (req.query.district) filter.district = req.query.district;
+  if (req.query.upazila) filter.upazila = req.query.upazila;
+  if (req.query.union) filter.union = req.query.union;
   const page = Math.max(1, Number(req.query.page) || 1);
   const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 20));
   const [items, total] = await Promise.all([
     BloodRequest.find(filter)
       .populate("requester", "fullName")
-      .populate("district upazila", "nameEn nameBn")
+      .populate("district upazila union", "nameEn nameBn")
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit),
@@ -103,9 +106,9 @@ export const getPublicBloodRequests = asyncHandler(async (req, res) => {
     expiresAt: { $gt: new Date() },
   })
     .select(
-      "patientName bloodGroup urgency units unitsFulfilled hospitalName district upazila neededAt contactName contactPhone createdAt details status",
+      "patientName bloodGroup urgency units unitsFulfilled hospitalName district upazila union neededAt contactName contactPhone createdAt details status",
     )
-    .populate("district upazila", "nameEn nameBn")
+    .populate("district upazila union", "nameEn nameBn")
     .sort({ createdAt: -1 })
     .limit(20)
     .lean();
@@ -126,7 +129,7 @@ export const getPublicBloodRequests = asyncHandler(async (req, res) => {
 export const getBloodRequestsById = asyncHandler(async (req, res) => {
   const item = await BloodRequest.findById(req.params.id)
     .populate("requester", "fullName")
-    .populate("district upazila", "nameEn nameBn");
+    .populate("district upazila union", "nameEn nameBn");
   if (!item) throw new AppError("Request not found.", 404);
   if (req.user.role === ROLES.USER && String(item.requester._id) !== String(req.user._id))
     throw new AppError("Forbidden.", 403);

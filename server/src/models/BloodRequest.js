@@ -20,6 +20,7 @@ const bloodRequestSchema = new Schema({
   division: { type: Schema.Types.ObjectId, ref: "Location", required: true },
   district: { type: Schema.Types.ObjectId, ref: "Location", required: true },
   upazila: { type: Schema.Types.ObjectId, ref: "Location", default: null },
+  union: { type: Schema.Types.ObjectId, ref: "Location", default: null },
   neededAt: { type: Date, required: true },
   contactName: { type: String, required: true, trim: true, maxlength: 100 },
   contactPhone: { type: String, required: true, trim: true },

@@ -1,53 +1,77 @@
 import connectDB from "../config/db.js";
 import { Location } from "../models/index.js";
 
-/* Starter subset. Extend this with the full 64-district dataset when needed. */
-const DATA = {
-    Dhaka: {
-        Dhaka: ["Khilkhet", "Uttara", "Mirpur", "Dhanmondi", "Savar"],
-        Tangail: [
-            "Tangail Sadar",
-            "Kalihati",
-            "Bhuapur",
-            "Gopalpur",
-            "Delduar",
-            "Ghatail",
-            "Madhupur",
-            "Sakhipur",
-            "Basail",
-            "Mirzapur",
+/* Tangail-focused location dataset: district -> upazilas -> unions.
+   Source: Bangladesh Bureau of Statistics / Wikipedia (109 union parishads). */
+const DIVISION = { nameEn: "Dhaka", nameBn: "ঢাকা", path: "dhaka" };
+const DISTRICT = { nameEn: "Tangail", nameBn: "টাঙ্গাইল", path: "dhaka/tangail" };
+
+const UPAZILAS = {
+    "Basail": {
+        bn: "বাসাইল",
+        unions: ["Basail", "Fulki", "Habla", "Kanchanpur", "Kaoaljani", "Kashil"],
+    },
+    "Bhuapur": {
+        bn: "ভুয়াপুর",
+        unions: ["Arjuna", "Aloa", "Falda", "Gabsara", "Gobindashi", "Nikrail"],
+    },
+    "Delduar": {
+        bn: "দেলদুয়ার",
+        unions: ["Atia", "Delduar", "Deoli", "Dubail", "Elasin", "Fazilhati", "Lauhati", "Pathrail"],
+    },
+    "Dhanbari": {
+        bn: "ধনবাড়ী",
+        unions: ["Baniajan", "Birtara", "Bolibhadra", "Dhopakhali", "Jodunathpur", "Mushuddi", "Paiska"],
+    },
+    "Ghatail": {
+        bn: "ঘাটাইল",
+        unions: [
+            "Anehola", "Deulabari", "Deopara", "Dhalapara", "Digalkandi", "Digar", "Ghatail",
+            "Jamuria", "Lakherpara", "Lakkhindar", "Rasulpur", "Sagardighi", "Sandhanpur", "Sangrampur",
         ],
-        Gazipur: ["Gazipur Sadar", "Kaliakair", "Tongi"],
-        Narayanganj: ["Narayanganj Sadar", "Rupganj"],
     },
-    Chattogram: {
-        Chattogram: ["Kotwali", "Pahartali", "Hathazari", "Sitakunda"],
-        "Cox's Bazar": ["Cox's Bazar Sadar", "Chakaria"],
-        Cumilla: ["Cumilla Sadar", "Chandina"],
+    "Gopalpur": {
+        bn: "গোপালপুর",
+        unions: ["Alamnagar", "Dhopakandi", "Hadira", "Hemnagar", "Jhawail", "Mirzapur", "Nagda Simla"],
     },
-    Rajshahi: {
-        Rajshahi: ["Boalia", "Paba"],
-        Bogura: ["Bogura Sadar", "Shibganj"],
+    "Kalihati": {
+        bn: "কালিহাতি",
+        unions: [
+            "Balla", "Bangra", "Bir Bashinda", "Dashkia", "Durgapur", "Gohaliabari", "Kok Dohora",
+            "Nagbari", "Narandia", "Paikara", "Parkhi", "Salla", "Shahadebpur",
+        ],
     },
-    Khulna: {
-        Khulna: ["Khulna Sadar", "Dumuria"],
-        Jashore: ["Jashore Sadar", "Sharsha"],
+    "Madhupur": {
+        bn: "মধুপুর",
+        unions: ["Alokdia", "Arankhola", "Ausnara", "Golabari", "Mirzabari", "Sholakuri"],
     },
-    Sylhet: {
-        Sylhet: ["Sylhet Sadar", "Beanibazar"],
-        Moulvibazar: ["Moulvibazar Sadar", "Sreemangal"],
+    "Mirzapur": {
+        bn: "মির্জাপুর",
+        unions: [
+            "Ajgana", "Anaitara", "Bahuria", "Banail", "Banshtail", "Bhaora", "Bhatgram", "Fatepur",
+            "Gorai", "Jamurki", "Latifpur", "Mohera", "Tarafpur", "Warshi",
+        ],
     },
-    Barishal: {
-        Barishal: ["Barishal Sadar", "Bakerganj"],
-        Bhola: ["Bhola Sadar"],
+    "Nagarpur": {
+        bn: "নাগরপুর",
+        unions: [
+            "Bekra", "Bhadra", "Bharra", "Dhubaria", "Duptiair", "Gayhata", "Mamudnagar", "Mokna",
+            "Nagarpur", "Pakutia", "Sahabatpur", "Salimabad",
+        ],
     },
-    Rangpur: {
-        Rangpur: ["Rangpur Sadar", "Mithapukur"],
-        Dinajpur: ["Dinajpur Sadar"],
+    "Sakhipur": {
+        bn: "সাখীপুর",
+        unions: [
+            "Baheratoil", "Dariapur", "Gazaria", "Hatibandha", "Jadabpur", "Kakrajan", "Kalia",
+            "Kalmegha", "Borochawna", "Hateya Razabari",
+        ],
     },
-    Mymensingh: {
-        Mymensingh: ["Mymensingh Sadar", "Trishal"],
-        Jamalpur: ["Jamalpur Sadar"],
+    "Tangail Sadar": {
+        bn: "টাঙ্গাইল সদর",
+        unions: [
+            "Baghil", "Danya", "Gala", "Gharinda", "Hugra", "Karatia", "Katuli", "Kakua", "Magra",
+            "Mahamudnagar", "Porabari", "Silimpur",
+        ],
     },
 };
 
@@ -61,51 +85,63 @@ const slug = (value) =>
 const upsert = (path, payload) =>
     Location.findOneAndUpdate(
         { path },
-        { $setOnInsert: { path, ...payload } },
-        { returnDocument: "after", upsert: true }
+        { $set: payload, $setOnInsert: { path } },
+        { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
     );
 
 const seed = async () => {
     await connectDB();
-    let count = 0;
 
-    for (const [divisionName, districts] of Object.entries(DATA)) {
-        const divisionPath = slug(divisionName);
-        const division = await upsert(divisionPath, {
-            nameEn: divisionName,
-            nameBn: divisionName,
-            type: "division",
-            parent: null,
+    // Fresh Tangail-only tree — remove any legacy divisions/districts/upazilas.
+    await Location.deleteMany({});
+
+    const division = await upsert(DIVISION.path, {
+        nameEn: DIVISION.nameEn,
+        nameBn: DIVISION.nameBn,
+        type: "division",
+        parent: null,
+        code: "BD-DH",
+    });
+
+    const district = await upsert(DISTRICT.path, {
+        nameEn: DISTRICT.nameEn,
+        nameBn: DISTRICT.nameBn,
+        type: "district",
+        parent: division._id,
+        code: "BD-63",
+    });
+
+    let upazilaCount = 0;
+    let unionCount = 0;
+
+    for (const [name, data] of Object.entries(UPAZILAS)) {
+        const path = `${DISTRICT.path}/${slug(name)}`;
+        const upazila = await upsert(path, {
+            nameEn: name,
+            nameBn: data.bn,
+            type: "upazila",
+            parent: district._id,
         });
-        count += 1;
+        upazilaCount += 1;
 
-        for (const [districtName, upazilas] of Object.entries(districts)) {
-            const districtPath = `${divisionPath}/${slug(districtName)}`;
-            const district = await upsert(districtPath, {
-                nameEn: districtName,
-                nameBn: districtName,
-                type: "district",
-                parent: division._id,
+        for (const union of data.unions) {
+            await upsert(`${path}/${slug(union)}`, {
+                nameEn: union,
+                nameBn: union, // editable from the admin location manager
+                type: "union",
+                parent: upazila._id,
             });
-            count += 1;
-
-            for (const upazilaName of upazilas) {
-                await upsert(`${districtPath}/${slug(upazilaName)}`, {
-                    nameEn: upazilaName,
-                    nameBn: upazilaName,
-                    type: "upazila",
-                    parent: district._id,
-                });
-                count += 1;
-            }
+            unionCount += 1;
         }
     }
 
-    console.log(`Location seed complete (${count} records processed).`);
+    console.log(
+        `Tangail seeded: 1 division, 1 district, ${upazilaCount} upazilas, ${unionCount} unions.`
+    );
     process.exit(0);
 };
 
 seed().catch((error) => {
-    console.error("Location seed failed:", error);
+    console.error("Tangail seed failed:", error);
     process.exit(1);
 });

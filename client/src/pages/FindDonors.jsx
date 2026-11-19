@@ -32,6 +32,7 @@ const FindDonors = ({
     divisions = [],
     districts = [],
     upazilas = [],
+    unions = [],
     isLoading = false,
     error = null,
     totalDonors = 0,
@@ -57,10 +58,12 @@ const FindDonors = ({
         division: isBn ? "বিভাগ" : "Division",
         district: isBn ? "জেলা" : "District",
         upazila: isBn ? "উপজেলা" : "Upazila",
+        union: isBn ? "ইউনিয়ন" : "Union",
         allGroups: isBn ? "সকল রক্তের গ্রুপ" : "All Blood Groups",
         selectDivision: isBn ? "বিভাগ নির্বাচন করুন" : "Select Division",
         selectDistrict: isBn ? "জেলা নির্বাচন করুন" : "Select District",
         selectUpazila: isBn ? "উপজেলা নির্বাচন করুন" : "Select Upazila",
+        selectUnion: isBn ? "ইউনিয়ন নির্বাচন করুন" : "Select Union",
         search: isBn ? "রক্তদাতা খুঁজুন" : "Search Donors",
         clear: isBn ? "রিসেট" : "Clear Filters",
         results: isBn ? "অনুসন্ধানের ফলাফল" : "Search Results",
@@ -138,6 +141,7 @@ const FindDonors = ({
             division: "",
             district: "",
             upazila: "",
+            union: "",
         },
     });
 
@@ -145,6 +149,7 @@ const FindDonors = ({
     const selectedDivision = watch("division");
     const selectedDistrict = watch("district");
     const selectedUpazila = watch("upazila");
+    const selectedUnion = watch("union");
 
     const filteredDistricts = useMemo(
         () =>
@@ -162,6 +167,14 @@ const FindDonors = ({
         [upazilas, selectedDistrict]
     );
 
+    const filteredUnions = useMemo(
+        () =>
+            unions.filter(
+                (union) => union.upazilaId === selectedUpazila
+            ),
+        [unions, selectedUpazila]
+    );
+
     const submitSearch = (values) => {
         onSearch(values);
     };
@@ -172,6 +185,7 @@ const FindDonors = ({
             division: "",
             district: "",
             upazila: "",
+            union: "",
         });
 
         onSearch({
@@ -179,6 +193,7 @@ const FindDonors = ({
             division: "",
             district: "",
             upazila: "",
+            union: "",
         });
     };
 
@@ -265,7 +280,7 @@ const FindDonors = ({
                     </div>
 
                     <form onSubmit={handleSubmit(submitSearch)}>
-                        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
                             {/* Blood group */}
                             <div>
                                 <label className="mb-2 block text-sm font-semibold text-[#34423B]">
@@ -300,6 +315,7 @@ const FindDonors = ({
                                                     ...values,
                                                     district: "",
                                                     upazila: "",
+                                                    union: "",
                                                 }),
                                                 { keepDefaultValues: true }
                                             );
@@ -330,6 +346,7 @@ const FindDonors = ({
                                                 (values) => ({
                                                     ...values,
                                                     upazila: "",
+                                                    union: "",
                                                 }),
                                                 { keepDefaultValues: true }
                                             );
@@ -364,6 +381,26 @@ const FindDonors = ({
                                     {filteredUpazilas.map((upazila) => (
                                         <option key={upazila._id} value={upazila._id}>
                                             {isBn ? upazila.nameBn : upazila.nameEn}
+                                        </option>
+                                    ))}
+                                </Select>
+                            </div>
+
+                            {/* Union */}
+                            <div>
+                                <label className="mb-2 block text-sm font-semibold text-[#34423B]">
+                                    {content.union}
+                                </label>
+                                <Select
+                                    {...register("union")}
+                                    value={selectedUnion}
+                                    disabled={!selectedUpazila}
+                                    size="lg"
+                                >
+                                    <option value="">{content.selectUnion}</option>
+                                    {filteredUnions.map((union) => (
+                                        <option key={union._id} value={union._id}>
+                                            {isBn ? union.nameBn : union.nameEn}
                                         </option>
                                     ))}
                                 </Select>

@@ -77,6 +77,7 @@ const emptyForm = {
     division: "",
     district: "",
     upazila: "",
+    union: "",
     neededAt: "",
     contactName: "",
     contactPhone: "",
@@ -107,6 +108,7 @@ const RequestsManagement = () => {
 
     const divisionValue = watch("division");
     const districtValue = watch("district");
+    const upazilaValue = watch("upazila");
 
     const items = data?.items || [];
     const table = useTableControls(items, {
@@ -145,6 +147,7 @@ const RequestsManagement = () => {
             division: item.division?._id || item.division || "",
             district: item.district?._id || item.district || "",
             upazila: item.upazila?._id || item.upazila || "",
+            union: item.union?._id || item.union || "",
             neededAt: item.neededAt ? String(item.neededAt).slice(0, 10) : "",
             contactName: item.contactName || "",
             contactPhone: item.contactPhone || "",
@@ -237,6 +240,9 @@ const RequestsManagement = () => {
     );
     const upazilas = locations.filter(
         (item) => item.type === "upazila" && String(item.parent) === districtValue
+    );
+    const unions = locations.filter(
+        (item) => item.type === "union" && String(item.parent) === upazilaValue
     );
 
     return (
@@ -432,6 +438,7 @@ const RequestsManagement = () => {
                                         onChange: () => {
                                             setValue("district", "");
                                             setValue("upazila", "");
+                                            setValue("union", "");
                                         },
                                     })}
                                     value={divisionValue}
@@ -445,7 +452,10 @@ const RequestsManagement = () => {
                                 <Select
                                     size="lg"
                                     {...register("district", {
-                                        onChange: () => setValue("upazila", ""),
+                                        onChange: () => {
+                                            setValue("upazila", "");
+                                            setValue("union", "");
+                                        },
                                     })}
                                     value={districtValue}
                                     disabled={!divisionValue}
@@ -456,9 +466,21 @@ const RequestsManagement = () => {
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Upazila")}</span>
-                                <Select size="lg" {...register("upazila")} value={watch("upazila")} disabled={!districtValue}>
+                                <Select
+                                    size="lg"
+                                    {...register("upazila", { onChange: () => setValue("union", "") })}
+                                    value={upazilaValue}
+                                    disabled={!districtValue}
+                                >
                                     <option value="">{t("text.Select upazila")}</option>
                                     {upazilas.map((item) => <option key={item._id} value={item._id}>{item.nameEn}</option>)}
+                                </Select>
+                            </label>
+                            <label>
+                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Union", "Union")}</span>
+                                <Select size="lg" {...register("union")} value={watch("union")} disabled={!upazilaValue}>
+                                    <option value="">{t("text.Select union", "Select union")}</option>
+                                    {unions.map((item) => <option key={item._id} value={item._id}>{item.nameEn}</option>)}
                                 </Select>
                             </label>
                             <label>

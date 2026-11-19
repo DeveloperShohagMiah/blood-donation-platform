@@ -9,7 +9,7 @@
     "campaigns": "Campaigns",
     "about": "About",
     "contact": "Contact",
-    "login": "Log in",
+    "login": "Sign in",
     "tagline": "DONATE BLOOD. SAVE LIVES.",
     "chooseLanguage": "Choose language",
     "openMenu": "Open menu",
@@ -129,10 +129,10 @@
       "donors": "Registered donors",
       "fulfilled": "Requests fulfilled"
     },
-    "subtitle": "Search donors by blood group and location, or post a request and let people nearby respond. Fast, free and always voluntary.",
-    "title1": "Find a",
-    "title2": "before it’s too late.",
-    "titleAccent": "blood donor",
+    "subtitle": "A community-driven platform connecting voluntary blood donors with people in need. Because every connection can make a difference.",
+    "title1": "Connecting donors",
+    "title2": "",
+    "titleAccent": "Saving Lives",
     "viewRequests": "See open blood requests"
   },
   "home": {
@@ -165,7 +165,9 @@
       "subtitle": "Connecting voluntary blood donors from across the country. Find compatible blood groups and location matches instantly.",
       "title": "Voluntary Blood Donors Showcase",
       "unavailable": "Unavailable",
-      "upazila": "Area / Upazila"
+      "upazila": "Area / Upazila",
+      "union": "Union",
+      "selectUnion": "Select Union"
     },
     "emergency": {
       "all": "All",
@@ -509,6 +511,72 @@
     "Your details": "Your details",
     "Your name": "Your name",
     "Your password has been updated_DOT_ You can now sign in with the new one_DOT_": "Your password has been updated. You can now sign in with the new one.",
-    "Your phone number": "Your phone number"
+    "Your phone number": "Your phone number",
+    "Union": "Union",
+    "Select union": "Select union",
+    "Union (optional)": "Union (optional)"
+  },
+  "about": {
+    "badge": "About Blood Connect",
+    "heading1": "Connecting Hearts,",
+    "heading2": "Saving Lives.",
+    "intro": "Blood Connect is a community-focused blood donation initiative that connects voluntary blood donors with people who need blood. Our goal is to make blood donation coordination more accessible, organized, and reliable.",
+    "becomeDonor": "Become a Donor",
+    "contact": "Contact Us",
+    "imageAlt": "Blood donation",
+    "everyDrop": "Every Drop Matters",
+    "giveHope": "Give blood. Give hope.",
+    "whoHeading": "Who We Are",
+    "whoTitle": "A Community Built Around Humanity",
+    "whoText1": "Finding a blood donor during an emergency can be stressful and time-sensitive. Blood Connect aims to simplify that process by creating a structured platform where people can find available donors and volunteers can coordinate blood requests.",
+    "whoText2": "We are starting our operations in Tangail, Bangladesh, with a vision to expand our support to more communities across the country.",
+    "mission": {
+      "title": "Our Mission",
+      "text": "To connect voluntary blood donors with people in need through an organized, accessible, and responsible coordination system supported by dedicated volunteers."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "text": "To create a world where everyone has access to timely and reliable blood donation support, fostering a culture of generosity and community care."
+    },
+    "guideHeading": "What Guides Us",
+    "valuesTitle": "Our Core Values",
+    "valuesText": "The principles that guide how we serve our community.",
+    "values": {
+      "humanity": {
+        "title": "Humanity First",
+        "text": "We believe every person deserves access to timely blood donation support, regardless of their background."
+      },
+      "trust": {
+        "title": "Trust & Transparency",
+        "text": "We work to verify blood requests and coordinate responsibly to build a reliable donation community."
+      },
+      "community": {
+        "title": "Community Driven",
+        "text": "We bring donors, volunteers, and people in need together to make a meaningful difference."
+      },
+      "service": {
+        "title": "Responsible Service",
+        "text": "We respect donor privacy, voluntary participation, and the importance of responsible coordination."
+      }
+    },
+    "ctaTitle": "Be Part of Something Meaningful",
+    "ctaText": "Your willingness to donate blood can make a real difference. Join our community and help someone find hope.",
+    "join": "Join Our Community",
+    "approach": "Our Approach",
+    "howTitle": "How Blood Connect Works",
+    "steps": {
+      "find": {
+        "title": "Find Donors",
+        "text": "Search for available blood donors by blood group and location."
+      },
+      "verify": {
+        "title": "Verify Requests",
+        "text": "Our volunteers review and verify submitted blood requests."
+      },
+      "coordinate": {
+        "title": "Coordinate Support",
+        "text": "Volunteers coordinate with donors and blood seekers to support the donation process."
+      }
+    }
   }
 }

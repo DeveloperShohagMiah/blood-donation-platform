@@ -43,6 +43,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
             division: "",
             district: "",
             upazila: "",
+            union: "",
             hospitalName: "",
             hospitalAddress: "",
             neededAt: "",
@@ -58,6 +59,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
     const selectedDivision = watch("division");
     const selectedDistrict = watch("district");
     const selectedUpazila = watch("upazila");
+    const selectedUnion = watch("union");
 
     const divisions = locations.filter((item) => item.type === "division");
     const districts = locations.filter(
@@ -65,6 +67,9 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
     );
     const upazilas = locations.filter(
         (item) => item.type === "upazila" && String(item.parent) === selectedDistrict
+    );
+    const unions = locations.filter(
+        (item) => item.type === "union" && String(item.parent) === selectedUpazila
     );
 
     const submit = async (values) => {
@@ -163,6 +168,91 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                         aria-invalid={Boolean(errors.patientName)}
                                     />
                                     <FieldError error={errors.patientName} />
+                                </label>
+                                <label>
+                                    <span className={labelClass}>
+                                        {t("bloodRequest.form.division", "Division")}
+                                    </span>
+                                    <Select
+                                        {...register("division", {
+                                            required: requiredRule("Division"),
+                                            onChange: () => {
+                                                setValue("district", "");
+                                                setValue("upazila", "");
+                                                setValue("union", "");
+                                            },
+                                        })}
+                                        value={selectedDivision}
+                                        size="lg"
+                                        invalid={Boolean(errors.division)}
+                                    >
+                                        <option value="">{t("text.Select division")}</option>
+                                        {divisions.map((item) => (
+                                            <option key={item._id} value={item._id}>{item.nameEn}</option>
+                                        ))}
+                                    </Select>
+                                    <FieldError error={errors.division} />
+                                </label>
+
+                                <label>
+                                    <span className={labelClass}>
+                                        {t("bloodRequest.form.district", "District")}
+                                    </span>
+                                    <Select
+                                        {...register("district", {
+                                            required: requiredRule("District"),
+                                            onChange: () => {
+                                                setValue("upazila", "");
+                                                setValue("union", "");
+                                            },
+                                        })}
+                                        value={selectedDistrict}
+                                        size="lg"
+                                        disabled={!selectedDivision}
+                                        invalid={Boolean(errors.district)}
+                                    >
+                                        <option value="">{t("text.Select district")}</option>
+                                        {districts.map((item) => (
+                                            <option key={item._id} value={item._id}>{item.nameEn}</option>
+                                        ))}
+                                    </Select>
+                                    <FieldError error={errors.district} />
+                                </label>
+
+                                <label>
+                                    <span className={labelClass}>
+                                        {t("bloodRequest.form.upazila", "Upazila (optional)")}
+                                    </span>
+                                    <Select
+                                        {...register("upazila", {
+                                            onChange: () => setValue("union", ""),
+                                        })}
+                                        value={selectedUpazila}
+                                        size="lg"
+                                        disabled={!selectedDistrict}
+                                    >
+                                        <option value="">{t("text.Select upazila")}</option>
+                                        {upazilas.map((item) => (
+                                            <option key={item._id} value={item._id}>{item.nameEn}</option>
+                                        ))}
+                                    </Select>
+                                </label>
+
+                                <label>
+                                    <span className={labelClass}>
+                                        {t("text.Union (optional)", "Union (optional)")}
+                                    </span>
+                                    <Select
+                                        {...register("union")}
+                                        value={selectedUnion}
+                                        size="lg"
+                                        disabled={!selectedUpazila}
+                                    >
+                                        <option value="">{t("text.Select union", "Select union")}</option>
+                                        {unions.map((item) => (
+                                            <option key={item._id} value={item._id}>{item.nameEn}</option>
+                                        ))}
+                                    </Select>
                                 </label>
 
                                 <fieldset className="sm:col-span-2">
@@ -313,78 +403,18 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                     <FieldError error={errors.hospitalName} />
                                 </label>
 
-                                <label>
-                                    <span className={labelClass}>
-                                        {t("bloodRequest.form.division", "Division")}
-                                    </span>
-                                    <Select
-                                        {...register("division", {
-                                            required: requiredRule("Division"),
-                                            onChange: () => {
-                                                setValue("district", "");
-                                                setValue("upazila", "");
-                                            },
-                                        })}
-                                        value={selectedDivision}
-                                        size="lg"
-                                        invalid={Boolean(errors.division)}
-                                    >
-                                        <option value="">{t("text.Select division")}</option>
-                                        {divisions.map((item) => (
-                                            <option key={item._id} value={item._id}>{item.nameEn}</option>
-                                        ))}
-                                    </Select>
-                                    <FieldError error={errors.division} />
-                                </label>
 
-                                <label>
-                                    <span className={labelClass}>
-                                        {t("bloodRequest.form.district", "District")}
-                                    </span>
-                                    <Select
-                                        {...register("district", {
-                                            required: requiredRule("District"),
-                                            onChange: () => setValue("upazila", ""),
-                                        })}
-                                        value={selectedDistrict}
-                                        size="lg"
-                                        disabled={!selectedDivision}
-                                        invalid={Boolean(errors.district)}
-                                    >
-                                        <option value="">{t("text.Select district")}</option>
-                                        {districts.map((item) => (
-                                            <option key={item._id} value={item._id}>{item.nameEn}</option>
-                                        ))}
-                                    </Select>
-                                    <FieldError error={errors.district} />
-                                </label>
-
-                                <label>
-                                    <span className={labelClass}>
-                                        {t("bloodRequest.form.upazila", "Upazila (optional)")}
-                                    </span>
-                                    <Select
-                                        {...register("upazila")}
-                                        value={selectedUpazila}
-                                        size="lg"
-                                        disabled={!selectedDistrict}
-                                    >
-                                        <option value="">{t("text.Select upazila")}</option>
-                                        {upazilas.map((item) => (
-                                            <option key={item._id} value={item._id}>{item.nameEn}</option>
-                                        ))}
-                                    </Select>
-                                </label>
-
-                                <label>
+                                <label className="col-span-2">
                                     <span className={labelClass}>
                                         {t("bloodRequest.form.hospitalAddress", "Hospital address / area")}
                                     </span>
-                                    <input
+                                    <textarea
                                         {...register("hospitalAddress", {
                                             required: requiredRule("Hospital address"),
                                         })}
-                                        className={inputClass}
+                                        rows={2}
+                                        maxLength={1000}
+                                        className="mt-2 w-full resize-y rounded-xl border border-[#e9e5e2] bg-[#fcfbfa] px-4 py-3 text-sm leading-6 text-[#172321] outline-none transition placeholder:text-[#a0a9a5] focus:border-[#d45b69] focus:bg-white focus:ring-4 focus:ring-[#dc263a]/[0.07]"
                                         placeholder="e.g. Tangail Sadar, Dhaka"
                                         aria-invalid={Boolean(errors.hospitalAddress)}
                                     />

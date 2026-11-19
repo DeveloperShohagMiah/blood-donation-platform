@@ -20,6 +20,7 @@ const donorProfileSchema = new Schema(
     division: { type: Schema.Types.ObjectId, ref: "Location", required: true },
     district: { type: Schema.Types.ObjectId, ref: "Location", required: true },
     upazila: { type: Schema.Types.ObjectId, ref: "Location", default: null },
+    union: { type: Schema.Types.ObjectId, ref: "Location", default: null },
     area: { type: String, trim: true, maxlength: 150, default: "" },
     isPubliclyListed: { type: Boolean, default: false },
     allowContactRequests: { type: Boolean, default: false },
