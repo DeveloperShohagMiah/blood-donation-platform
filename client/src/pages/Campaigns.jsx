@@ -14,10 +14,10 @@ import {
 import { apiFetch } from "../utils/api";
 
 const tone = {
-    published: "bg-emerald-500/10 text-emerald-700 ring-emerald-500/20",
-    draft: "bg-slate-500/10 text-slate-600 ring-slate-500/20",
-    completed: "bg-sky-500/10 text-sky-700 ring-sky-500/20",
-    cancelled: "bg-rose-500/10 text-rose-700 ring-rose-500/20",
+    published: "bg-success/10 text-success-deep ring-success/20",
+    draft: "bg-muted-foreground/10 text-muted-foreground ring-muted-foreground/20",
+    completed: "bg-info/10 text-info ring-info/20",
+    cancelled: "bg-destructive/10 text-destructive ring-destructive/20",
 };
 
 const StatusPill = ({ status, label }) => (
@@ -92,9 +92,9 @@ const Campaigns = () => {
     );
 
     return (
-        <main className="min-h-screen bg-[#F8FAF9] ">
+        <main className="min-h-screen bg-surface-alt ">
             {/* Hero */}
-            <section className="relative isolate overflow-hidden bg-gradient-to-br from-[#FFF3F3] via-white to-[#FFF8F5] py-16 sm:py-20">
+            <section className="relative isolate overflow-hidden bg-gradient-to-br from-primary/5 via-card to-primary/5 py-16 sm:py-20">
                 <div className="pointer-events-none absolute -top-24 -right-20 size-80 rounded-full bg-primary/10 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-32 -left-20 size-80 rounded-full bg-accent/40 blur-3xl" />
                 <div className="container relative text-center max-w-7xl mx-auto">
@@ -136,12 +136,12 @@ const Campaigns = () => {
                                 onClick={() => setFilter(tab.key)}
                                 aria-pressed={filter === tab.key}
                                 className={`inline-flex h-9 items-center gap-2 rounded-full border px-4 text-xs font-bold transition ${filter === tab.key
-                                    ? "border-primary bg-primary text-white shadow-md shadow-primary/25"
+                                    ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
                                     : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-primary"
                                     }`}
                             >
                                 {tab.label}
-                                <span className={`grid min-w-5 place-items-center rounded-full px-1.5 text-[10px] ${filter === tab.key ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"}`}>
+                                <span className={`grid min-w-5 place-items-center rounded-full px-1.5 text-[10px] ${filter === tab.key ? "bg-card/20 text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
                                     {counts[tab.key]}
                                 </span>
                             </button>
@@ -150,7 +150,7 @@ const Campaigns = () => {
                 </div>
 
                 {error && (
-                    <p className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                    <p className="mb-6 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning">
                         Campaigns could not be loaded right now ({error}).
                     </p>
                 )}
@@ -174,7 +174,7 @@ const Campaigns = () => {
                         </p>
                         <Link
                             to="/donors"
-                            className="mt-5 inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-white"
+                            className="mt-5 inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground"
                         >
                             Find donors instead <ArrowRight size={15} />
                         </Link>
@@ -186,10 +186,10 @@ const Campaigns = () => {
                             const start = new Date(item.startAt);
                             return (
                                 <article key={item._id} className="premium-card flex flex-col overflow-hidden">
-                                    <div className="relative h-32 overflow-hidden bg-gradient-to-br from-[#7F1D1D] via-primary to-[#E11D48]">
-                                        <div className="absolute -top-10 -right-8 size-40 rounded-full border-[18px] border-white/10" />
-                                        <div className="absolute -bottom-16 -left-8 size-40 rounded-full border-[18px] border-white/10" />
-                                        <div className="absolute top-4 left-5 grid size-11 place-items-center rounded-xl bg-white/15 text-white backdrop-blur-md ring-1 ring-white/20">
+                                    <div className="relative h-32 overflow-hidden bg-gradient-to-br from-brand-deep via-primary to-primary">
+                                        <div className="absolute -top-10 -right-8 size-40 rounded-full border-[18px] border-background/10" />
+                                        <div className="absolute -bottom-16 -left-8 size-40 rounded-full border-[18px] border-background/10" />
+                                        <div className="absolute top-4 left-5 grid size-11 place-items-center rounded-xl bg-card/15 text-primary-foreground backdrop-blur-md ring-1 ring-background/20">
                                             <Droplets size={20} />
                                         </div>
                                         <div className="absolute top-4 right-5">
@@ -198,7 +198,7 @@ const Campaigns = () => {
                                                 label={state === "completed" ? "Completed" : state === "ongoing" ? "Ongoing" : "Upcoming"}
                                             />
                                         </div>
-                                        <div className="absolute bottom-4 left-5 flex items-center gap-2 rounded-xl bg-black/20 px-3 py-1.5 text-white backdrop-blur-md">
+                                        <div className="absolute bottom-4 left-5 flex items-center gap-2 rounded-xl bg-overlay-soft px-3 py-1.5 text-primary-foreground backdrop-blur-md">
                                             <CalendarDays size={14} />
                                             <span className="text-xs font-bold">
                                                 {Number.isNaN(start.getTime())
@@ -249,11 +249,11 @@ const Campaigns = () => {
 
             {/* Detail modal */}
             {viewing && (
-                <div className="fixed inset-0 z-[70] grid place-items-center bg-black/50 p-4 backdrop-blur-sm" onClick={() => setViewing(null)}>
+                <div className="fixed inset-0 z-[70] grid place-items-center bg-overlay p-4 backdrop-blur-sm" onClick={() => setViewing(null)}>
                     <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
-                        <div className="relative h-28 bg-gradient-to-br from-[#7F1D1D] via-primary to-[#E11D48]">
-                            <div className="absolute -top-8 -right-6 size-32 rounded-full border-4 border-white/10" />
-                            <div className="absolute bottom-3 left-5 flex items-center gap-2 text-white">
+                        <div className="relative h-28 bg-gradient-to-br from-brand-deep via-primary to-primary">
+                            <div className="absolute -top-8 -right-6 size-32 rounded-full border-4 border-background/10" />
+                            <div className="absolute bottom-3 left-5 flex items-center gap-2 text-primary-foreground">
                                 <Megaphone size={18} />
                                 <span className="text-xs font-bold uppercase tracking-wider">{t("text.Campaign details")}</span>
                             </div>
@@ -261,7 +261,7 @@ const Campaigns = () => {
                                 type="button"
                                 onClick={() => setViewing(null)}
                                 aria-label="Close"
-                                className="absolute top-3 right-3 grid size-8 place-items-center rounded-full bg-white/15 text-white backdrop-blur hover:bg-white/25"
+                                className="absolute top-3 right-3 grid size-8 place-items-center rounded-full bg-card/15 text-primary-foreground backdrop-blur hover:bg-card/25"
                             >
                                 <X size={17} />
                             </button>

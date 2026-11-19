@@ -28,31 +28,31 @@ const phoneOk = (v) => /^(?:\+?88)?01[3-9]\d{8}$/.test(v.replace(/[\s-]/g, ""));
 
 const inputClass = (error, extra = "") =>
     [
-        "h-12 w-full rounded-xl border bg-[#F4F7F9] px-4 text-[15px] font-medium text-[#192623] outline-none transition",
-        "placeholder:font-normal placeholder:text-[#9AA6A1] focus:bg-white focus:ring-4",
+        "h-12 w-full rounded-xl border bg-surface-soft px-4 text-[15px] font-medium text-foreground outline-none transition",
+        "placeholder:font-normal placeholder:text-muted-foreground focus:bg-card focus:ring-4",
         error
-            ? "border-[#E11D48] focus:border-[#E11D48] focus:ring-[#E11D48]/10"
-            : "border-[#E4EBE7] focus:border-[#C62838] focus:ring-[#C62838]/10",
+            ? "border-destructive focus:border-destructive focus:ring-primary/10"
+            : "border-border focus:border-primary focus:ring-primary/10",
         extra,
     ].join(" ");
 
 const Field = ({ id, label, required, hint, error, children, className = "" }) => (
     <div className={className}>
-        <label htmlFor={id} className="mb-2 block text-sm font-bold text-[#192623]">
+        <label htmlFor={id} className="mb-2 block text-sm font-bold text-foreground">
             {label}
             {required ? (
-                <span className="text-[#C62838]" aria-hidden="true"> *</span>
+                <span className="text-primary" aria-hidden="true"> *</span>
             ) : (
-                <span className="ml-1.5 text-xs font-medium text-[#84918C]">{t("text.(optional)")}</span>
+                <span className="ml-1.5 text-xs font-medium text-muted-foreground">{t("text.(optional)")}</span>
             )}
         </label>
         {children}
         {error ? (
-            <p id={`${id}-error`} role="alert" className="mt-1.5 flex items-center gap-1.5 text-[13px] font-medium text-[#E11D48]">
+            <p id={`${id}-error`} role="alert" className="mt-1.5 flex items-center gap-1.5 text-[13px] font-medium text-destructive">
                 <AlertCircle size={14} /> {error}
             </p>
         ) : (
-            hint && <p id={`${id}-hint`} className="mt-1.5 text-[13px] text-[#84918C]">{hint}</p>
+            hint && <p id={`${id}-hint`} className="mt-1.5 text-[13px] text-muted-foreground">{hint}</p>
         )}
     </div>
 );
@@ -166,44 +166,44 @@ const BecomeDonor = () => {
         const pending = step === "pending";
 
         return (
-            <main className="grid min-h-[70vh] place-items-center bg-[#F8FAFB] px-4 py-20">
-                <div className="w-full max-w-[520px] rounded-3xl bg-white p-8 text-center shadow-[0_24px_60px_rgba(11,16,32,0.1)] sm:p-12">
-                    <span className="mx-auto grid size-16 place-items-center rounded-full bg-[#E7F7EF] text-[#1E8E5A]">
+            <main className="grid min-h-[70vh] place-items-center bg-surface-alt px-4 py-20">
+                <div className="w-full max-w-[520px] rounded-3xl bg-card p-8 text-center shadow-lg sm:p-12">
+                    <span className="mx-auto grid size-16 place-items-center rounded-full bg-success-soft text-success">
                         {pending ? <CheckCircle2 size={34} /> : <ShieldCheck size={34} />}
                     </span>
 
-                    <h1 className="mt-6 text-3xl font-extrabold tracking-tight text-[#192623]">
+                    <h1 className="mt-6 text-3xl font-extrabold tracking-tight text-foreground">
                         {pending ? "Registration complete" : "Verify your phone"}
                     </h1>
 
                     {pending ? (
                         <>
-                            <p className="mt-3 text-[15px] leading-relaxed text-[#66736E]">
+                            <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
                                 Thanks, {form.fullName.split(" ")[0]}. Your number{" "}
-                                <strong className="text-[#192623]">{identifier}</strong> has been
+                                <strong className="text-foreground">{identifier}</strong> has been
                                 verified.
                             </p>
-                            <p className="mt-5 rounded-xl bg-amber-50 p-4 text-sm leading-relaxed text-amber-900 ring-1 ring-amber-100">
+                            <p className="mt-5 rounded-xl bg-warning/10 p-4 text-sm leading-relaxed text-warning ring-1 ring-warning/15">
                                 Your account is waiting for admin approval. Once it is active,
                                 log in and complete your donor profile from the dashboard so
                                 people nearby can find you.
                             </p>
                             <div className="mt-8 flex justify-center">
-                                <Link to="/" className="inline-flex h-12 items-center justify-center rounded-full border border-[#E4EBE7] px-6 text-sm font-bold text-[#192623] transition hover:border-[#C62838] hover:text-[#C62838]">
+                                <Link to="/" className="inline-flex h-12 items-center justify-center rounded-full border border-border px-6 text-sm font-bold text-foreground transition hover:border-primary hover:text-primary">
                                     {t("register.goHome", "Back to home")}
                                 </Link>
                             </div>
                         </>
                     ) : (
                         <>
-                            <p className="mt-3 text-[15px] leading-relaxed text-[#66736E]">
+                            <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
                                 We sent a 6-digit code to{" "}
-                                <strong className="text-[#192623]">{identifier}</strong>. Enter it
+                                <strong className="text-foreground">{identifier}</strong>. Enter it
                                 below to verify your number.
                             </p>
 
                             {devCode && (
-                                <p className="mt-4 rounded-xl bg-blue-50 p-3 text-sm text-blue-900 ring-1 ring-blue-100">
+                                <p className="mt-4 rounded-xl bg-info/10 p-3 text-sm text-info ring-1 ring-info/15">
                                     Development code:{" "}
                                     <strong className="tracking-widest">{devCode}</strong>
                                 </p>
@@ -221,14 +221,14 @@ const BecomeDonor = () => {
                                     className={inputClass(!!verifyError, "text-center text-xl tracking-[0.5em]")}
                                 />
                                 {verifyError && (
-                                    <p role="alert" className="text-[13px] font-medium text-[#E11D48]">
+                                    <p role="alert" className="text-[13px] font-medium text-destructive">
                                         {verifyError}
                                     </p>
                                 )}
                                 <button
                                     type="submit"
                                     disabled={verifying || code.trim().length !== 6}
-                                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#DC2626] to-[#E11D48] text-[15px] font-extrabold text-white transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+                                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-brand-vivid to-primary text-[15px] font-extrabold text-primary-foreground transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
                                 >
                                     {verifying ? (
                                         <><Loader2 size={18} className="animate-spin" /> Verifying…</>
@@ -247,7 +247,7 @@ const BecomeDonor = () => {
     /* ---------- Account form ---------- */
     return (
         <main className="pb-20">
-            <div className="bg-linear-to-br from-primary/10 via-white/80 to-primary/10 pt-14 pb-30 sm:pt-28">
+            <div className="bg-linear-to-br from-primary/10 via-card/80 to-primary/10 pt-14 pb-30 sm:pt-28">
                 <div className="mx-auto w-[calc(100%-2rem)] max-w-[1280px] md:w-[calc(100%-4rem)]">
                     <SectionHeader
                         tone="dark"
@@ -264,9 +264,9 @@ const BecomeDonor = () => {
                 <form
                     onSubmit={handleSubmit}
                     noValidate
-                    className="rounded-[28px] bg-white p-6 shadow-[0_24px_60px_rgba(11,16,32,0.12)] sm:p-9"
+                    className="rounded-[28px] bg-card p-6 shadow-lg sm:p-9"
                 >
-                    <h2 className="mb-6 text-lg font-extrabold text-[#192623]">
+                    <h2 className="mb-6 text-lg font-extrabold text-foreground">
                         Your details
                     </h2>
 
@@ -329,7 +329,7 @@ const BecomeDonor = () => {
                             className="sm:col-span-2"
                         >
                             <span className="relative block">
-                                <Lock size={17} className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-[#84918C]" />
+                                <Lock size={17} className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground" />
                                 <input
                                     id="password"
                                     type={showPassword ? "text" : "password"}
@@ -344,7 +344,7 @@ const BecomeDonor = () => {
                                     type="button"
                                     onClick={() => setShowPassword((s) => !s)}
                                     aria-label={showPassword ? t("register.hide", "Hide password") : t("register.show", "Show password")}
-                                    className="absolute top-1/2 right-2 grid size-9 -translate-y-1/2 place-items-center rounded-lg text-[#66736E] hover:bg-[#EEF1F4]"
+                                    className="absolute top-1/2 right-2 grid size-9 -translate-y-1/2 place-items-center rounded-lg text-muted-foreground hover:bg-border"
                                 >
                                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
@@ -353,14 +353,14 @@ const BecomeDonor = () => {
                     </div>
 
                     <div className="mt-6">
-                        <label className="flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-[#33443D]">
+                        <label className="flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-foreground">
                             <input
                                 id="agreeTerms"
                                 type="checkbox"
                                 checked={form.agreeTerms}
                                 onChange={(e) => update("agreeTerms", e.target.checked)}
                                 aria-invalid={!!errors.agreeTerms}
-                                className="mt-0.5 size-[18px] shrink-0 accent-[#C62838]"
+                                className="mt-0.5 size-[18px] shrink-0 accent-primary"
                             />
                             {t(
                                 "register.agreeTerms",
@@ -368,14 +368,14 @@ const BecomeDonor = () => {
                             )}
                         </label>
                         {errors.agreeTerms && (
-                            <p role="alert" className="mt-1 ml-[30px] flex items-center gap-1.5 text-[13px] font-medium text-[#E11D48]">
+                            <p role="alert" className="mt-1 ml-[30px] flex items-center gap-1.5 text-[13px] font-medium text-destructive">
                                 <AlertCircle size={14} /> {errors.agreeTerms}
                             </p>
                         )}
                     </div>
 
                     {errors.form && (
-                        <p role="alert" className="mt-6 rounded-xl bg-[#FFF1F2] p-3.5 text-sm font-medium text-[#E11D48]">
+                        <p role="alert" className="mt-6 rounded-xl bg-primary/5 p-3.5 text-sm font-medium text-destructive">
                             {errors.form}
                         </p>
                     )}
@@ -392,16 +392,16 @@ const BecomeDonor = () => {
                         )}
                     </button>
 
-                    <p className="mt-5 text-center text-sm text-[#66736E]">
+                    <p className="mt-5 text-center text-sm text-muted-foreground">
                         {t("register.haveAccount", "Already registered?")}{" "}
-                        <Link to="/login" className="font-bold text-[#C62838] hover:underline">
+                        <Link to="/login" className="font-bold text-primary hover:underline">
                             {t("navigation.login", "Log in")}
                         </Link>
                     </p>
                 </form>
 
                 <aside className="space-y-5 lg:sticky lg:top-24">
-                    <div className="rounded-3xl bg-[#192623] p-7 text-white">
+                    <div className="rounded-3xl bg-foreground p-7 text-primary-foreground">
                         <h2 className="text-lg font-extrabold">What happens next?</h2>
                         <ol className="mt-5 space-y-4">
                             {[
@@ -409,8 +409,8 @@ const BecomeDonor = () => {
                                 "An admin reviews and approves your account.",
                                 "Log in and complete your donor profile (blood group, area and availability).",
                             ].map((line, index) => (
-                                <li key={line} className="flex gap-3 text-[15px] text-[#D5DFDA]">
-                                    <span className="grid size-6 shrink-0 place-items-center rounded-full bg-white/10 text-xs font-bold">
+                                <li key={line} className="flex gap-3 text-[15px] text-background/70">
+                                    <span className="grid size-6 shrink-0 place-items-center rounded-full bg-card/10 text-xs font-bold">
                                         {index + 1}
                                     </span>
                                     {line}
@@ -419,12 +419,12 @@ const BecomeDonor = () => {
                         </ol>
                     </div>
 
-                    <div className="rounded-3xl border border-[#E4EBE7] bg-white p-6">
-                        <p className="flex items-center gap-2 font-bold text-[#192623]">
-                            <ShieldCheck size={19} className="text-[#1E8E5A]" />
+                    <div className="rounded-3xl border border-border bg-card p-6">
+                        <p className="flex items-center gap-2 font-bold text-foreground">
+                            <ShieldCheck size={19} className="text-success" />
                             {t("register.privacyTitle", "Your privacy")}
                         </p>
-                        <p className="mt-2.5 text-sm leading-relaxed text-[#66736E]">
+                        <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
                             {t(
                                 "register.privacyText",
                                 "We only ask for what's needed to create your account. Your donor details are added later, and you control whether they are listed publicly."

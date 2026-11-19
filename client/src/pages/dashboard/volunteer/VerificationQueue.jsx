@@ -93,7 +93,7 @@ const VerificationQueue = () => {
             />
             <ErrorBanner message={queueQuery.error || assignmentsQuery.error || actionError} />
             {notice && (
-                <div className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                <div className="mb-5 rounded-xl border border-success/30 bg-success-soft px-4 py-3 text-sm font-medium text-success-deep">
                     {notice}
                 </div>
             )}
@@ -147,7 +147,7 @@ const VerificationQueue = () => {
                                                             type="button"
                                                             disabled={busyId === item._id}
                                                             onClick={() => decide(item._id, "verify")}
-                                                            className="inline-flex h-9 items-center gap-1 rounded-lg bg-primary px-3 text-xs font-bold text-white transition hover:brightness-95 disabled:opacity-60"
+                                                            className="inline-flex h-9 items-center gap-1 rounded-lg bg-primary px-3 text-xs font-bold text-primary-foreground transition hover:brightness-95 disabled:opacity-60"
                                                         >
                                                             <CheckCircle2 size={14} /> Verify
                                                         </button>
@@ -155,7 +155,7 @@ const VerificationQueue = () => {
                                                             type="button"
                                                             disabled={busyId === item._id}
                                                             onClick={() => decide(item._id, "reject")}
-                                                            className="inline-flex h-9 items-center gap-1 rounded-lg border border-border px-3 text-xs font-bold text-rose-600 transition hover:border-rose-300 disabled:opacity-60"
+                                                            className="inline-flex h-9 items-center gap-1 rounded-lg border border-border px-3 text-xs font-bold text-destructive transition hover:border-destructive/40 disabled:opacity-60"
                                                         >
                                                             <XCircle size={14} /> Reject
                                                         </button>

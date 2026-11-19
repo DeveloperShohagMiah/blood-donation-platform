@@ -54,29 +54,29 @@ const CreateBloodRequest = () => {
 
     if (submitted) {
         return (
-            <main className="grid min-h-[70vh] place-items-center bg-[#F8FAFB] px-4 py-20">
-                <div className="w-full max-w-[520px] rounded-3xl bg-white p-8 text-center shadow-[0_24px_60px_rgba(11,16,32,0.1)] sm:p-12">
-                    <span className="mx-auto grid size-16 place-items-center rounded-full bg-[#E7F7EF] text-[#1E8E5A]">
+            <main className="grid min-h-[70vh] place-items-center bg-surface-alt px-4 py-20">
+                <div className="w-full max-w-[520px] rounded-3xl bg-card p-8 text-center shadow-lg sm:p-12">
+                    <span className="mx-auto grid size-16 place-items-center rounded-full bg-success-soft text-success">
                         <CheckCircle2 size={34} />
                     </span>
-                    <h1 className="mt-6 text-3xl font-extrabold tracking-tight text-[#192623]">
+                    <h1 className="mt-6 text-3xl font-extrabold tracking-tight text-foreground">
                         Request submitted
                     </h1>
-                    <p className="mt-3 text-[15px] leading-relaxed text-[#66736E]">
+                    <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
                         Your blood request is waiting for volunteer verification.
                         We’ll notify you once it’s approved and shared with donors.
                     </p>
                     <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
                         <Link
                             to="/donors"
-                            className="inline-flex h-12 items-center justify-center rounded-full bg-primary px-6 text-sm font-bold text-white transition hover:brightness-95"
+                            className="inline-flex h-12 items-center justify-center rounded-full bg-primary px-6 text-sm font-bold text-primary-foreground transition hover:brightness-95"
                         >
                             Find donors
                         </Link>
                         <button
                             type="button"
                             onClick={() => setSubmitted(false)}
-                            className="inline-flex h-12 items-center justify-center rounded-full border border-[#E4EBE7] px-6 text-sm font-bold text-[#192623] transition hover:border-primary hover:text-primary"
+                            className="inline-flex h-12 items-center justify-center rounded-full border border-border px-6 text-sm font-bold text-foreground transition hover:border-primary hover:text-primary"
                         >
                             Submit another request
                         </button>
@@ -90,7 +90,7 @@ const CreateBloodRequest = () => {
         <>
             {loadError && (
                 <div className="mx-auto mt-6 max-w-5xl px-4">
-                    <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                    <p className="rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning">
                         Locations could not be loaded ({loadError}). The location
                         fields below will be empty.
                     </p>

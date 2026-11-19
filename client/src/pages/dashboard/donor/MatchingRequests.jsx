@@ -1,9 +1,9 @@
-import { t } from "../../../utils/tr.js";
-import { formatDate } from "../format";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { CheckCircle2, HeartHandshake, MapPin, Send } from "lucide-react";
 import { apiFetch } from "../../../utils/api";
+import { formatDate } from "../format";
 import { useApiData } from "../hooks";
 import {
     EmptyState,
@@ -13,16 +13,37 @@ import {
 } from "../components/UI";
 
 const MatchingRequests = () => {
+    const { t } = useTranslation();
     const profileQuery = useApiData("/donors/me");
     const requestsQuery = useApiData("/blood-requests/public");
+    const [searchParams, setSearchParams] = useSearchParams();
     const [busyId, setBusyId] = useState("");
     const [responded, setResponded] = useState([]);
     const [actionError, setActionError] = useState("");
 
+    const focusId = searchParams.get("request");
+    const autoRespond = searchParams.get("respond") === "1";
+    const autoRespondedRef = useRef(false);
+    const targetRef = useRef(null);
+
     const profile = profileQuery.data?.profile;
     const myGroup = profile?.bloodGroup;
     const all = requestsQuery.data?.items || [];
-    const matches = myGroup ? all.filter((item) => item.bloodGroup === myGroup) : all;
+
+    const respondedIds = useMemo(() => {
+        const ids = new Set(responded);
+        all.forEach((item) => {
+            if (item.hasResponded) ids.add(item._id);
+        });
+        return ids;
+    }, [responded, all]);
+
+    // A deep link keeps the chosen request visible even if its group differs.
+    const matches = myGroup
+        ? all.filter((item) => item.bloodGroup === myGroup || item._id === focusId)
+        : all;
+
+    const unavailable = !profile || profile.availability !== "available";
 
     const respond = async (id) => {
         setActionError("");
@@ -32,7 +53,7 @@ const MatchingRequests = () => {
                 method: "POST",
                 body: { response: "interested" },
             });
-            setResponded((current) => [...current, id]);
+            setResponded((current) => [...new Set([...current, id])]);
         } catch (err) {
             setActionError(err.message);
         } finally {
@@ -40,7 +61,46 @@ const MatchingRequests = () => {
         }
     };
 
-    const unavailable = !profile || profile.availability !== "available";
+    // Arriving from "I can donate" after login: complete that single response,
+    // then drop the auto flag while keeping the request highlighted.
+    useEffect(() => {
+        if (
+            !autoRespond ||
+            !focusId ||
+            autoRespondedRef.current ||
+            profileQuery.loading ||
+            requestsQuery.loading
+        )
+            return;
+        autoRespondedRef.current = true;
+
+        const needsResponse = !respondedIds.has(focusId) && !unavailable;
+        setSearchParams(
+            (previous) => {
+                const next = new URLSearchParams(previous);
+                next.delete("respond");
+                return next;
+            },
+            { replace: true }
+        );
+
+        if (needsResponse) queueMicrotask(() => void respond(focusId));
+    }, [
+        autoRespond,
+        focusId,
+        profileQuery.loading,
+        requestsQuery.loading,
+        respondedIds,
+        unavailable,
+        respond,
+        setSearchParams,
+    ]);
+
+    useEffect(() => {
+        if (focusId && !requestsQuery.loading) {
+            targetRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    }, [focusId, requestsQuery.loading]);
 
     return (
         <>
@@ -54,18 +114,14 @@ const MatchingRequests = () => {
             />
 
             <ErrorBanner
-                message={
-                    actionError ||
-                    requestsQuery.error ||
-                    profileQuery.error
-                }
+                message={actionError || requestsQuery.error || profileQuery.error}
             />
 
             {unavailable && (
-                <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                    Set your profile to <strong>{t("text.Available")}</strong> before responding to requests.{" "}
+                <div className="mb-5 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning">
+                    Set your profile to <strong>{t("text.Available", "Available")}</strong> before responding to requests.{" "}
                     <Link to="/dashboard/profile" className="font-bold underline">
-                        Update profile
+                        {t("text.Update profile", "Update profile")}
                     </Link>
                 </div>
             )}
@@ -83,15 +139,21 @@ const MatchingRequests = () => {
                               <div key={i} className="h-44 animate-pulse rounded-2xl border border-border bg-card" />
                           ))
                         : matches.map((item) => {
-                              const done = responded.includes(item._id);
+                              const done = respondedIds.has(item._id);
+                              const focused = item._id === focusId;
                               return (
                                   <article
                                       key={item._id}
-                                      className="rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:border-primary/30 hover:shadow-md"
+                                      ref={focused ? targetRef : null}
+                                      className={`rounded-2xl border bg-card p-5 shadow-sm transition hover:border-primary/30 hover:shadow-md ${
+                                          focused
+                                              ? "border-primary ring-2 ring-primary/20"
+                                              : "border-border"
+                                      }`}
                                   >
                                       <div className="flex items-start justify-between gap-3">
                                           <div className="flex items-center gap-3">
-                                              <span className="grid size-12 place-items-center rounded-xl bg-primary text-lg font-extrabold text-white shadow-md shadow-primary/25">
+                                              <span className="grid size-12 place-items-center rounded-xl bg-primary text-lg font-extrabold text-primary-foreground shadow-md shadow-primary/25">
                                                   {item.bloodGroup}
                                               </span>
                                               <div>
@@ -120,18 +182,22 @@ const MatchingRequests = () => {
                                               type="button"
                                               disabled={done || busyId === item._id || unavailable}
                                               onClick={() => respond(item._id)}
-                                              className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-white transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+                                              className={`inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-60 ${
+                                                  done
+                                                      ? "bg-success/15 text-success-deep ring-1 ring-success/30"
+                                                      : "bg-primary text-primary-foreground hover:brightness-95"
+                                              }`}
                                           >
                                               {done ? (
-                                                  <><CheckCircle2 size={16} /> Responded</>
+                                                  <><CheckCircle2 size={16} /> {t("text.Responded", "Responded")}</>
                                               ) : (
-                                                  <><Send size={15} /> {busyId === item._id ? "Sending…" : "I can help"}</>
+                                                  <><Send size={15} /> {busyId === item._id ? t("text.Sending_DOT__DOT__DOT_", "Sending...") : t("text.I can donate", "I can donate")}</>
                                               )}
                                           </button>
                                           <a
                                               href={`tel:${item.contactPhone}`}
-                                              className="grid size-10 place-items-center rounded-xl border border-border text-foreground transition hover:border-primary hover:text-primary"
-                                              aria-label="Call requester"
+                                              className="grid size-10 place-items-center rounded-xl border border-border text-foreground transition hover:border-primary hover:bg-primary/5 hover:text-primary"
+                                              aria-label={t("text.Call requester", "Call requester")}
                                           >
                                               <HeartHandshake size={17} />
                                           </a>

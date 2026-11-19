@@ -91,13 +91,13 @@ const Navbar = () => {
         [
             "relative z-10 rounded-full px-3.5 py-2 text-[13.5px] font-semibold",
             "transition-colors duration-200 outline-none",
-            "focus-visible:ring-2 focus-visible:ring-[#C62838]/40",
+            "focus-visible:ring-2 focus-visible:ring-primary/40",
             "after:absolute after:-bottom-0.5 after:left-1/2 after:size-1",
-            "after:-translate-x-1/2 after:rounded-full after:bg-[#C62838]",
+            "after:-translate-x-1/2 after:rounded-full after:bg-primary",
             "after:transition-all after:duration-300",
             isActive
                 ? "bg-primary/5 text-primary after:scale-100 after:opacity-100"
-                : "text-[#66736E] hover:text-[#192623] after:scale-0 after:opacity-0",
+                : "text-muted-foreground hover:text-foreground after:scale-0 after:opacity-0",
         ].join(" ");
 
     const mobileLinkClass = ({ isActive }) =>
@@ -105,8 +105,8 @@ const Navbar = () => {
             "group flex items-center gap-3 rounded-xl px-3 py-3",
             "text-[15px] font-semibold transition-colors duration-200",
             isActive
-                ? "bg-[#FDEEF0] text-[#C62838]"
-                : "text-[#33443D] hover:bg-muted",
+                ? "bg-primary/5 text-primary"
+                : "text-foreground hover:bg-muted",
         ].join(" ");
 
     return (
@@ -116,8 +116,8 @@ const Navbar = () => {
                     "sticky top-0 z-50 w-full border-b backdrop-blur-xl",
                     "transition-[background-color,border-color,box-shadow] duration-300",
                     scrolled
-                        ? "border-border/70 bg-white/75 shadow-[0_8px_30px_rgba(29,55,44,0.08)] supports-[backdrop-filter]:bg-white/70"
-                        : "border-transparent bg-white/95",
+                        ? "border-border/70 bg-card/75 shadow-md supports-[backdrop-filter]:bg-card/70"
+                        : "border-transparent bg-card/95",
                 ].join(" ")}
             >
                 <nav
@@ -134,13 +134,13 @@ const Navbar = () => {
                         to="/"
                         onClick={closeMenu}
                         aria-label={t("navigation.home")}
-                        className="group flex shrink-0 items-center gap-2.5 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-[#C62838]/40"
+                        className="group flex shrink-0 items-center gap-2.5 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                     >
                         <span
                             className={[
                                 "relative grid place-items-center rounded-[14px]",
-                                "bg-linear-to-br from-primary to-primary/80 text-white",
-                                "shadow-[0_8px_18px_rgba(198,40,56,0.28),inset_0_1px_0_rgba(255,255,255,0.28)] ring-1 ring-white/25",
+                                "bg-linear-to-br from-primary to-primary/80 text-primary-foreground",
+                                "shadow-md ring-1 ring-background/25",
                                 "transition-all duration-300 group-hover:-rotate-6 group-hover:scale-105",
                                 scrolled ? "size-10" : "size-11",
                             ].join(" ")}
@@ -148,17 +148,17 @@ const Navbar = () => {
                             <Droplets
                                 size={22}
                                 strokeWidth={2.5}
-                                fill="rgba(255,255,255,0.18)"
+                                fill="var(--primary-foreground)" fillOpacity="0.18"
                             />
                         </span>
 
                         <span className="flex flex-col">
-                            <span className="text-[20px] leading-none font-extrabold tracking-tight text-[#192623]">
+                            <span className="text-[20px] leading-none font-extrabold tracking-tight text-foreground">
                                 Blood <span className="text-primary">{t("text.Connect")}</span>
                             </span>
                             <span
                                 className={[
-                                    "overflow-hidden text-[8px] font-bold tracking-[1.5px] text-[#84918C]",
+                                    "overflow-hidden text-[8px] font-bold tracking-[1.5px] text-muted-foreground",
                                     "transition-all duration-300",
                                     scrolled ? "mt-0 max-h-0 opacity-0" : "mt-1.5 max-h-3 opacity-100",
                                 ].join(" ")}
@@ -177,7 +177,7 @@ const Navbar = () => {
                     >
                         <span
                             aria-hidden="true"
-                            className="pointer-events-none absolute inset-y-0 my-auto h-9 rounded-full bg-[#F1F5F3] transition-[transform,width,opacity] duration-300 ease-out motion-reduce:transition-none"
+                            className="pointer-events-none absolute inset-y-0 my-auto h-9 rounded-full bg-muted/40 transition-[transform,width,opacity] duration-300 ease-out motion-reduce:transition-none"
                             style={{
                                 width: hover.width,
                                 transform: `translateX(${hover.left}px)`,
@@ -212,7 +212,7 @@ const Navbar = () => {
                                 className={[
                                     "pointer-events-none absolute top-[3px] bottom-[3px] left-[3px]",
                                     "w-[calc(50%-3px)] rounded-lg bg-primary",
-                                    "shadow-[0_1px_4px_rgba(28,48,39,0.16)]",
+                                    "shadow-sm",
                                     "transition-transform duration-300 ease-out motion-reduce:transition-none",
                                     currentLanguage === "BN" ? "translate-x-full" : "",
                                 ].join(" ")}
@@ -226,10 +226,10 @@ const Navbar = () => {
                                     className={[
                                         "relative z-10 h-full cursor-pointer rounded-full border-0 bg-transparent p-0",
                                         "text-[11px] font-bold outline-none transition-colors",
-                                        "focus-visible:ring-2 focus-visible:ring-[#C62838]/40",
+                                        "focus-visible:ring-2 focus-visible:ring-primary/40",
                                         currentLanguage === language
                                             ? "text-muted"
-                                            : "text-[#829089] hover:text-[#33443D]",
+                                            : "text-muted-foreground hover:text-foreground",
                                     ].join(" ")}
                                 >
                                     {language}
@@ -245,7 +245,7 @@ const Navbar = () => {
                         ) : (
                             <Link
                                 to="/login"
-                                className="hidden rounded-full px-3.5 py-2 text-[13.5px] font-semibold text-white transition-colors bg-primary md:inline-flex"
+                                className="hidden btn-premium rounded-full px-3.5 py-2 text-[13.5px] font-semibold text-primary-foreground transition-colors bg-primary md:inline-flex"
                             >
                                 {t("navigation.login")}
                             </Link>
@@ -256,10 +256,10 @@ const Navbar = () => {
                             to="/become-donor"
                             className={[
                                 "group/cta relative hidden px-3.5 py-2 items-center justify-center gap-1.5 overflow-hidden",
-                                "rounded-full bg-gradient-to-b from-[#D6313F] to-[#B91F32] px-4 text-[13px] font-bold text-white",
-                                "shadow-[0_6px_16px_rgba(198,40,56,0.28),inset_0_1px_0_rgba(255,255,255,0.25)]",
-                                "ring-1 ring-[#A91F30]/60 transition-all duration-200",
-                                "hover:-translate-y-px hover:shadow-[0_10px_22px_rgba(198,40,56,0.34),inset_0_1px_0_rgba(255,255,255,0.25)]",
+                                "rounded-full bg-gradient-to-b from-primary to-primary-hover px-4 text-[13px] font-bold text-primary-foreground",
+                                "shadow-md",
+                                "ring-1 ring-primary-hover/60 transition-all duration-200",
+                                "hover:-translate-y-px hover:shadow-md",
                                 "active:translate-y-0 md:inline-flex",
                             ].join(" ")}
                         >
@@ -275,7 +275,7 @@ const Navbar = () => {
                     {/* Mobile menu button */}
                     <button
                         type="button"
-                        className="grid size-10 shrink-0 place-items-center rounded-xl border border-border/70 bg-white text-[#33443D] outline-none transition-colors hover:border-[#F0BDC0] hover:text-[#C62838] focus-visible:ring-2 focus-visible:ring-[#C62838]/40 md:hidden"
+                        className="grid size-10 shrink-0 place-items-center rounded-xl border border-border/70 bg-card text-foreground outline-none transition-colors hover:border-primary/30 hover:text-primary focus-visible:ring-2 focus-visible:ring-primary/40 md:hidden"
                         aria-label={
                             menuOpen ? t("navigation.closeMenu") : t("navigation.openMenu")
                         }
@@ -306,8 +306,8 @@ const Navbar = () => {
                         id="primary-navigation"
                         className={[
                             "absolute inset-x-0 top-full mt-2 origin-top md:hidden",
-                            "rounded-2xl border border-border/70 bg-white p-2",
-                            "shadow-[0_24px_60px_rgba(26,48,39,0.18)]",
+                            "rounded-2xl border border-border/70 bg-card p-2",
+                            "shadow-lg",
                             "transition-all duration-200 ease-out motion-reduce:transition-none",
                             menuOpen
                                 ? "visible translate-y-0 scale-100 opacity-100"
@@ -332,15 +332,15 @@ const Navbar = () => {
                             })}
                         </div>
 
-                        <div className="mt-2 grid gap-2 border-t border-[#EDF2EF] p-1 pt-3">
+                        <div className="mt-2 grid gap-2 border-t border-border p-1 pt-3">
                             {isAuthenticated && user && (
                                 <div className="flex items-center gap-2.5 px-2 pb-1">
                                     <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary/10 text-[11px] font-bold text-primary">
                                         {user.fullName.slice(0, 2).toUpperCase()}
                                     </span>
                                     <div className="min-w-0">
-                                        <p className="truncate text-sm font-bold text-[#192623]">{user.fullName}</p>
-                                        <p className="truncate text-xs capitalize text-[#829089]">{user.role}</p>
+                                        <p className="truncate text-sm font-bold text-foreground">{user.fullName}</p>
+                                        <p className="truncate text-xs capitalize text-muted-foreground">{user.role}</p>
                                     </div>
                                 </div>
                             )}
@@ -348,7 +348,7 @@ const Navbar = () => {
                                 <Link
                                     to="/dashboard"
                                     onClick={closeMenu}
-                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#192623] text-sm font-bold text-white"
+                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-foreground text-sm font-bold text-primary-foreground"
                                 >
                                     Dashboard
                                 </Link>
@@ -357,7 +357,7 @@ const Navbar = () => {
                                 <button
                                     type="button"
                                     onClick={() => { logout(); closeMenu(); }}
-                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/70 text-sm font-semibold text-[#33443D] transition-colors hover:bg-muted"
+                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/70 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
                                 >
                                     <LogOut size={16} />
                                     {t("navigation.logout", "Log out")}
@@ -366,7 +366,7 @@ const Navbar = () => {
                                 <Link
                                     to="/login"
                                     onClick={closeMenu}
-                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/70 text-sm font-semibold text-[#33443D] transition-colors hover:bg-muted"
+                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/70 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
                                 >
                                     <LogIn size={16} />
                                     {t("navigation.login")}
@@ -376,7 +376,7 @@ const Navbar = () => {
                             <Link
                                 to="/become-donor"
                                 onClick={closeMenu}
-                                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-[#D6313F] to-[#B91F32] text-sm font-bold text-white shadow-[0_6px_16px_rgba(198,40,56,0.25)] transition hover:brightness-95"
+                                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-primary to-primary-hover text-sm font-bold text-primary-foreground shadow-md transition hover:brightness-95"
                             >
                                 {t("navigation.becomeDonor")}
                                 <ArrowUpRight size={16} />
@@ -391,7 +391,7 @@ const Navbar = () => {
                 aria-hidden="true"
                 onClick={closeMenu}
                 className={[
-                    "fixed inset-0 z-40 bg-[#192623]/30 backdrop-blur-[2px] md:hidden",
+                    "fixed inset-0 z-40 bg-foreground/30 backdrop-blur-[2px] md:hidden",
                     "transition-opacity duration-200",
                     menuOpen ? "opacity-100" : "pointer-events-none opacity-0",
                 ].join(" ")}

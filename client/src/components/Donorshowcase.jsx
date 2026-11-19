@@ -47,7 +47,7 @@ const initials = (name) =>
 /* A labelled, styled select */
 const Field = ({ label, value, onChange, placeholder, options, disabled }) => (
     <label className="block min-w-0">
-        <span className="mb-2 block text-xs font-bold tracking-wide text-[#66736E] uppercase">
+        <span className="mb-2 block text-xs font-bold tracking-wide text-muted-foreground uppercase">
             {label}
         </span>
         <Select
@@ -175,7 +175,7 @@ const DonorShowcase = () => {
                     ref={filterRef}
                     onSubmit={applyFilters}
                     aria-label={t("home.donors.filterLabel", "Filter donors")}
-                    className="relative z-20 mx-auto md:-mt-40 grid w-full gap-4 rounded-2xl border border-border/70 bg-white p-5 shadow-[0_24px_60px_rgba(11,16,32,0.14)] sm:grid-cols-2 sm:p-6 lg:grid-cols-6 lg:items-end">
+                    className="relative z-20 mx-auto md:-mt-40 grid w-full gap-4 rounded-2xl border border-border/70 bg-card p-5 shadow-lg sm:grid-cols-2 sm:p-6 lg:grid-cols-6 lg:items-end">
                     <Field
                         label={t("home.donors.group", "Blood group")}
                         placeholder={t("home.donors.selectGroup", "Select Blood Group")}
@@ -217,7 +217,7 @@ const DonorShowcase = () => {
 
                     <button
                         type="submit"
-                        className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-[#E11D48] px-7 text-sm font-extrabold tracking-wide text-white uppercase shadow-[0_10px_22px_rgba(220,38,38,0.3)] outline-none transition hover:brightness-95 focus-visible:ring-4 focus-visible:ring-[#C62838]/30 active:scale-[0.98] sm:col-span-2 lg:col-span-1"
+                        className="inline-flex btn-premium h-12 items-center justify-center gap-2 rounded-xl px-4 text-sm font-extrabold tracking-wide text-primary-foreground capitalize shadow-md outline-none transition hover:brightness-95 focus-visible:ring-4 focus-visible:ring-primary/30 active:scale-[0.98] sm:col-span-2 lg:col-span-1"
                     >
                         <Filter size={17} strokeWidth={2.4} />
                         {t("home.donors.filter", "Filter donors")}
@@ -238,7 +238,7 @@ const DonorShowcase = () => {
                 </div>
 
                 {/* Count + clear */}
-                <div className="mt-6 flex items-center justify-between gap-3 text-sm text-[#66736E]">
+                <div className="mt-6 flex items-center justify-between gap-3 text-sm text-muted-foreground">
                     <p aria-live="polite">
                         {t("home.donors.showing", "Showing {{shown}} of {{total}} donors", {
                             shown: shown.length,
@@ -249,7 +249,7 @@ const DonorShowcase = () => {
                         <button
                             type="button"
                             onClick={clearFilters}
-                            className="font-bold text-[#C62838] underline-offset-4 hover:underline"
+                            className="font-bold text-primary underline-offset-4 hover:underline"
                         >
                             {t("home.donors.reset", "Clear filters")}
                         </button>
@@ -257,7 +257,7 @@ const DonorShowcase = () => {
                 </div>
 
                 {error && (
-                    <p className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                    <p className="mt-5 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning">
                         Donors could not be loaded right now ({error}).
                     </p>
                 )}
@@ -274,7 +274,7 @@ const DonorShowcase = () => {
                         {shown.map((d) => (
                             <li
                                 key={d.id}
-                                className="group relative border border-primary/10 bg-linear-to-b from-primary/3 to-white rounded-lg p-5 shadow-xs hover:shadow-md transition-shadow"
+                                className="group relative border border-primary/10 bg-linear-to-b from-primary/3 to-card rounded-lg p-5 shadow-xs hover:shadow-md transition-shadow"
                             >
                                 {/* Top accent line */}
                                 {/* <span
@@ -283,39 +283,39 @@ const DonorShowcase = () => {
                                 /> */}
 
                                 <div className="flex items-center gap-3">
-                                    <span className="grid size-11 shrink-0 place-items-center rounded-full bg-[#F1F4F7] text-sm font-bold text-[#33443D]">
+                                    <span className="grid size-11 shrink-0 place-items-center rounded-full bg-muted/40 text-sm font-bold text-foreground">
                                         {initials(d.name)}
                                     </span>
-                                    <p className="min-w-0 flex-1 truncate text-[16px] font-extrabold text-[#0B1020]">
+                                    <p className="min-w-0 flex-1 truncate text-[16px] font-extrabold text-foreground">
                                         {d.name}
                                     </p>
-                                    <span className="grid size-10 shrink-0 place-items-center rounded-full border border-[#FADADD] bg-[#FDEEF0] text-sm font-extrabold text-primary">
+                                    <span className="grid size-10 shrink-0 place-items-center rounded-full border border-primary/20 bg-primary/5 text-sm font-extrabold text-primary">
                                         {d.group}
                                     </span>
                                 </div>
 
-                                <p className="mt-4 flex items-center gap-2 rounded-full bg-[#F6F8FA] px-3 py-2 text-xs text-[#66736E]">
+                                <p className="mt-4 flex items-center gap-2 rounded-full bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
                                     <CalendarDays size={14} className="text-primary" />
                                     {t("home.donors.last", "Last donated:")}{" "}
-                                    <span className="font-bold text-[#0B1020]">{d.last}</span>
+                                    <span className="font-bold text-foreground">{d.last}</span>
                                 </p>
 
-                                <p className="mt-3 flex items-start gap-2 text-xs font-medium text-[#475650]">
+                                <p className="mt-3 flex items-start gap-2 text-xs font-medium text-muted-foreground">
                                     <MapPin size={14} className="mt-0.5 shrink-0 text-primary" />
                                     {d.union && <>{d.union}, </>}{d.upazila}, {d.district}, {d.division}
                                 </p>
 
-                                <div className="mt-4 flex items-center justify-between border-t border-[#EEF1F4] pt-4">
+                                <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
                                     <span
                                         className={[
                                             "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold",
                                             d.available
-                                                ? "bg-[#E7F7EF] text-[#1E8E5A]"
-                                                : "bg-[#F1F4F7] text-[#84918C]",
+                                                ? "bg-success-soft text-success"
+                                                : "bg-muted/40 text-muted-foreground",
                                         ].join(" ")}
                                     >
                                         <span
-                                            className={`size-1.5 rounded-full ${d.available ? "bg-[#2FB37A]" : "bg-[#B5BFBA]"}`}
+                                            className={`size-1.5 rounded-full ${d.available ? "bg-success" : "bg-muted-foreground"}`}
                                         />
                                         {d.available
                                             ? t("home.donors.available", "Available")
@@ -326,7 +326,7 @@ const DonorShowcase = () => {
                                         <a
                                             href={`tel:${d.phone}`}
                                             aria-label={t("home.donors.contactName", "Contact {{name}}", { name: d.name })}
-                                            className="inline-flex h-10 items-center gap-2 rounded-full bg-primary px-5 text-sm font-bold text-white shadow-[0_6px_14px_rgba(220,38,38,0.25)] transition hover:bg-[#B91C1C] active:scale-[0.97]"
+                                            className="inline-flex btn-premium h-10 items-center gap-2 rounded-full px-5 text-sm font-bold text-primary-foreground shadow-sm transition hover:bg-primary-hover active:scale-[0.97]"
                                         >
                                             <Phone size={15} />
                                             {t("home.donors.contact", "Contact")}
@@ -334,7 +334,7 @@ const DonorShowcase = () => {
                                     ) : (
                                         <Link
                                             to={`/donors?group=${encodeURIComponent(d.group)}`}
-                                            className="inline-flex h-10 items-center gap-2 rounded-full bg-primary px-5 text-sm font-bold text-white shadow-[0_6px_14px_rgba(220,38,38,0.25)] transition hover:bg-[#B91C1C] active:scale-[0.97]"
+                                            className="inline-flex h-10 items-center gap-2 rounded-full btn-premium px-5 text-sm font-bold text-primary-foreground shadow-sm transition hover:bg-primary-hover active:scale-[0.97]"
                                         >
                                             <Phone size={15} />
                                             {t("home.donors.contact", "Contact")}
@@ -345,14 +345,14 @@ const DonorShowcase = () => {
                         ))}
                     </ul>
                 ) : (
-                    <div className="mt-5 grid place-items-center rounded-2xl border border-dashed border-[#D9E3DD] bg-white px-6 py-14 text-center">
-                        <SearchX size={32} className="text-[#84918C]" />
-                        <p className="mt-3 font-bold text-[#192623]">
+                    <div className="mt-5 grid place-items-center rounded-2xl border border-dashed border-border bg-card px-6 py-14 text-center">
+                        <SearchX size={32} className="text-muted-foreground" />
+                        <p className="mt-3 font-bold text-foreground">
                             {hasFilters
                                 ? t("home.donors.emptyTitle", "No donors match these filters")
                                 : t("home.donors.noneTitle", "No donors listed yet")}
                         </p>
-                        <p className="mt-1 text-sm text-[#66736E]">
+                        <p className="mt-1 text-sm text-muted-foreground">
                             {hasFilters
                                 ? t("home.donors.emptyText", "Try a wider area or a different blood group.")
                                 : t("home.donors.noneText", "Once donors opt in to be listed publicly, they will appear here.")}
@@ -361,7 +361,7 @@ const DonorShowcase = () => {
                             <button
                                 type="button"
                                 onClick={clearFilters}
-                                className="mt-4 rounded-full border border-[#E4EBE7] px-4 py-2 text-sm font-bold text-[#C62838] hover:bg-[#FDEEF0]"
+                                className="mt-4 rounded-full border border-border px-4 py-2 text-sm font-bold text-primary hover:bg-primary/5"
                             >
                                 {t("home.donors.reset", "Clear filters")}
                             </button>

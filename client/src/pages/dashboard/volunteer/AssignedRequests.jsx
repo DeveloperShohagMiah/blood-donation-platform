@@ -41,7 +41,7 @@ const AssignedRequests = () => {
                 actions={
                     <Link
                         to="/dashboard/queue"
-                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-white transition hover:brightness-95"
+                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground transition hover:brightness-95"
                     >
                         <ShieldCheck size={16} /> Verification queue
                     </Link>
@@ -68,7 +68,7 @@ const AssignedRequests = () => {
                                   <article key={item._id} className="rounded-2xl border border-border bg-card p-5 shadow-sm">
                                       <div className="flex items-start justify-between gap-3">
                                           <div className="flex items-center gap-3">
-                                              <span className="grid size-12 place-items-center rounded-xl bg-primary text-lg font-extrabold text-white">
+                                              <span className="grid size-12 place-items-center rounded-xl bg-primary text-lg font-extrabold text-primary-foreground">
                                                   {request.bloodGroup || "?"}
                                               </span>
                                               <div>
@@ -98,7 +98,7 @@ const AssignedRequests = () => {
                                                   type="button"
                                                   disabled={busyId === item._id}
                                                   onClick={() => updateStatus(item._id, "completed")}
-                                                  className="inline-flex h-9 items-center rounded-lg bg-primary px-4 text-xs font-bold text-white transition hover:brightness-95 disabled:opacity-60"
+                                                  className="inline-flex h-9 items-center rounded-lg bg-primary px-4 text-xs font-bold text-primary-foreground transition hover:brightness-95 disabled:opacity-60"
                                               >
                                                   Mark completed
                                               </button>
@@ -106,7 +106,7 @@ const AssignedRequests = () => {
                                                   type="button"
                                                   disabled={busyId === item._id}
                                                   onClick={() => updateStatus(item._id, "cancelled")}
-                                                  className="inline-flex h-9 items-center rounded-lg border border-border px-4 text-xs font-bold text-muted-foreground transition hover:border-rose-300 hover:text-rose-600 disabled:opacity-60"
+                                                  className="inline-flex h-9 items-center rounded-lg border border-border px-4 text-xs font-bold text-muted-foreground transition hover:border-destructive/40 hover:text-destructive disabled:opacity-60"
                                               >
                                                   Cancel assignment
                                               </button>

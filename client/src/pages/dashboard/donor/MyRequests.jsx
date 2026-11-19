@@ -64,7 +64,7 @@ const MyRequests = () => {
                 actions={
                     <Link
                         to="/create-blood-requests"
-                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-white transition hover:brightness-95"
+                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground transition hover:brightness-95"
                     >
                         <Plus size={16} /> New request
                     </Link>
@@ -79,7 +79,7 @@ const MyRequests = () => {
                     title="No requests yet"
                     text="When you submit a blood request, you can follow its status here."
                     action={
-                        <Link to="/create-blood-requests" className="inline-flex h-10 items-center rounded-xl bg-primary px-4 text-sm font-bold text-white">
+                        <Link to="/create-blood-requests" className="inline-flex h-10 items-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground">
                             Create a request
                         </Link>
                     }
@@ -95,16 +95,17 @@ const MyRequests = () => {
                             <Th>{t("text.Urgency")}</Th>
                             <Th>{t("text.Hospital")}</Th>
                             <Th>{t("text.Needed by")}</Th>
+                            <Th>{t("text.Progress")}</Th>
                             <Th>{t("text.Status")}</Th>
                             <Th className="text-right">{t("text.Action")}</Th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
-                            <LoadingRow cols={7} />
+                            <LoadingRow cols={8} />
                         ) : table.rows.length === 0 ? (
                             <tr>
-                                <Td colSpan={7} className="py-10 text-center text-muted-foreground">
+                                <Td colSpan={8} className="py-10 text-center text-muted-foreground">
                                     No requests match your search or filter.
                                 </Td>
                             </tr>
@@ -120,16 +121,31 @@ const MyRequests = () => {
                                     <Td>
                                         <span className={`text-xs font-bold capitalize ${
                                             item.urgency === "critical"
-                                                ? "text-rose-600"
+                                                ? "text-destructive"
                                                 : item.urgency === "urgent"
-                                                    ? "text-amber-600"
-                                                    : "text-emerald-600"
+                                                    ? "text-warning"
+                                                    : "text-success"
                                         }`}>
                                             {item.urgency || "normal"}
                                         </span>
                                     </Td>
                                     <Td>{item.hospitalName}</Td>
                                     <Td>{formatDate(item.neededAt)}</Td>
+                                    <Td>
+                                        <div className="flex items-center gap-2">
+                                            <div className="h-1.5 w-16 overflow-hidden rounded-full bg-muted">
+                                                <div
+                                                    className="h-full rounded-full bg-primary"
+                                                    style={{
+                                                        width: `${Math.min(100, ((item.unitsFulfilled || 0) / (item.units || 1)) * 100)}%`,
+                                                    }}
+                                                />
+                                            </div>
+                                            <span className="text-xs font-bold text-foreground">
+                                                {item.unitsFulfilled || 0}/{item.units || 1}
+                                            </span>
+                                        </div>
+                                    </Td>
                                     <Td><StatusBadge value={item.status} /></Td>
                                     <Td className="text-right">
                                         {["submitted", "verified", "matching"].includes(item.status) ? (
@@ -137,7 +153,7 @@ const MyRequests = () => {
                                                 type="button"
                                                 onClick={() => cancel(item._id)}
                                                 disabled={busyId === item._id}
-                                                className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-600 transition hover:text-rose-700 disabled:opacity-50"
+                                                className="inline-flex items-center gap-1.5 text-xs font-bold text-destructive transition hover:text-destructive disabled:opacity-50"
                                             >
                                                 <XCircle size={14} />
                                                 {busyId === item._id ? "Cancelling…" : "Cancel"}

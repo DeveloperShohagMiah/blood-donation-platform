@@ -81,7 +81,7 @@ const UserMenu = ({ onNavigate, align = "right" }) => {
                 onClick={() => setOpen((value) => !value)}
                 aria-haspopup="menu"
                 aria-expanded={open}
-                className="inline-flex h-10 items-center gap-2 rounded-full border border-border/70 bg-white pl-1 pr-2.5 text-[#33443D] outline-none transition hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary/30"
+                className="inline-flex h-10 items-center gap-2 rounded-full border border-border/70 bg-card pl-1 pr-2.5 text-foreground outline-none transition hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary/30"
             >
                 <span className="grid size-8 place-items-center rounded-full bg-primary/10 text-[11px] font-bold text-primary">
                     {initials}
@@ -129,7 +129,7 @@ const UserMenu = ({ onNavigate, align = "right" }) => {
                             type="button"
                             role="menuitem"
                             onClick={handleLogout}
-                            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold text-rose-600 transition hover:bg-rose-50"
+                            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold text-destructive transition hover:bg-destructive/10"
                         >
                             <LogOut size={16} />
                             Log out

@@ -93,12 +93,12 @@ const Contact = () => {
     };
 
     const inputClass =
-        "mt-2  w-full rounded-xl border border-[#e9e5e2] bg-[#fcfbfa] px-4 text-sm font-medium text-[#172321] outline-none transition placeholder:font-normal placeholder:text-[#a0a9a5] focus:border-[#d45b69] focus:bg-white focus:ring-4 focus:ring-[#dc263a]/[0.07]";
+        "mt-2  w-full rounded-xl border border-border bg-surface-soft px-4 text-sm font-medium text-foreground outline-none transition placeholder:font-normal placeholder:text-muted-foreground focus:border-primary focus:bg-card focus:ring-4 focus:ring-primary/[0.07]";
 
     return (
         <main className="min-h-screen bg-background text-foreground">
             {/* Hero */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-rose-100/60 py-20 dark:from-red-950/20 dark:via-background ">
+            <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-destructive/15 py-20 dark:from-destructive/20 dark:via-background ">
                 <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-primary/50/10 blur-3xl" />
 
                 <div className="relative mx-auto max-w-7xl px-5 text-center sm:px-8">
@@ -169,11 +169,11 @@ const Contact = () => {
 
                     <div className="mt-8 rounded-2xl bg-primary p-6">
                         <div className="flex items-center gap-3">
-                            <Heart className="text-white" size={23} />
-                            <h3 className="font-bold text-2xl text-white">Need Blood Urgently?</h3>
+                            <Heart className="text-primary-foreground" size={23} />
+                            <h3 className="font-bold text-2xl text-primary-foreground">Need Blood Urgently?</h3>
                         </div>
 
-                        <p className="mt-3 text-sm leading-7 text-white/70">
+                        <p className="mt-3 text-sm leading-7 text-primary-foreground/70">
                             If someone needs blood, please submit a blood request
                             through our dedicated request system so our volunteers
                             can review and coordinate it.
@@ -181,7 +181,7 @@ const Contact = () => {
 
                         <Link
                             to="/create-blood-requests"
-                            className="mt-5 inline-flex items-end gap-2 font-bold text-white text-sm text-right transition hover:gap-3"
+                            className="mt-5 inline-flex items-end gap-2 font-bold text-primary-foreground text-sm text-right transition hover:gap-3"
                         >
                             Submit Blood Request
                             <ArrowRight size={17} />
@@ -190,7 +190,7 @@ const Contact = () => {
                 </div>
 
                 {/* Right side: Form */}
-                <div className="rounded-3xl bg-linear-to-b from-primary/2 to-white border border-primary/10 shadow-xs hover:shadow-md transition-shadow sm:p-9 h-fit">
+                <div className="rounded-3xl bg-linear-to-b from-primary/2 to-card border border-primary/10 shadow-xs hover:shadow-md transition-shadow sm:p-9 h-fit">
                     <div className="mb-8">
                         <h2 className="text-2xl font-bold">{t("text.Send Us a Message")}</h2>
                         <p className="mt-2 text-sm text-muted-foreground">
@@ -344,8 +344,8 @@ const Contact = () => {
                             <div
                                 role="status"
                                 className={`flex items-start gap-3 rounded-xl p-4 text-sm ${submitStatus.type === "success"
-                                    ? "bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-400"
-                                    : "bg-primary/5 text-red-700 dark:bg-red-950/30 dark:text-red-400"
+                                    ? "bg-success-soft text-success-deep dark:bg-success/20 dark:text-success"
+                                    : "bg-primary/5 text-destructive dark:bg-destructive/20 dark:text-destructive"
                                     }`}
                             >
                                 {submitStatus.type === "success" ? (
@@ -360,7 +360,7 @@ const Contact = () => {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary/90 px-6 py-4 font-bold text-white shadow-lg shadow-red-600/20 transition disabled:cursor-not-allowed disabled:opacity-60"
+                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary/90 px-6 py-4 font-bold text-primary-foreground shadow-lg shadow-destructive/20 transition disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {isSubmitting ? (
                                 <>

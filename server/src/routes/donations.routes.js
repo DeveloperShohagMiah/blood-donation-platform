@@ -8,5 +8,7 @@ const router = Router();
 router.get("/donations/me", protect, controller.getMyDonations);
 router.post("/donations", protect, volunteerOrStaff, controller.postDonations);
 router.get("/donations", protect, volunteerOrStaff, controller.getDonations);
+router.patch("/donations/:id", protect, volunteerOrStaff, controller.patchDonationsById);
+router.delete("/donations/:id", protect, volunteerOrStaff, controller.deleteDonationsById);
 
 export default router;

@@ -98,13 +98,13 @@ const DashboardLayout = () => {
 
     const sidebarContent = (mobile = false) => (
         <>
-            <div className="flex h-16 items-center gap-2.5 border-b border-white/10 px-5">
-                <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary text-white shadow-lg shadow-primary/25">
+            <div className="flex h-16 items-center gap-2.5 border-b border-background/10 px-5">
+                <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/25">
                     <Droplets size={19} strokeWidth={2.5} />
                 </span>
                 {(!collapsed || mobile) && (
                     <span className="text-[17px] font-extrabold tracking-tight whitespace-nowrap">
-                        Blood <span className="text-[#F26A77]">{t("text.Connect")}</span>
+                        Blood <span className="text-brand-light">{t("text.Connect")}</span>
                     </span>
                 )}
                 {mobile && (
@@ -112,7 +112,7 @@ const DashboardLayout = () => {
                         type="button"
                         onClick={() => setMobileOpen(false)}
                         aria-label="Close menu"
-                        className="ml-auto grid size-9 place-items-center rounded-lg text-white/70 hover:bg-white/10"
+                        className="ml-auto grid size-9 place-items-center rounded-lg text-primary-foreground/70 hover:bg-card/10"
                     >
                         <X size={18} />
                     </button>
@@ -122,7 +122,7 @@ const DashboardLayout = () => {
             <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
                 <div>
                     {(!collapsed || mobile) && (
-                        <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/40">
+                        <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-primary-foreground/40">
                             {roleLabel} workspace
                         </p>
                     )}
@@ -139,10 +139,10 @@ const DashboardLayout = () => {
                                         className={({ isActive }) =>
                                             [
                                                 "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition",
-                                                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30",
+                                                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background/30",
                                                 isActive
-                                                    ? "bg-primary text-white shadow-lg shadow-primary/25"
-                                                    : "text-white/65 hover:bg-white/10 hover:text-white",
+                                                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
+                                                    : "text-primary-foreground/65 hover:bg-card/10 hover:text-primary-foreground",
                                             ].join(" ")
                                         }
                                     >
@@ -158,25 +158,25 @@ const DashboardLayout = () => {
                 </div>
             </nav>
 
-            <div className="border-t border-white/10 p-3">
+            <div className="border-t border-background/10 p-3">
                 <a
                     href="/"
                     target="_blank"
                     rel="noopener noreferrer"
                     title={collapsed && !mobile ? "View website" : undefined}
-                    className="mb-2 flex items-center gap-2.5 rounded-xl border border-white/10 px-3 py-2.5 text-sm font-semibold text-white/75 transition hover:border-primary/40 hover:bg-white/5 hover:text-white"
+                    className="mb-2 flex items-center gap-2.5 rounded-xl border border-background/10 px-3 py-2.5 text-sm font-semibold text-primary-foreground/75 transition hover:border-primary/40 hover:bg-card/5 hover:text-primary-foreground"
                 >
                     <ExternalLink size={16} className="shrink-0" />
                     {(!collapsed || mobile) && "View website"}
                 </a>
-                <div className="flex items-center gap-3 rounded-xl bg-white/5 p-2.5">
-                    <span className="grid size-9 shrink-0 place-items-center rounded-full bg-white/10 text-xs font-bold text-white">
+                <div className="flex items-center gap-3 rounded-xl bg-card/5 p-2.5">
+                    <span className="grid size-9 shrink-0 place-items-center rounded-full bg-card/10 text-xs font-bold text-primary-foreground">
                         {user?.fullName?.slice(0, 2).toUpperCase() || "BC"}
                     </span>
                     {(!collapsed || mobile) && (
                         <div className="min-w-0 flex-1">
-                            <p className="truncate text-sm font-bold text-white">{user?.fullName}</p>
-                            <p className="text-[11px] capitalize text-white/50">{roleLabel}</p>
+                            <p className="truncate text-sm font-bold text-primary-foreground">{user?.fullName}</p>
+                            <p className="text-[11px] capitalize text-primary-foreground/50">{roleLabel}</p>
                         </div>
                     )}
                     {(!collapsed || mobile) && (
@@ -185,7 +185,7 @@ const DashboardLayout = () => {
                             onClick={handleLogout}
                             title="Log out"
                             aria-label="Log out"
-                            className="grid size-8 place-items-center rounded-lg text-white/60 transition hover:bg-white/10 hover:text-white"
+                            className="grid size-8 place-items-center rounded-lg text-primary-foreground/60 transition hover:bg-card/10 hover:text-primary-foreground"
                         >
                             <LogOut size={16} />
                         </button>
@@ -196,16 +196,16 @@ const DashboardLayout = () => {
     );
 
     return (
-        <div className="min-h-screen bg-[#F7F8FA]">
+        <div className="min-h-screen bg-surface-alt">
             <aside
-                className={`fixed inset-y-0 left-0 z-40 hidden flex-col border-r border-white/10 bg-[#101827] text-white transition-[width] duration-300 lg:flex ${collapsed ? "w-[76px]" : "w-[260px]"}`}
+                className={`fixed inset-y-0 left-0 z-40 hidden flex-col border-r border-background/10 bg-foreground text-primary-foreground transition-[width] duration-300 lg:flex ${collapsed ? "w-[76px]" : "w-[260px]"}`}
             >
                 {sidebarContent()}
                 <button
                     type="button"
                     onClick={() => setCollapsed((value) => !value)}
                     aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-                    className="absolute -right-3 top-20 grid size-6 place-items-center rounded-full border border-white/10 bg-[#101827] text-white/70 shadow-md transition hover:text-white"
+                    className="absolute -right-3 top-20 grid size-6 place-items-center rounded-full border border-background/10 bg-foreground text-primary-foreground/70 shadow-md transition hover:text-primary-foreground"
                 >
                     <ChevronLeft size={14} className={collapsed ? "rotate-180" : ""} />
                 </button>
@@ -217,9 +217,9 @@ const DashboardLayout = () => {
                         type="button"
                         aria-label="Close menu"
                         onClick={() => setMobileOpen(false)}
-                        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+                        className="absolute inset-0 bg-overlay backdrop-blur-sm"
                     />
-                    <aside className="absolute inset-y-0 left-0 flex w-[270px] flex-col bg-[#101827] text-white shadow-2xl">
+                    <aside className="absolute inset-y-0 left-0 flex w-[270px] flex-col bg-foreground text-primary-foreground shadow-2xl">
                         {sidebarContent(true)}
                     </aside>
                 </div>
@@ -253,7 +253,7 @@ const DashboardLayout = () => {
                         >
                             <Bell size={19} />
                             {unread > 0 && (
-                                <span className="absolute top-1 right-1 grid min-w-4 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
+                                <span className="absolute top-1 right-1 grid min-w-4 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
                                     {unread > 9 ? "9+" : unread}
                                 </span>
                             )}

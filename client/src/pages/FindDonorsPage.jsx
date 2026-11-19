@@ -163,7 +163,7 @@ const FindDonorsPage = () => {
 
             {contactDonor && (
                 <div
-                    className="fixed inset-0 z-[70] grid place-items-center bg-[#0B1210]/60 p-4 backdrop-blur-sm"
+                    className="fixed inset-0 z-[70] grid place-items-center bg-foreground/60 p-4 backdrop-blur-sm"
                     onClick={closeContact}
                     role="presentation"
                 >
@@ -172,14 +172,14 @@ const FindDonorsPage = () => {
                         aria-modal="true"
                         aria-labelledby="contact-dialog-title"
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl sm:p-8"
+                        className="w-full max-w-md rounded-3xl bg-card p-6 shadow-2xl sm:p-8"
                     >
                         <div className="flex items-start justify-between gap-4">
                             <div>
-                                <h2 id="contact-dialog-title" className="text-xl font-extrabold text-[#192623]">
+                                <h2 id="contact-dialog-title" className="text-xl font-extrabold text-foreground">
                                     {contactSent ? "Request sent" : "Request contact"}
                                 </h2>
-                                <p className="mt-1 text-sm text-[#829089]">
+                                <p className="mt-1 text-sm text-muted-foreground">
                                     {contactDonor.fullName} · {contactDonor.bloodGroup}
                                 </p>
                             </div>
@@ -187,14 +187,14 @@ const FindDonorsPage = () => {
                                 type="button"
                                 onClick={closeContact}
                                 aria-label="Close"
-                                className="grid size-9 place-items-center rounded-full text-[#829089] transition hover:bg-[#F1F5F3] hover:text-[#192623]"
+                                className="grid size-9 place-items-center rounded-full text-muted-foreground transition hover:bg-muted/40 hover:text-foreground"
                             >
                                 <X size={19} />
                             </button>
                         </div>
 
                         {contactSent ? (
-                            <div className="mt-6 rounded-xl bg-[#EDF8F1] p-4 text-sm leading-relaxed text-[#1E8E5A]">
+                            <div className="mt-6 rounded-xl bg-success-soft p-4 text-sm leading-relaxed text-success">
                                 Your request has been sent to our team. They will
                                 coordinate the introduction and protect both
                                 parties’ contact details.
@@ -202,7 +202,7 @@ const FindDonorsPage = () => {
                         ) : (
                             <form onSubmit={submitContact} className="mt-6 space-y-4">
                                 <label className="block">
-                                    <span className="mb-1.5 block text-sm font-semibold text-[#34423B]">
+                                    <span className="mb-1.5 block text-sm font-semibold text-foreground">
                                         Your name
                                     </span>
                                     <input
@@ -211,13 +211,13 @@ const FindDonorsPage = () => {
                                         onChange={(e) =>
                                             setContactForm((f) => ({ ...f, requesterName: e.target.value }))
                                         }
-                                        className="h-12 w-full rounded-xl border border-[#E4EAE6] bg-white px-4 text-sm outline-none transition focus:border-[#C62838] focus:ring-4 focus:ring-red-500/5"
+                                        className="h-12 w-full rounded-xl border border-border bg-card px-4 text-sm outline-none transition focus:border-primary focus:ring-4 focus:ring-destructive/10"
                                         placeholder="Your full name"
                                     />
                                 </label>
 
                                 <label className="block">
-                                    <span className="mb-1.5 block text-sm font-semibold text-[#34423B]">
+                                    <span className="mb-1.5 block text-sm font-semibold text-foreground">
                                         Your phone number
                                     </span>
                                     <input
@@ -227,13 +227,13 @@ const FindDonorsPage = () => {
                                         onChange={(e) =>
                                             setContactForm((f) => ({ ...f, requesterPhone: e.target.value }))
                                         }
-                                        className="h-12 w-full rounded-xl border border-[#E4EAE6] bg-white px-4 text-sm outline-none transition focus:border-[#C62838] focus:ring-4 focus:ring-red-500/5"
+                                        className="h-12 w-full rounded-xl border border-border bg-card px-4 text-sm outline-none transition focus:border-primary focus:ring-4 focus:ring-destructive/10"
                                         placeholder="01XXXXXXXXX"
                                     />
                                 </label>
 
                                 <label className="block">
-                                    <span className="mb-1.5 block text-sm font-semibold text-[#34423B]">
+                                    <span className="mb-1.5 block text-sm font-semibold text-foreground">
                                         Message (optional)
                                     </span>
                                     <textarea
@@ -242,13 +242,13 @@ const FindDonorsPage = () => {
                                         onChange={(e) =>
                                             setContactForm((f) => ({ ...f, message: e.target.value }))
                                         }
-                                        className="w-full resize-y rounded-xl border border-[#E4EAE6] bg-white px-4 py-3 text-sm outline-none transition focus:border-[#C62838] focus:ring-4 focus:ring-red-500/5"
+                                        className="w-full resize-y rounded-xl border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-4 focus:ring-destructive/10"
                                         placeholder="Tell the team why you need to contact this donor"
                                     />
                                 </label>
 
                                 {contactError && (
-                                    <p role="alert" className="rounded-xl bg-red-50 px-3 py-2 text-sm text-[#9F1D2B]">
+                                    <p role="alert" className="rounded-xl bg-destructive/10 px-3 py-2 text-sm text-primary-hover">
                                         {contactError}
                                     </p>
                                 )}
@@ -256,7 +256,7 @@ const FindDonorsPage = () => {
                                 <button
                                     type="submit"
                                     disabled={contactSending}
-                                    className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-[#C62838] px-5 text-sm font-bold text-white transition hover:bg-[#A91F30] disabled:cursor-not-allowed disabled:opacity-60"
+                                    className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                                 >
                                     {contactSending ? "Sending…" : "Send request"}
                                 </button>

@@ -29,6 +29,7 @@ import {
 import Hero from "../components/Hero";
 import SectionHeader from "../components/SectionHeader";
 import DonorShowcase from "../components/Donorshowcase";
+import DonateButton from "../components/DonateButton";
 import { apiFetch } from "../utils/api";
 
 const container =
@@ -64,6 +65,7 @@ const mapPublicRequest = (item) => {
         contactPerson: item.contactName || "",
         phone: item.contactPhone || "",
         verified: Boolean(item.isVerified),
+        hasResponded: Boolean(item.hasResponded),
         urgency: ["critical", "urgent", "normal"].includes(item.urgency)
             ? item.urgency
             : urgencyByStatus[item.status] || "normal",
@@ -74,25 +76,25 @@ const mapPublicRequest = (item) => {
 const urgencyStyles = {
     critical: {
         rank: 0,
-        dot: "bg-rose-500",
-        pill: "bg-rose-50 text-rose-700 ring-rose-200",
-        bar: "bg-rose-500",
-        card: "ring-1 ring-rose-200/80",
+        dot: "bg-destructive",
+        pill: "bg-destructive/10 text-destructive ring-destructive/25",
+        bar: "bg-destructive",
+        card: "ring-1 ring-destructive/25",
         pulse: true,
     },
     urgent: {
         rank: 1,
-        dot: "bg-amber-500",
-        pill: "bg-amber-50 text-amber-800 ring-amber-200",
-        bar: "bg-amber-500",
+        dot: "bg-chart-3",
+        pill: "bg-warning/10 text-warning ring-warning/30",
+        bar: "bg-chart-3",
         card: "",
         pulse: false,
     },
     normal: {
         rank: 2,
-        dot: "bg-emerald-500",
-        pill: "bg-emerald-50 text-emerald-700 ring-emerald-200",
-        bar: "bg-emerald-500",
+        dot: "bg-success",
+        pill: "bg-success-soft text-success-deep ring-success/30",
+        bar: "bg-success",
         card: "",
         pulse: false,
     },
@@ -107,7 +109,7 @@ const Tile = ({ item, className = "" }) =>
     item.src ? (
         <img src={item.src} alt={item.caption} loading="lazy" className={`size-full object-cover ${className}`} />
     ) : (
-        <div className={`grid size-full place-items-center bg-linear-to-br from-primary/10 via-primary/3 to-emerald-50 ${className}`}>
+        <div className={`grid size-full place-items-center bg-linear-to-br from-primary/10 via-primary/3 to-success-soft ${className}`}>
             <Camera size={28} className="text-primary/40" aria-hidden="true" />
         </div>
     );
@@ -303,7 +305,7 @@ const Home = () => {
     }, [lightbox]);
 
     const glassBtn =
-        "grid size-11 place-items-center rounded-full border border-white/15 bg-white/10 text-white backdrop-blur-md transition hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none";
+        "grid size-11 place-items-center rounded-full border border-background/15 bg-card/10 text-primary-foreground backdrop-blur-md transition hover:bg-card/20 focus-visible:ring-2 focus-visible:ring-background/60 focus-visible:outline-none";
 
     return (
         <main>
@@ -316,7 +318,7 @@ const Home = () => {
                 aria-labelledby="emergency-heading"
                 className="relative overflow-hidden border-t border-primary/10 bg-primary/3 py-16 md:py-24"
             >
-                <div aria-hidden="true" className="pointer-events-none absolute -top-40 left-1/2 size-[560px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(220,38,38,0.08),transparent)]" />
+                <div aria-hidden="true" className="pointer-events-none absolute -top-40 left-1/2 size-[560px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
 
                 <div className={`${container} relative`}>
                     <SectionHeader
@@ -345,12 +347,12 @@ const Home = () => {
                                         "inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-semibold outline-none transition-all",
                                         "focus-visible:ring-2 focus-visible:ring-primary/50",
                                         active
-                                            ? "border-primary bg-primary text-white shadow-md shadow-primary/25"
+                                            ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
                                             : "border-border/60 bg-card text-muted-foreground hover:border-primary/40 hover:text-primary",
                                     ].join(" ")}
                                 >
                                     {f.label}
-                                    <span className={`grid min-w-5 place-items-center rounded-full px-1.5 text-[11px] font-bold ${active ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"}`}>
+                                    <span className={`grid min-w-5 place-items-center rounded-full px-1.5 text-[11px] font-bold ${active ? "bg-card/20 text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
                                         {counts[f.key]}
                                     </span>
                                 </button>
@@ -359,7 +361,7 @@ const Home = () => {
                     </div>
 
                     {requestsError && (
-                        <p className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                        <p className="mt-6 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning">
                             Requests could not be loaded right now ({requestsError}).
                         </p>
                     )}
@@ -384,7 +386,7 @@ const Home = () => {
                                         <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-1 ${s.bar}`} />
 
                                         <div className="flex items-start justify-between gap-2">
-                                            <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-linear-to-br from-primary to-primary/80 text-xl font-extrabold text-white shadow-lg shadow-primary/30">
+                                            <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-linear-to-br from-primary to-primary/80 text-xl font-extrabold text-primary-foreground shadow-lg shadow-primary/30">
                                                 {r.group}
                                             </span>
                                             <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ring-1 ${s.pill}`}>
@@ -438,15 +440,20 @@ const Home = () => {
                                         </div>
 
                                         <div className="mt-auto flex gap-2.5 pt-6">
-                                            <Link
-                                                to={r.verified ? "/dashboard/matching" : "/blood-requests"}
-                                                className="inline-flex h-11 flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:brightness-95 active:scale-[0.98]"
-                                            >
-                                                {r.verified
-                                                    ? t("home.emergency.respond", "I can donate")
-                                                    : t("home.emergency.pendingShort", "Pending review")}
-                                                <ArrowRight size={15} />
-                                            </Link>
+                                            {r.verified ? (
+                                                <DonateButton
+                                                    requestId={r.id}
+                                                    hasResponded={r.hasResponded}
+                                                />
+                                            ) : (
+                                                <Link
+                                                    to="/blood-requests"
+                                                    className="inline-flex h-11 flex-1 items-center justify-center gap-1.5 rounded-xl border border-border text-sm font-bold text-muted-foreground transition hover:border-primary hover:text-primary"
+                                                >
+                                                    {t("home.emergency.pendingShort", "Pending review")}
+                                                    <ArrowRight size={15} />
+                                                </Link>
+                                            )}
                                             {r.verified && r.phone && (
                                                 <a
                                                     href={`tel:${r.phone}`}
@@ -502,9 +509,9 @@ const Home = () => {
                                 const start = new Date(item.startAt);
                                 return (
                                     <article key={item._id} className="premium-card overflow-hidden">
-                                        <div className="relative h-24 bg-gradient-to-br from-[#7F1D1D] via-primary to-[#E11D48]">
-                                            <div className="absolute -top-8 -right-6 size-28 rounded-full border-[14px] border-white/10" />
-                                            <div className="absolute bottom-3 left-4 flex items-center gap-2 rounded-xl bg-black/20 px-3 py-1.5 text-white backdrop-blur-md">
+                                        <div className="relative h-24 bg-gradient-to-br from-brand-deep via-primary to-primary">
+                                            <div className="absolute -top-8 -right-6 size-28 rounded-full border-[14px] border-background/10" />
+                                            <div className="absolute bottom-3 left-4 flex items-center gap-2 rounded-xl bg-overlay-soft px-3 py-1.5 text-primary-foreground backdrop-blur-md">
                                                 <CalendarDays size={13} />
                                                 <span className="text-xs font-bold">
                                                     {Number.isNaN(start.getTime())
@@ -555,13 +562,13 @@ const Home = () => {
                     <div className="mt-10 grid items-start gap-6 lg:grid-cols-[1.35fr_1fr]">
                         {/* Bento rules */}
                         <ul className="grid gap-5 sm:grid-cols-2">
-                            <li className="relative overflow-hidden rounded-3xl bg-linear-to-br from-primary to-primary/80 p-7 text-white shadow-xl shadow-primary/20 sm:col-span-2">
-                                <FeaturedIcon aria-hidden="true" size={150} strokeWidth={1.2} className="absolute -right-6 -bottom-8 text-white/10" />
-                                <span className="grid size-12 place-items-center rounded-2xl bg-white/15 backdrop-blur">
+                            <li className="relative overflow-hidden rounded-3xl bg-linear-to-br from-primary to-primary/80 p-7 text-primary-foreground shadow-xl shadow-primary/20 sm:col-span-2">
+                                <FeaturedIcon aria-hidden="true" size={150} strokeWidth={1.2} className="absolute -right-6 -bottom-8 text-primary-foreground/10" />
+                                <span className="grid size-12 place-items-center rounded-2xl bg-card/15 backdrop-blur">
                                     <FeaturedIcon size={22} strokeWidth={2.1} />
                                 </span>
                                 <h3 className="mt-5 text-2xl font-extrabold tracking-tight">{featuredRule.title}</h3>
-                                <p className="mt-2 max-w-[460px] text-[15px] leading-relaxed text-white/85">{featuredRule.text}</p>
+                                <p className="mt-2 max-w-[460px] text-[15px] leading-relaxed text-primary-foreground/85">{featuredRule.text}</p>
                             </li>
 
                             {otherRules.map((rule, i) => {
@@ -571,7 +578,7 @@ const Home = () => {
                                         key={rule.title}
                                         className={`rounded-2xl border border-border/70 bg-card p-6 transition duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5 ${i === otherRules.length - 1 && otherRules.length % 2 === 1 ? "sm:col-span-2" : ""}`}
                                     >
-                                        <span className="grid size-11 place-items-center rounded-xl bg-emerald-50 text-emerald-700">
+                                        <span className="grid size-11 place-items-center rounded-xl bg-success-soft text-success-deep">
                                             <Icon size={20} strokeWidth={2.1} />
                                         </span>
                                         <h3 className="mt-4 font-bold text-foreground">{rule.title}</h3>
@@ -582,22 +589,22 @@ const Home = () => {
                         </ul>
 
                         {/* Do not donate if */}
-                        <aside className="rounded-3xl border border-amber-200 bg-linear-to-b from-amber-50 to-amber-50/40 p-7">
-                            <h3 className="flex items-center gap-2.5 text-lg font-extrabold text-amber-900">
-                                <span className="grid size-9 place-items-center rounded-xl bg-amber-100">
+                        <aside className="rounded-3xl border border-warning/30 bg-linear-to-b from-warning/10 to-warning/10 p-7">
+                            <h3 className="flex items-center gap-2.5 text-lg font-extrabold text-warning">
+                                <span className="grid size-9 place-items-center rounded-xl bg-warning/15">
                                     <AlertTriangle size={18} />
                                 </span>
                                 {t("home.safety.notTitle", "Do not donate if")}
                             </h3>
                             <ul className="mt-5 space-y-3">
                                 {notDonateIf.map((line) => (
-                                    <li key={line} className="flex gap-3 rounded-xl bg-white/70 px-3.5 py-3 text-[14.5px] leading-snug text-amber-950/85 ring-1 ring-amber-100">
-                                        <X size={16} className="mt-0.5 shrink-0 text-amber-600" />
+                                    <li key={line} className="flex gap-3 rounded-xl bg-card/70 px-3.5 py-3 text-[14.5px] leading-snug text-warning ring-1 ring-warning/15">
+                                        <X size={16} className="mt-0.5 shrink-0 text-warning" />
                                         {line}
                                     </li>
                                 ))}
                             </ul>
-                            <p className="mt-5 flex gap-2 text-xs leading-relaxed text-amber-900/70">
+                            <p className="mt-5 flex gap-2 text-xs leading-relaxed text-warning/70">
                                 <Stethoscope size={16} className="mt-0.5 shrink-0" />
                                 {t("home.safety.disclaimer", "This is general advice, not medical advice. Staff at the blood bank make the final decision.")}
                             </p>
@@ -647,7 +654,7 @@ const Home = () => {
                                                 : "border-transparent hover:bg-card/70",
                                         ].join(" ")}
                                     >
-                                        <span className={`grid size-12 shrink-0 place-items-center rounded-xl transition-colors ${active ? "bg-primary text-white" : "bg-primary/10 text-primary"}`}>
+                                        <span className={`grid size-12 shrink-0 place-items-center rounded-xl transition-colors ${active ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"}`}>
                                             <Icon size={21} strokeWidth={2.1} />
                                         </span>
                                         <span className="min-w-0">
@@ -721,13 +728,13 @@ const Home = () => {
                                 >
                                     <Tile item={item} className="transition-transform duration-700 ease-out group-hover:scale-110 motion-reduce:transition-none" />
 
-                                    <span aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-black/60 via-black/0 to-black/0 opacity-80 transition-opacity group-hover:opacity-100" />
+                                    <span aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-overlay via-black/0 to-black/0 opacity-80 transition-opacity group-hover:opacity-100" />
 
-                                    <span aria-hidden="true" className="absolute top-3 right-3 grid size-9 scale-90 place-items-center rounded-full bg-white/20 text-white opacity-0 backdrop-blur-md transition-all duration-200 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100">
+                                    <span aria-hidden="true" className="absolute top-3 right-3 grid size-9 scale-90 place-items-center rounded-full bg-card/20 text-primary-foreground opacity-0 backdrop-blur-md transition-all duration-200 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100">
                                         <Maximize2 size={15} />
                                     </span>
 
-                                    <span className="absolute inset-x-3 bottom-3 rounded-xl border border-white/20 bg-black/10 px-3.5 py-2.5 text-left text-[13px] leading-snug font-semibold text-white backdrop-blur-xl transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                                    <span className="absolute inset-x-3 bottom-3 rounded-xl border border-background/20 bg-overlay-soft px-3.5 py-2.5 text-left text-[13px] leading-snug font-semibold text-primary-foreground backdrop-blur-xl transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                                         {item.caption}
                                     </span>
                                 </button>
@@ -742,10 +749,10 @@ const Home = () => {
                         role="dialog"
                         aria-modal="true"
                         aria-label={galleryItems[lightbox].caption}
-                        className="fixed inset-0 z-[60] grid place-items-center bg-[#0B1210]/92 p-4 backdrop-blur-md"
+                        className="fixed inset-0 z-[60] grid place-items-center bg-foreground/92 p-4 backdrop-blur-md"
                         onClick={() => setLightbox(null)}
                     >
-                        <span className="absolute top-5 left-5 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-sm font-semibold text-white backdrop-blur-md">
+                        <span className="absolute top-5 left-5 rounded-full border border-background/15 bg-card/10 px-3.5 py-1.5 text-sm font-semibold text-primary-foreground backdrop-blur-md">
                             {lightbox + 1} / {galleryItems.length}
                         </span>
 
@@ -760,10 +767,10 @@ const Home = () => {
                         </button>
 
                         <figure className="w-full max-w-[920px]" onClick={(e) => e.stopPropagation()}>
-                            <div className="aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl shadow-black/50 ring-1 ring-white/10">
+                            <div className="aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl shadow-overlay ring-1 ring-background/10">
                                 <Tile item={galleryItems[lightbox]} />
                             </div>
-                            <figcaption className="mt-4 text-center text-sm font-medium text-white/85">
+                            <figcaption className="mt-4 text-center text-sm font-medium text-primary-foreground/85">
                                 {galleryItems[lightbox].caption}
                             </figcaption>
                         </figure>

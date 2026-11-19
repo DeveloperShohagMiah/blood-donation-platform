@@ -2,10 +2,10 @@ import { Children, cloneElement, isValidElement } from "react";
 
 const toneClasses = {
     primary: "bg-primary/10 text-primary ring-primary/15",
-    success: "bg-emerald-500/10 text-emerald-600 ring-emerald-500/15",
-    warning: "bg-amber-500/10 text-amber-600 ring-amber-500/15",
-    info: "bg-sky-500/10 text-sky-600 ring-sky-500/15",
-    violet: "bg-violet-500/10 text-violet-600 ring-violet-500/15",
+    success: "bg-success/10 text-success ring-success/15",
+    warning: "bg-chart-3/10 text-warning ring-warning/15",
+    info: "bg-info/10 text-info ring-info/15",
+    violet: "bg-violet/10 text-violet ring-violet/15",
 };
 
 export const StatCard = ({ icon: Icon, label, value, hint, tone = "primary" }) => (
@@ -29,23 +29,23 @@ export const StatCard = ({ icon: Icon, label, value, hint, tone = "primary" }) =
 );
 
 const statusTones = {
-    submitted: "bg-amber-500/10 text-amber-700 ring-amber-500/20",
-    pending: "bg-amber-500/10 text-amber-700 ring-amber-500/20",
-    pending_verification: "bg-amber-500/10 text-amber-700 ring-amber-500/20",
-    verified: "bg-sky-500/10 text-sky-700 ring-sky-500/20",
-    approved: "bg-emerald-500/10 text-emerald-700 ring-emerald-500/20",
-    matching: "bg-violet-500/10 text-violet-700 ring-violet-500/20",
-    in_progress: "bg-indigo-500/10 text-indigo-700 ring-indigo-500/20",
-    active: "bg-indigo-500/10 text-indigo-700 ring-indigo-500/20",
-    fulfilled: "bg-emerald-500/10 text-emerald-700 ring-emerald-500/20",
-    contacted: "bg-sky-500/10 text-sky-700 ring-sky-500/20",
-    rejected: "bg-rose-500/10 text-rose-700 ring-rose-500/20",
-    cancelled: "bg-slate-500/10 text-slate-600 ring-slate-500/20",
-    closed: "bg-slate-500/10 text-slate-600 ring-slate-500/20",
-    expired: "bg-slate-500/10 text-slate-600 ring-slate-500/20",
-    suspended: "bg-rose-500/10 text-rose-700 ring-rose-500/20",
-    available: "bg-emerald-500/10 text-emerald-700 ring-emerald-500/20",
-    unavailable: "bg-slate-500/10 text-slate-600 ring-slate-500/20",
+    submitted: "bg-chart-3/10 text-warning ring-warning/20",
+    pending: "bg-chart-3/10 text-warning ring-warning/20",
+    pending_verification: "bg-chart-3/10 text-warning ring-warning/20",
+    verified: "bg-info/10 text-info ring-info/20",
+    approved: "bg-success/10 text-success-deep ring-success/20",
+    matching: "bg-violet/10 text-violet ring-violet/20",
+    in_progress: "bg-indigo/10 text-indigo ring-indigo/20",
+    active: "bg-indigo/10 text-indigo ring-indigo/20",
+    fulfilled: "bg-success/10 text-success-deep ring-success/20",
+    contacted: "bg-info/10 text-info ring-info/20",
+    rejected: "bg-destructive/10 text-destructive ring-destructive/20",
+    cancelled: "bg-muted-foreground/10 text-muted-foreground ring-muted-foreground/20",
+    closed: "bg-muted-foreground/10 text-muted-foreground ring-muted-foreground/20",
+    expired: "bg-muted-foreground/10 text-muted-foreground ring-muted-foreground/20",
+    suspended: "bg-destructive/10 text-destructive ring-destructive/20",
+    available: "bg-success/10 text-success-deep ring-success/20",
+    unavailable: "bg-muted-foreground/10 text-muted-foreground ring-muted-foreground/20",
 };
 
 export const StatusBadge = ({ value }) => {
@@ -151,8 +151,8 @@ export const Td = ({ children, className = "", label, ...props }) => (
 
 const iconButtonTones = {
     default: "border-border bg-card text-muted-foreground hover:border-primary/50 hover:bg-primary/5 hover:text-primary",
-    danger: "border-rose-200 bg-card text-rose-600 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700",
-    success: "border-emerald-200 bg-card text-emerald-600 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700",
+    danger: "border-destructive/25 bg-card text-destructive hover:border-destructive/40 hover:bg-destructive/10 hover:text-destructive",
+    success: "border-success/30 bg-card text-success hover:border-success/40 hover:bg-success-soft hover:text-success-deep",
 };
 
 /** Consistent, accessible icon button for table row actions. */
@@ -178,7 +178,7 @@ export const ActionGroup = ({ children, className = "" }) => (
 
 export const ErrorBanner = ({ message }) =>
     message ? (
-        <div role="alert" className="mb-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+        <div role="alert" className="mb-5 rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-3 text-sm text-destructive">
             {message}
         </div>
     ) : null;

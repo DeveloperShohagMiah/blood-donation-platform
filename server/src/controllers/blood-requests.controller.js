@@ -1,4 +1,10 @@
-import { BloodRequest, RequestAssignment, Notification } from "../models/index.js";
+import {
+  BloodRequest,
+  RequestAssignment,
+  Notification,
+  DonorProfile,
+  DonorResponse,
+} from "../models/index.js";
 import { ROLES, REQUEST_STATUS } from "../constants/index.js";
 import { AppError, asyncHandler, send, pick } from "../utils/http.js";
 import { audit, validateLocation } from "./helpers.js";
@@ -95,29 +101,42 @@ export const getPublicBloodRequests = asyncHandler(async (req, res) => {
     REQUEST_STATUS.IN_PROGRESS,
   ];
 
-  const items = await BloodRequest.find({
-    status: {
-      $in: [
-        REQUEST_STATUS.SUBMITTED,
-        REQUEST_STATUS.PENDING_VERIFICATION,
-        ...verifiedStatuses,
-      ],
-    },
-    expiresAt: { $gt: new Date() },
-  })
-    .select(
-      "patientName bloodGroup urgency units unitsFulfilled hospitalName district upazila union neededAt contactName contactPhone createdAt details status",
-    )
-    .populate("district upazila union", "nameEn nameBn")
-    .sort({ createdAt: -1 })
-    .limit(20)
-    .lean();
+  const [items, respondedIds] = await Promise.all([
+    BloodRequest.find({
+      status: {
+        $in: [
+          REQUEST_STATUS.SUBMITTED,
+          REQUEST_STATUS.PENDING_VERIFICATION,
+          ...verifiedStatuses,
+        ],
+      },
+      expiresAt: { $gt: new Date() },
+    })
+      .select(
+        "patientName bloodGroup urgency units unitsFulfilled hospitalName district upazila union neededAt contactName contactPhone createdAt details status",
+      )
+      .populate("district upazila union", "nameEn nameBn")
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .lean(),
+    (async () => {
+      if (!req.user) return new Set();
+      const profile = await DonorProfile.findOne({ user: req.user._id }).select("_id");
+      if (!profile) return new Set();
+      const responses = await DonorResponse.find({
+        donor: profile._id,
+        response: { $in: ["interested", "accepted"] },
+      }).select("request");
+      return new Set(responses.map((item) => String(item.request)));
+    })(),
+  ]);
 
   const publicItems = items.map((item) => {
     const isVerified = verifiedStatuses.includes(item.status);
     return {
       ...item,
       isVerified,
+      hasResponded: respondedIds.has(String(item._id)),
       contactName: isVerified ? item.contactName : undefined,
       contactPhone: isVerified ? item.contactPhone : undefined,
     };

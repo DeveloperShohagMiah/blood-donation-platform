@@ -1,7 +1,7 @@
 import { Router } from "express";
 import * as controller from "../controllers/blood-requests.controller.js";
 import { admin, volunteerOrStaff } from "./route-guards.js";
-import { protect } from "../middlewares/auth.middleware.js";
+import { optionalAuth, protect } from "../middlewares/auth.middleware.js";
 import { BloodRequest } from "../models/index.js";
 import { deleteOne, updateOne } from "../controllers/adminCrud.controller.js";
 
@@ -10,7 +10,7 @@ const router = Router();
 router.post("/blood-requests", protect, controller.postBloodRequests);
 router.patch("/blood-requests/:id/cancel", protect, controller.patchBloodRequestsByIdCancel);
 router.get("/blood-requests", protect, controller.getBloodRequests);
-router.get("/blood-requests/public", controller.getPublicBloodRequests);
+router.get("/blood-requests/public", optionalAuth, controller.getPublicBloodRequests);
 router.patch(
   "/blood-requests/:id",
   protect,

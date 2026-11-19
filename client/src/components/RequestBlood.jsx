@@ -18,9 +18,9 @@ import Select from "./Select";
 const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
 
 const inputClass =
-    "mt-2 h-12 w-full rounded-xl border border-[#e9e5e2] bg-[#fcfbfa] px-4 text-sm font-medium text-[#172321] outline-none transition placeholder:font-normal placeholder:text-[#a0a9a5] focus:border-[#d45b69] focus:bg-white focus:ring-4 focus:ring-[#dc263a]/[0.07] disabled:cursor-not-allowed disabled:bg-[#f4f2f1] disabled:opacity-60";
-const labelClass = "text-[13px] font-bold text-[#34413b]";
-const errorClass = "mt-1.5 text-xs font-medium text-[#b42336]";
+    "mt-2 h-12 w-full rounded-xl border border-border bg-surface-soft px-4 text-sm font-medium text-foreground outline-none transition placeholder:font-normal placeholder:text-muted-foreground focus:border-primary focus:bg-card focus:ring-4 focus:ring-primary/[0.07] disabled:cursor-not-allowed disabled:bg-surface-soft disabled:opacity-60";
+const labelClass = "text-[13px] font-bold text-foreground";
+const errorClass = "mt-1.5 text-xs font-medium text-destructive";
 const today = () => new Date().toISOString().split("T")[0];
 
 export default function BloodRequestForm({ onSubmit, onCancel, locations = [] }) {
@@ -116,12 +116,12 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
         <section className="relative isolate overflow-hidden px-4 py-12 sm:px-6 sm:py-16">
             <div
                 aria-hidden="true"
-                className="pointer-events-none absolute -right-40 -top-40 -z-10 size-[500px] rounded-full bg-[radial-gradient(circle,rgba(220,38,58,0.10)_0%,transparent_68%)]"
+                className="pointer-events-none absolute -right-40 -top-40 -z-10 size-[500px] rounded-full bg-primary/10 blur-3xl"
             />
 
             <div className="mx-auto max-w-5xl">
                 <header className="mb-8 max-w-2xl">
-                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-2 text-xs font-bold text-[#68746e] shadow-sm">
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-2 text-xs font-bold text-muted-foreground shadow-sm">
                         <span className="size-2 rounded-full bg-primary" />
                         {t("bloodRequest.form.eyebrow", "HELP SOMEONE IN NEED")}
                     </div>
@@ -139,7 +139,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                 <form
                     noValidate
                     onSubmit={handleSubmit(submit)}
-                    className="overflow-hidden rounded-[28px] border border-primary/10 bg-linear-to-tr from-primary/2 to-white shadow-xl shadow-primary/10"
+                    className="overflow-hidden rounded-[28px] border border-primary/10 bg-linear-to-tr from-primary/2 to-card shadow-xl shadow-primary/10"
                 >
                     <div className="grid lg:grid-cols-[minmax(0,1fr)_280px]">
                         <div className="p-5 sm:p-8 lg:p-9">
@@ -271,9 +271,9 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                                     className="peer sr-only"
                                                 />
                                                 <span
-                                                    className={`grid h-11 place-items-center rounded-xl border text-sm font-extrabold transition-all peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#c51f35] ${selectedBloodGroup === group
-                                                        ? "border-[#c51f35] bg-[#c51f35] text-white shadow-[0_6px_15px_rgba(197,31,53,0.2)]"
-                                                        : "border-[#eee9e6] bg-[#fcfbfa] text-[#59645f] hover:border-[#e7aab1] hover:bg-[#fff5f5] hover:text-[#c51f35]"
+                                                    className={`grid h-11 place-items-center rounded-xl border text-sm font-extrabold transition-all peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary ${selectedBloodGroup === group
+                                                        ? "border-primary bg-primary text-primary-foreground shadow-md"
+                                                        : "border-border bg-surface-soft text-muted-foreground hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
                                                         }`}
                                                 >
                                                     {group}
@@ -297,10 +297,10 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                             const active = selectedUrgency === option.value;
                                             const activeClass =
                                                 option.value === "critical"
-                                                    ? "border-rose-600 bg-rose-600 text-white shadow-[0_6px_15px_rgba(225,29,72,0.25)]"
+                                                    ? "border-destructive bg-destructive text-primary-foreground shadow-md"
                                                     : option.value === "urgent"
-                                                        ? "border-amber-500 bg-amber-500 text-white shadow-[0_6px_15px_rgba(245,158,11,0.25)]"
-                                                        : "border-emerald-600 bg-emerald-600 text-white shadow-[0_6px_15px_rgba(5,150,105,0.25)]";
+                                                        ? "border-chart-3 bg-chart-3 text-primary-foreground shadow-md"
+                                                        : "border-success bg-success text-primary-foreground shadow-md";
                                             return (
                                                 <label key={option.value} className="cursor-pointer">
                                                     <input
@@ -312,7 +312,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                                         className="peer sr-only"
                                                     />
                                                     <span
-                                                        className={`grid h-11 place-items-center rounded-xl border text-sm font-bold transition-all peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#c51f35] ${active ? activeClass : "border-[#eee9e6] bg-[#fcfbfa] text-[#59645f] hover:border-[#e7aab1]"}`}
+                                                        className={`grid h-11 place-items-center rounded-xl border text-sm font-bold transition-all peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary ${active ? activeClass : "border-border bg-surface-soft text-muted-foreground hover:border-primary/30"}`}
                                                     >
                                                         {option.label}
                                                     </span>
@@ -356,7 +356,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                     <span className="relative block">
                                         <CalendarDays
                                             size={17}
-                                            className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-[#9aa39f]"
+                                            className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground"
                                         />
                                         <input
                                             type="date"
@@ -414,7 +414,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                         })}
                                         rows={2}
                                         maxLength={1000}
-                                        className="mt-2 w-full resize-y rounded-xl border border-[#e9e5e2] bg-[#fcfbfa] px-4 py-3 text-sm leading-6 text-[#172321] outline-none transition placeholder:text-[#a0a9a5] focus:border-[#d45b69] focus:bg-white focus:ring-4 focus:ring-[#dc263a]/[0.07]"
+                                        className="mt-2 w-full resize-y rounded-xl border border-border bg-surface-soft px-4 py-3 text-sm leading-6 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:bg-card focus:ring-4 focus:ring-primary/[0.07]"
                                         placeholder="e.g. Tangail Sadar, Dhaka"
                                         aria-invalid={Boolean(errors.hospitalAddress)}
                                     />
@@ -438,7 +438,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                     <span className="relative block">
                                         <UserRound
                                             size={17}
-                                            className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-[#9aa39f]"
+                                            className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground"
                                         />
                                         <input
                                             {...register("contactName", {
@@ -464,7 +464,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                     <span className="relative block">
                                         <Phone
                                             size={16}
-                                            className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-[#9aa39f]"
+                                            className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground"
                                         />
                                         <input
                                             type="tel"
@@ -487,7 +487,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                 <label className="sm:col-span-2">
                                     <span className={labelClass}>
                                         {t("bloodRequest.form.details", "Additional information")}
-                                        <span className="ml-1 font-medium text-[#9aa39f]">
+                                        <span className="ml-1 font-medium text-muted-foreground">
                                             ({t("bloodRequest.form.optional", "optional")})
                                         </span>
                                     </span>
@@ -500,7 +500,7 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                         })}
                                         rows={4}
                                         maxLength={1000}
-                                        className="mt-2 w-full resize-y rounded-xl border border-[#e9e5e2] bg-[#fcfbfa] px-4 py-3 text-sm leading-6 text-[#172321] outline-none transition placeholder:text-[#a0a9a5] focus:border-[#d45b69] focus:bg-white focus:ring-4 focus:ring-[#dc263a]/[0.07]"
+                                        className="mt-2 w-full resize-y rounded-xl border border-border bg-surface-soft px-4 py-3 text-sm leading-6 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:bg-card focus:ring-4 focus:ring-primary/[0.07]"
                                         placeholder={t("bloodRequest.form.detailsPlaceholder", "Add helpful details for donors (up to 1,000 characters)")}
                                         aria-invalid={Boolean(errors.details)}
                                     />
@@ -509,23 +509,23 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                             </div>
 
                             {errors.root?.server && (
-                                <p role="alert" className="mt-5 rounded-xl border border-[#f2c9cd] bg-[#fff4f4] px-4 py-3 text-sm font-medium text-[#a51f32]">
+                                <p role="alert" className="mt-5 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm font-medium text-destructive">
                                     {errors.root.server.message}
                                 </p>
                             )}
 
-                            <div className="mt-8 flex flex-col-reverse gap-3 border-t border-[#f0ece9] pt-6 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="mt-8 flex flex-col-reverse gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
                                 <button
                                     type="button"
                                     onClick={onCancel}
-                                    className="inline-flex h-12 items-center justify-center rounded-xl px-4 text-sm font-bold text-[#737f79] transition hover:bg-[#f7f5f3] hover:text-[#172321]"
+                                    className="inline-flex h-12 items-center justify-center rounded-xl px-4 text-sm font-bold text-muted-foreground transition hover:bg-surface-soft hover:text-foreground"
                                 >
                                     {t("bloodRequest.form.cancel", "Cancel")}
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-primary to-primary/80 px-6 text-sm font-extrabold text-white shadow-[0_9px_22px_rgba(185,31,53,0.22)] transition hover:-translate-y-0.5 hover:shadow-[0_13px_26px_rgba(185,31,53,0.27)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c51f35] disabled:cursor-not-allowed disabled:opacity-60"
+                                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-primary to-primary/80 px-6 text-sm font-extrabold text-primary-foreground shadow-md transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60"
                                 >
                                     {isSubmitting
                                         ? t("bloodRequest.form.submitting", "Submitting...")
@@ -552,25 +552,25 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
                                     t("bloodRequest.form.tip3", "Use a phone number that donors can reach."),
                                 ].map((tip) => (
                                     <div key={tip} className="flex gap-3">
-                                        <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-[#eaf5ef] text-[#277653]">
+                                        <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-success-soft text-success-deep">
                                             <CheckCircle2 size={13} />
                                         </span>
-                                        <p className="text-xs leading-5 text-[#68746e]">{tip}</p>
+                                        <p className="text-xs leading-5 text-muted-foreground">{tip}</p>
                                     </div>
                                 ))}
                             </div>
-                            <div className="mt-8 rounded-2xl border border-border bg-white p-4">
-                                <div className="flex items-center gap-2 text-[#277653]">
+                            <div className="mt-8 rounded-2xl border border-border bg-card p-4">
+                                <div className="flex items-center gap-2 text-success-deep">
                                     <ShieldCheck size={17} />
                                     <span className="text-xs font-extrabold">
                                         {t("bloodRequest.form.privacyTitle", "Protect personal information")}
                                     </span>
                                 </div>
-                                <p className="mt-2 text-xs leading-5 text-[#89948e]">
+                                <p className="mt-2 text-xs leading-5 text-muted-foreground">
                                     {t("bloodRequest.form.privacyText", "Only share contact details you are comfortable making available to potential donors.")}
                                 </p>
                             </div>
-                            <div className="mt-5 flex items-center gap-2 text-[11px] font-semibold text-[#929b96]">
+                            <div className="mt-5 flex items-center gap-2 text-[11px] font-semibold text-muted-foreground">
                                 <Clock3 size={14} />
                                 {t("bloodRequest.form.quickNote", "It only takes a few minutes")}
                             </div>
@@ -585,19 +585,19 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [] })
 function SectionHeading({ icon, title, subtitle }) {
     return (
         <div className="mb-6 flex items-center gap-3">
-            <span className="grid size-10 place-items-center rounded-2xl bg-[#fff0f1] text-[#c51f35]">
+            <span className="grid size-10 place-items-center rounded-2xl bg-primary/5 text-primary">
                 {icon}
             </span>
             <div>
-                <h2 className="text-base font-extrabold text-[#172321]">{title}</h2>
-                <p className="mt-0.5 text-xs text-[#929b96]">{subtitle}</p>
+                <h2 className="text-base font-extrabold text-foreground">{title}</h2>
+                <p className="mt-0.5 text-xs text-muted-foreground">{subtitle}</p>
             </div>
         </div>
     );
 }
 
 function Divider() {
-    return <div className="my-8 border-t border-[#f0ece9]" />;
+    return <div className="my-8 border-t border-border" />;
 }
 
 function FieldError({ error }) {

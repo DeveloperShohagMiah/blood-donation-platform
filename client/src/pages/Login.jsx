@@ -79,14 +79,14 @@ const getSafeRedirect = (from) => {
 
 const getInputClass = (hasError) =>
     [
-        "h-13 w-full rounded-xl border bg-white pl-12 pr-4",
-        "text-sm font-medium text-slate-900 outline-none",
-        "placeholder:font-normal placeholder:text-slate-400",
+        "h-13 w-full rounded-xl border bg-card pl-12 pr-4",
+        "text-sm font-medium text-foreground outline-none",
+        "placeholder:font-normal placeholder:text-muted-foreground",
         "transition duration-200",
         "focus:ring-4",
         hasError
             ? "border-primary/40 focus:border-primary/90 focus:ring-primary/90/10"
-            : "border-slate-200 hover:border-slate-300 focus:border-primary/90 focus:ring-primary/90/10",
+            : "border-border hover:border-input focus:border-primary/90 focus:ring-primary/90/10",
     ].join(" ");
 
 // --------------------------------------------------
@@ -95,13 +95,13 @@ const getInputClass = (hasError) =>
 
 const FeatureItem = ({ icon: Icon, title, description }) => (
     <div className="flex items-start gap-4">
-        <div className="grid size-11 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/10 text-primary">
+        <div className="grid size-11 shrink-0 place-items-center rounded-xl border border-background/10 bg-card/10 text-primary">
             <Icon size={20} />
         </div>
 
         <div>
-            <h3 className="text-sm font-semibold text-white">{title}</h3>
-            <p className="mt-1 text-sm leading-relaxed text-slate-400">
+            <h3 className="text-sm font-semibold text-primary-foreground">{title}</h3>
+            <p className="mt-1 text-sm leading-relaxed text-background/70">
                 {description}
             </p>
         </div>
@@ -312,24 +312,24 @@ const Login = ({ onSuccess }) => {
     ];
 
     return (
-        <main className="relative min-h-[calc(100vh-76px)] overflow-hidden bg-[#F8F9FC] lg:grid lg:grid-cols-2">
+        <main className="relative min-h-[calc(100vh-76px)] overflow-hidden bg-surface-alt lg:grid lg:grid-cols-2">
 
             {/* ------------------------------------------- */}
             {/* Left brand panel */}
             {/* ------------------------------------------- */}
 
-            <section className="relative hidden overflow-hidden bg-[#101827] px-10 py-12 text-white lg:flex lg:flex-col lg:justify-between xl:px-16 xl:py-14">
+            <section className="relative hidden overflow-hidden bg-foreground px-10 py-12 text-primary-foreground lg:flex lg:flex-col lg:justify-between xl:px-16 xl:py-14">
 
                 {/* Background decoration */}
                 <div className="pointer-events-none absolute -right-40 -top-40 size-[520px] rounded-full bg-primary/90/10 blur-3xl" />
-                <div className="pointer-events-none absolute -bottom-48 -left-40 size-[520px] rounded-full bg-rose-500/10 blur-3xl" />
+                <div className="pointer-events-none absolute -bottom-48 -left-40 size-[520px] rounded-full bg-destructive/10 blur-3xl" />
 
                 <div className="relative z-10">
 
                     {/* Brand */}
                     <Link to="/" className="inline-flex items-center gap-3">
                         <span className="grid size-12 place-items-center rounded-2xl bg-primary shadow-lg shadow-primary/25">
-                            <Droplets size={25} className="text-white" />
+                            <Droplets size={25} className="text-primary-foreground" />
                         </span>
 
                         <span className="text-xl font-extrabold tracking-tight">
@@ -351,7 +351,7 @@ const Login = ({ onSuccess }) => {
                             </span>
                         </h2>
 
-                        <p className="mt-6 max-w-md text-base leading-8 text-slate-400">
+                        <p className="mt-6 max-w-md text-base leading-8 text-background/70">
                             {t(
                                 "login.heroText",
                                 "Log in to manage your donor profile, update your availability and stay connected with people who need blood."
@@ -367,16 +367,16 @@ const Login = ({ onSuccess }) => {
                 </div>
 
                 {/* Bottom information */}
-                <div className="relative z-10 flex items-center justify-between border-t border-white/10 pt-6">
-                    <p className="text-sm text-slate-400">
+                <div className="relative z-10 flex items-center justify-between border-t border-background/10 pt-6">
+                    <p className="text-sm text-background/70">
                         {t(
                             "login.voluntary",
                             "Blood donation is always voluntary and free."
                         )}
                     </p>
 
-                    <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
-                        <ShieldCheck size={16} className="text-emerald-400" />
+                    <div className="flex items-center gap-2 text-xs font-medium text-background/70">
+                        <ShieldCheck size={16} className="text-success" />
                         {t("login.secure", "Secure access")}
                     </div>
                 </div>
@@ -393,11 +393,11 @@ const Login = ({ onSuccess }) => {
                     to="/"
                     className="absolute top-6 left-5 inline-flex items-center gap-2.5 lg:hidden"
                 >
-                    <span className="grid size-10 place-items-center rounded-xl bg-primary text-white shadow-lg shadow-primary/20">
+                    <span className="grid size-10 place-items-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
                         <Droplets size={21} />
                     </span>
 
-                    <span className="text-lg font-extrabold tracking-tight text-slate-900">
+                    <span className="text-lg font-extrabold tracking-tight text-foreground">
                         Blood <span className="text-primary">{t("text.Connect")}</span>
                     </span>
                 </Link>
@@ -407,7 +407,7 @@ const Login = ({ onSuccess }) => {
                     {/* Back link */}
                     <Link
                         to="/"
-                        className="mb-8 hidden w-fit items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-primary lg:inline-flex"
+                        className="mb-8 hidden w-fit items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-primary lg:inline-flex"
                     >
                         <ArrowLeft size={16} />
                         {t("login.backHome", "Back to home")}
@@ -419,11 +419,11 @@ const Login = ({ onSuccess }) => {
                             <LockKeyhole size={25} />
                         </div>
 
-                        <h1 className="text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">
+                        <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
                             {t("login.title", "Welcome back")}
                         </h1>
 
-                        <p className="mt-3 text-sm leading-6 text-slate-500 sm:text-base">
+                        <p className="mt-3 text-sm leading-6 text-muted-foreground sm:text-base">
                             {t(
                                 "login.subtitle",
                                 "Sign in to your Blood Connect account using your registered phone number or email."
@@ -433,7 +433,7 @@ const Login = ({ onSuccess }) => {
 
                     {/* Session expired */}
                     {sessionExpired && (
-                        <div className="mt-6 flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm leading-6 text-blue-800">
+                        <div className="mt-6 flex items-start gap-3 rounded-xl border border-info/15 bg-info/10 p-4 text-sm leading-6 text-info">
                             <Info size={18} className="mt-0.5 shrink-0" />
                             {t(
                                 "login.expired",
@@ -445,7 +445,7 @@ const Login = ({ onSuccess }) => {
                     {/* Server error */}
                     <div aria-live="assertive">
                         {serverError && (
-                            <div className="mt-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-700">
+                            <div className="mt-6 flex items-start gap-3 rounded-xl border border-destructive/25 bg-destructive/10 p-4 text-sm leading-6 text-destructive">
                                 <AlertCircle size={19} className="mt-0.5 shrink-0" />
                                 <span>{serverError}</span>
                             </div>
@@ -463,7 +463,7 @@ const Login = ({ onSuccess }) => {
                         <div>
                             <label
                                 htmlFor="identifier"
-                                className="mb-2 block text-sm font-semibold text-slate-800"
+                                className="mb-2 block text-sm font-semibold text-foreground"
                             >
                                 {t("login.identifier", "Phone number or email")}
                             </label>
@@ -471,7 +471,7 @@ const Login = ({ onSuccess }) => {
                             <div className="relative">
                                 <UserRound
                                     size={19}
-                                    className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"
+                                    className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground"
                                 />
 
                                 <input
@@ -520,14 +520,14 @@ const Login = ({ onSuccess }) => {
                             <div className="mb-2 flex items-center justify-between gap-3">
                                 <label
                                     htmlFor="password"
-                                    className="text-sm font-semibold text-slate-800"
+                                    className="text-sm font-semibold text-foreground"
                                 >
                                     {t("login.password", "Password")}
                                 </label>
 
                                 <Link
                                     to="/forgot-password"
-                                    className="text-xs font-semibold text-primary transition hover:text-red-700 hover:underline sm:text-sm"
+                                    className="text-xs font-semibold text-primary transition hover:text-destructive hover:underline sm:text-sm"
                                 >
                                     {t("login.forgot", "Forgot password?")}
                                 </Link>
@@ -536,7 +536,7 @@ const Login = ({ onSuccess }) => {
                             <div className="relative">
                                 <LockKeyhole
                                     size={19}
-                                    className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"
+                                    className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground"
                                 />
 
                                 <input
@@ -574,7 +574,7 @@ const Login = ({ onSuccess }) => {
                                         showPassword ? "Hide password" : "Show password"
                                     }
                                     aria-pressed={showPassword}
-                                    className="absolute top-1/2 right-2 grid size-9 -translate-y-1/2 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/90/30"
+                                    className="absolute top-1/2 right-2 grid size-9 -translate-y-1/2 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/90/30"
                                 >
                                     {showPassword ? (
                                         <EyeOff size={18} />
@@ -591,7 +591,7 @@ const Login = ({ onSuccess }) => {
                             {capsLock && !errors.password && (
                                 <p
                                     id="caps-warning"
-                                    className="mt-2 flex items-center gap-2 text-xs font-medium text-amber-700"
+                                    className="mt-2 flex items-center gap-2 text-xs font-medium text-warning"
                                 >
                                     <Info size={14} />
                                     {t("login.caps", "Caps Lock is on.")}
@@ -601,10 +601,10 @@ const Login = ({ onSuccess }) => {
 
                         {/* Remember me */}
                         <div className="flex items-center justify-between gap-3 pt-1">
-                            <label className="inline-flex cursor-pointer items-center gap-2.5 text-sm text-slate-600">
+                            <label className="inline-flex cursor-pointer items-center gap-2.5 text-sm text-muted-foreground">
                                 <input
                                     type="checkbox"
-                                    className="size-4 cursor-pointer rounded border-slate-300 accent-primary focus:ring-primary/90"
+                                    className="size-4 cursor-pointer rounded border-input accent-primary focus:ring-primary/90"
                                     {...register("remember")}
                                 />
 
@@ -612,7 +612,7 @@ const Login = ({ onSuccess }) => {
                             </label>
 
                             {rememberMe && (
-                                <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">
+                                <span className="inline-flex items-center gap-1 text-xs font-medium text-success">
                                     <CheckCircle2 size={14} />
                                     {t("login.rememberOn", "Enabled")}
                                 </span>
@@ -644,8 +644,8 @@ const Login = ({ onSuccess }) => {
                     </form>
 
                     {/* Register */}
-                    <div className="mt-8 border-t border-slate-200 pt-7 text-center">
-                        <p className="text-sm text-slate-500">
+                    <div className="mt-8 border-t border-border pt-7 text-center">
+                        <p className="text-sm text-muted-foreground">
                             {t("login.noAccount", "New to Blood Connect?")}{" "}
                             <Link
                                 to="/become-donor"
@@ -657,7 +657,7 @@ const Login = ({ onSuccess }) => {
                     </div>
 
                     {/* Trust note */}
-                    <div className="mt-7 flex items-center justify-center gap-2 text-xs text-slate-400">
+                    <div className="mt-7 flex items-center justify-center gap-2 text-xs text-muted-foreground">
                         <ShieldCheck size={15} />
                         {t(
                             "login.privacy",

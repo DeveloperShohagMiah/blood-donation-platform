@@ -180,16 +180,16 @@ const DashboardHome = () => {
             <ErrorBanner message={error} />
 
             {showProfileWarning && (
-                <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-warning/30 bg-warning/10 p-5 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <p className="font-bold text-amber-900">{t("text.Complete your donor profile")}</p>
-                        <p className="mt-1 text-sm text-amber-800">
+                        <p className="font-bold text-warning">{t("text.Complete your donor profile")}</p>
+                        <p className="mt-1 text-sm text-warning">
                             Add your blood group and location so people nearby can find you.
                         </p>
                     </div>
                     <Link
                         to="/dashboard/profile"
-                        className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-amber-600 px-4 text-sm font-bold text-white transition hover:bg-amber-700"
+                        className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-warning px-4 text-sm font-bold text-primary-foreground transition hover:bg-warning"
                     >
                         Set up profile <ArrowRight size={15} />
                     </Link>

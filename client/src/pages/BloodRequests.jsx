@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
     ArrowRight,
-    CheckCircle2,
     Clock,
     Droplets,
     MapPin,
@@ -12,11 +11,12 @@ import {
     ShieldCheck,
 } from "lucide-react";
 import { apiFetch } from "../utils/api";
+import DonateButton from "../components/DonateButton";
 
 const urgencyStyles = {
-    critical: { dot: "bg-rose-500", pill: "bg-rose-50 text-rose-700 ring-rose-200", bar: "bg-rose-500", label: "Critical" },
-    urgent: { dot: "bg-amber-500", pill: "bg-amber-50 text-amber-800 ring-amber-200", bar: "bg-amber-500", label: "Urgent" },
-    normal: { dot: "bg-emerald-500", pill: "bg-emerald-50 text-emerald-700 ring-emerald-200", bar: "bg-emerald-500", label: "Normal" },
+    critical: { dot: "bg-destructive", pill: "bg-destructive/10 text-destructive ring-destructive/25", bar: "bg-destructive", label: "Critical" },
+    urgent: { dot: "bg-chart-3", pill: "bg-warning/10 text-warning ring-warning/30", bar: "bg-chart-3", label: "Urgent" },
+    normal: { dot: "bg-success", pill: "bg-success-soft text-success-deep ring-success/30", bar: "bg-success", label: "Normal" },
 };
 
 const levelOf = (value) => {
@@ -71,9 +71,9 @@ const BloodRequests = () => {
     );
 
     return (
-        <main className="min-h-screen bg-[#F8FAF9]">
+        <main className="min-h-screen bg-surface-alt">
             {/* Hero */}
-            <section className="relative isolate overflow-hidden bg-gradient-to-br text-center from-[#FFF3F3] via-white to-[#FFF8F5] py-16 sm:py-20">
+            <section className="relative isolate overflow-hidden bg-gradient-to-br text-center from-primary/5 via-card to-primary/5 py-16 sm:py-20">
                 <div className="pointer-events-none absolute -top-24 -right-20 size-80 rounded-full bg-primary/10 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-32 -left-20 size-80 rounded-full bg-accent/40 blur-3xl" />
                 <div className="container relative max-w-7xl mx-auto flex flex-col items-center justify-center gap-3 px-4">
@@ -129,12 +129,12 @@ const BloodRequests = () => {
                                 onClick={() => setUrgency(tab.key)}
                                 aria-pressed={urgency === tab.key}
                                 className={`inline-flex h-9 items-center gap-2 rounded-full border px-4 text-xs font-bold transition ${urgency === tab.key
-                                    ? "border-primary bg-primary text-white shadow-md shadow-primary/25"
+                                    ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
                                     : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-primary"
                                     }`}
                             >
                                 {tab.label}
-                                <span className={`grid min-w-5 place-items-center rounded-full px-1.5 text-[10px] ${urgency === tab.key ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"}`}>
+                                <span className={`grid min-w-5 place-items-center rounded-full px-1.5 text-[10px] ${urgency === tab.key ? "bg-card/20 text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
                                     {counts[tab.key]}
                                 </span>
                             </button>
@@ -154,7 +154,7 @@ const BloodRequests = () => {
                 </div>
 
                 {error && (
-                    <p className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                    <p className="mb-6 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning">
                         Requests could not be loaded right now ({error}).
                     </p>
                 )}
@@ -195,7 +195,7 @@ const BloodRequests = () => {
                                     <div className={`h-1 w-full ${style.bar}`} />
                                     <div className="flex flex-1 flex-col p-5">
                                         <div className="flex items-start justify-between gap-3">
-                                            <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-primary to-primary/80 text-xl font-extrabold text-white shadow-lg shadow-primary/25">
+                                            <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-primary to-primary/80 text-xl font-extrabold text-primary-foreground shadow-lg shadow-primary/25">
                                                 {item.bloodGroup}
                                             </span>
                                             <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ring-1 ${style.pill}`}>
@@ -244,12 +244,11 @@ const BloodRequests = () => {
                                         <div className="mt-auto flex gap-2 pt-5">
                                             {item.isVerified ? (
                                                 <>
-                                                    <Link
-                                                        to="/dashboard/matching"
-                                                        className="inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary px-4 text-xs font-bold text-white transition hover:brightness-95"
-                                                    >
-                                                        <CheckCircle2 size={14} /> I can donate
-                                                    </Link>
+                                                    <DonateButton
+                                                        requestId={item._id}
+                                                        hasResponded={item.hasResponded}
+                                                        compact
+                                                    />
                                                     {item.contactPhone && (
                                                         <a
                                                             href={`tel:${item.contactPhone}`}

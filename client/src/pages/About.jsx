@@ -36,11 +36,11 @@ const About = () => {
         <main className="overflow-hidden bg-background text-foreground">
             {/* Hero */}
             <section className="relative isolate">
-                <div className="absolute inset-0 -z-10 bg-gradient-to-br from-red-50 via-background to-rose-100/60 dark:from-red-950/20 dark:via-background dark:to-rose-950/10" />
+                <div className="absolute inset-0 -z-10 bg-gradient-to-br from-destructive/10 via-background to-destructive/15 dark:from-destructive/20 dark:via-background dark:to-destructive/20" />
 
                 <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:py-28">
                     <div>
-                        <span className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
+                        <span className="inline-flex items-center gap-2 rounded-full border border-destructive/25 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
                             <Heart size={15} />
                             {t("about.badge", "About Blood Connect")}
                         </span>
@@ -62,7 +62,7 @@ const About = () => {
                         <div className="mt-9 flex flex-wrap gap-4">
                             <Link
                                 to="/become-donor"
-                                className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-semibold text-white shadow-lg shadow-red-600/20 transition hover:bg-red-700"
+                                className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-semibold text-primary-foreground shadow-lg shadow-destructive/20 transition hover:bg-destructive"
                             >
                                 {t("about.becomeDonor", "Become a Donor")}
                                 <ArrowRight size={18} />
@@ -78,23 +78,23 @@ const About = () => {
                     </div>
 
                     <div className="relative">
-                        <div className="absolute -inset-4 rounded-[2rem] bg-red-500/10 blur-2xl" />
+                        <div className="absolute -inset-4 rounded-[2rem] bg-destructive/10 blur-2xl" />
                         <img
                             src="https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=1000&q=85"
                             alt={t("about.imageAlt", "Blood donation")}
                             className="relative aspect-[5/4] w-full rounded-[2rem] object-cover shadow-2xl"
                         />
 
-                        <div className="absolute -bottom-5 left-5 right-5 rounded-2xl border border-white/60 bg-muted/50/95 p-5 shadow-xl backdrop-blur dark:border-white/10 dark:bg-zinc-900/95 sm:left-auto sm:right-5 sm:w-64">
+                        <div className="absolute -bottom-5 left-5 right-5 rounded-2xl border border-background/60 bg-muted/50/95 p-5 shadow-xl backdrop-blur dark:border-background/10 dark:bg-foreground/95 sm:left-auto sm:right-5 sm:w-64">
                             <div className="flex items-center gap-3">
                                 <div className="rounded-xl bg-primary/10 p-3 text-primary">
                                     <Droplet size={24} />
                                 </div>
                                 <div>
-                                    <p className="font-bold text-zinc-900 dark:text-white">
+                                    <p className="font-bold text-foreground dark:text-primary-foreground">
                                         {t("about.everyDrop", "Every Drop Matters")}
                                     </p>
-                                    <p className="text-sm text-zinc-500">
+                                    <p className="text-sm text-muted-foreground">
                                         {t("about.giveHope", "Give blood. Give hope.")}
                                     </p>
                                 </div>
@@ -134,7 +134,7 @@ const About = () => {
                     {missionItems.map(({ key, icon: Icon }) => (
                         <div
                             key={key}
-                            className="rounded-2xl bg-linear-to-b from-primary/1 to-white p-5 border border-primary/10 shadow-xs hover:shadow-md transition-shadow sm:p-6"
+                            className="rounded-2xl bg-linear-to-b from-primary/1 to-card p-5 border border-primary/10 shadow-xs hover:shadow-md transition-shadow sm:p-6"
                         >
                             <div className="mb-6 inline-flex rounded-2xl bg-primary/5 p-4 text-primary dark:bg-primary/20">
                                 <Icon />
@@ -166,7 +166,7 @@ const About = () => {
                     {valueItems.map(({ key, icon: Icon }) => (
                         <div
                             key={key}
-                            className="rounded-2xl bg-linear-to-b from-primary/2 to-white p-5 border border-primary/10 shadow-xs hover:shadow-md transition-shadow sm:p-6"
+                            className="rounded-2xl bg-linear-to-b from-primary/2 to-card p-5 border border-primary/10 shadow-xs hover:shadow-md transition-shadow sm:p-6"
                         >
                             <div className="mb-5 inline-flex rounded-xl bg-primary/10 p-3 text-primary">
                                 <Icon />
@@ -183,12 +183,12 @@ const About = () => {
             {/* Community CTA */}
             <section className="bg-primary/3">
                 <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
-                    <div className="flex flex-col items-start gap-6 rounded-3xl bg-primary p-8 text-white sm:p-12 md:flex-row md:items-center md:justify-between">
+                    <div className="flex flex-col items-start gap-6 rounded-3xl bg-primary p-8 text-primary-foreground sm:p-12 md:flex-row md:items-center md:justify-between">
                         <div>
                             <h2 className="text-3xl font-bold">
                                 {t("about.ctaTitle", "Be Part of Something Meaningful")}
                             </h2>
-                            <p className="mt-3 max-w-2xl leading-7 text-red-100">
+                            <p className="mt-3 max-w-2xl leading-7 text-primary-foreground/85">
                                 {t(
                                     "about.ctaText",
                                     "Your willingness to donate blood can make a real difference. Join our community and help someone find hope."
@@ -198,7 +198,7 @@ const About = () => {
 
                         <Link
                             to="/become-donor"
-                            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-6 py-3.5 font-bold text-primary transition"
+                            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-card px-6 py-3.5 font-bold text-primary transition"
                         >
                             {t("about.join", "Join Our Community")}
                             <ArrowRight size={18} />
@@ -223,7 +223,7 @@ const About = () => {
                         {stepItems.map(({ number, key }) => (
                             <div
                                 key={number}
-                                className="flex flex-col justify-between rounded-2xl bg-linear-to-b from-primary/2 to-white p-5 border border-primary/10 shadow-xs hover:shadow-md transition-shadow sm:p-6"
+                                className="flex flex-col justify-between rounded-2xl bg-linear-to-b from-primary/2 to-card p-5 border border-primary/10 shadow-xs hover:shadow-md transition-shadow sm:p-6"
                             >
                                 <span className="text-4xl font-black text-primary/20">{number}</span>
                                 <h3 className="mt-5 text-xl font-bold">{t(`about.steps.${key}.title`)}</h3>

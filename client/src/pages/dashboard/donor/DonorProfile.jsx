@@ -24,13 +24,13 @@ const inputClass = (hasError) =>
     [
         "h-11 w-full rounded-xl border bg-background px-3.5 text-sm text-foreground outline-none transition focus:ring-4 disabled:cursor-not-allowed disabled:bg-muted",
         hasError
-            ? "border-rose-400 focus:border-rose-400 focus:ring-rose-500/10"
+            ? "border-destructive focus:border-destructive focus:ring-destructive/10"
             : "border-border focus:border-primary focus:ring-primary/10",
     ].join(" ");
 
 const FieldError = ({ message }) =>
     message ? (
-        <p role="alert" className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-rose-600">
+        <p role="alert" className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-destructive">
             <AlertCircle size={13} /> {message}
         </p>
     ) : null;
@@ -138,7 +138,7 @@ const DonorProfile = () => {
             />
             <ErrorBanner message={error} />
             {message && (
-                <div className="mb-5 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                <div className="mb-5 flex items-center gap-2 rounded-xl border border-success/30 bg-success-soft px-4 py-3 text-sm font-medium text-success-deep">
                     <CheckCircle2 size={17} /> {message}
                 </div>
             )}
@@ -160,7 +160,7 @@ const DonorProfile = () => {
                                         onClick={() => setValue("bloodGroup", group, { shouldValidate: true })}
                                         className={`h-10 rounded-xl border text-sm font-extrabold transition ${
                                             selectedGroup === group
-                                                ? "border-primary bg-primary text-white shadow-md shadow-primary/20"
+                                                ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/20"
                                                 : "border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-primary"
                                         }`}
                                     >
@@ -355,7 +355,7 @@ const DonorProfile = () => {
                 <button
                     type="submit"
                     disabled={isSubmitting || loading}
-                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-bold text-primary-foreground shadow-md shadow-primary/25 transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     <Save size={17} />
                     {isSubmitting ? "Saving…" : "Save profile"}

@@ -40,22 +40,22 @@ const inputClass = (hasError) =>
     [
         "h-11 w-full rounded-xl border bg-background px-3.5 text-sm text-foreground outline-none transition focus:ring-4",
         hasError
-            ? "border-rose-400 focus:border-rose-400 focus:ring-rose-500/10"
+            ? "border-destructive focus:border-destructive focus:ring-destructive/10"
             : "border-border focus:border-primary focus:ring-primary/10",
     ].join(" ");
 
 const FieldError = ({ message }) =>
     message ? (
-        <p role="alert" className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-rose-600">
+        <p role="alert" className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-destructive">
             <AlertCircle size={13} /> {message}
         </p>
     ) : null;
 
 const statusStyles = {
-    published: "bg-emerald-500/15 text-emerald-700 ring-emerald-500/25",
-    draft: "bg-slate-500/10 text-slate-600 ring-slate-500/20",
-    cancelled: "bg-rose-500/10 text-rose-700 ring-rose-500/20",
-    completed: "bg-sky-500/10 text-sky-700 ring-sky-500/20",
+    published: "bg-success/15 text-success-deep ring-success/25",
+    draft: "bg-muted-foreground/10 text-muted-foreground ring-muted-foreground/20",
+    cancelled: "bg-destructive/10 text-destructive ring-destructive/20",
+    completed: "bg-info/10 text-info ring-info/20",
 };
 
 const StatusPill = ({ status }) => (
@@ -182,7 +182,7 @@ const Campaigns = () => {
                     <button
                         type="button"
                         onClick={openCreate}
-                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-hover px-4 text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:brightness-105"
+                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-hover px-4 text-sm font-bold text-primary-foreground shadow-md shadow-primary/25 transition hover:brightness-105"
                     >
                         <Plus size={16} /> New campaign
                     </button>
@@ -197,7 +197,7 @@ const Campaigns = () => {
 
             <ErrorBanner message={error || actionError} />
             {notice && (
-                <div className="mb-5 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                <div className="mb-5 flex items-center gap-2 rounded-xl border border-success/30 bg-success-soft px-4 py-3 text-sm font-medium text-success-deep">
                     <Check size={17} /> {notice}
                 </div>
             )}
@@ -208,7 +208,7 @@ const Campaigns = () => {
                     title="No campaigns yet"
                     text="Create a campaign to promote an upcoming blood drive."
                     action={
-                        <button type="button" onClick={openCreate} className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-white">
+                        <button type="button" onClick={openCreate} className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground">
                             <Plus size={15} /> New campaign
                         </button>
                     }
@@ -227,16 +227,16 @@ const Campaigns = () => {
                                     className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/10"
                                 >
                                     {/* Premium header band */}
-                                    <div className="relative h-32 overflow-hidden bg-gradient-to-br from-[#7F1D1D] via-primary to-[#E11D48]">
-                                        <div className="absolute -top-10 -right-8 size-40 rounded-full border-[18px] border-white/10" />
-                                        <div className="absolute -bottom-16 -left-8 size-40 rounded-full border-[18px] border-white/10" />
-                                        <div className="absolute top-4 left-5 flex size-12 items-center justify-center rounded-2xl bg-white/15 text-white backdrop-blur-md ring-1 ring-white/20">
+                                    <div className="relative h-32 overflow-hidden bg-gradient-to-br from-brand-deep via-primary to-primary">
+                                        <div className="absolute -top-10 -right-8 size-40 rounded-full border-[18px] border-background/10" />
+                                        <div className="absolute -bottom-16 -left-8 size-40 rounded-full border-[18px] border-background/10" />
+                                        <div className="absolute top-4 left-5 flex size-12 items-center justify-center rounded-2xl bg-card/15 text-primary-foreground backdrop-blur-md ring-1 ring-background/20">
                                             <Megaphone size={22} />
                                         </div>
                                         <div className="absolute top-4 right-5">
                                             <StatusPill status={item.status} />
                                         </div>
-                                        <div className="absolute bottom-4 left-5 flex items-center gap-2 rounded-xl bg-black/20 px-3 py-1.5 text-white backdrop-blur-md">
+                                        <div className="absolute bottom-4 left-5 flex items-center gap-2 rounded-xl bg-overlay-soft px-3 py-1.5 text-primary-foreground backdrop-blur-md">
                                             <CalendarDays size={14} />
                                             <span className="text-xs font-bold">
                                                 {Number.isNaN(start.getTime())
@@ -296,7 +296,7 @@ const Campaigns = () => {
                                                 type="button"
                                                 title="Delete campaign"
                                                 onClick={() => setConfirmDelete(item)}
-                                                className="grid size-9 place-items-center rounded-lg border border-rose-200 text-rose-600 transition hover:bg-rose-50"
+                                                className="grid size-9 place-items-center rounded-lg border border-destructive/25 text-destructive transition hover:bg-destructive/10"
                                             >
                                                 <Trash2 size={15} />
                                             </button>
@@ -318,7 +318,7 @@ const Campaigns = () => {
 
             {/* Create / edit modal */}
             {editing && (
-                <div className="fixed inset-0 z-[70] grid place-items-center bg-black/50 p-4 backdrop-blur-sm" onClick={closeForm}>
+                <div className="fixed inset-0 z-[70] grid place-items-center bg-overlay p-4 backdrop-blur-sm" onClick={closeForm}>
                     <form
                         onSubmit={handleSubmit(save)}
                         onClick={(e) => e.stopPropagation()}
@@ -427,7 +427,7 @@ const Campaigns = () => {
                         </div>
 
                         {errors.root?.server && (
-                            <p role="alert" className="mt-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">
+                            <p role="alert" className="mt-5 rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive">
                                 {errors.root.server.message}
                             </p>
                         )}
@@ -436,7 +436,7 @@ const Campaigns = () => {
                             <button
                                 type="submit"
                                 disabled={isSubmitting || busy}
-                                className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-white disabled:opacity-60"
+                                className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground disabled:opacity-60"
                             >
                                 {isSubmitting || busy
                                     ? "Saving…"
@@ -452,11 +452,11 @@ const Campaigns = () => {
 
             {/* Read-only detail modal */}
             {viewing && (
-                <div className="fixed inset-0 z-[70] grid place-items-center bg-black/50 p-4 backdrop-blur-sm" onClick={() => setViewing(null)}>
+                <div className="fixed inset-0 z-[70] grid place-items-center bg-overlay p-4 backdrop-blur-sm" onClick={() => setViewing(null)}>
                     <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
-                        <div className="relative h-28 bg-gradient-to-br from-[#7F1D1D] via-primary to-[#E11D48]">
-                            <div className="absolute -top-8 -right-6 size-32 rounded-full border-4 border-white/10" />
-                            <div className="absolute bottom-3 left-5 flex items-center gap-2 text-white">
+                        <div className="relative h-28 bg-gradient-to-br from-brand-deep via-primary to-primary">
+                            <div className="absolute -top-8 -right-6 size-32 rounded-full border-4 border-background/10" />
+                            <div className="absolute bottom-3 left-5 flex items-center gap-2 text-primary-foreground">
                                 <Megaphone size={18} />
                                 <span className="text-xs font-bold uppercase tracking-wider">{t("text.Campaign details")}</span>
                             </div>
@@ -492,7 +492,7 @@ const Campaigns = () => {
                                         setViewing(null);
                                         openEdit(viewing);
                                     }}
-                                    className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-white"
+                                    className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground"
                                 >
                                     <Pencil size={15} /> Edit campaign
                                 </button>
@@ -505,14 +505,14 @@ const Campaigns = () => {
 
             {/* Delete confirmation */}
             {confirmDelete && (
-                <div className="fixed inset-0 z-[70] grid place-items-center bg-black/50 p-4 backdrop-blur-sm" onClick={() => setConfirmDelete(null)}>
+                <div className="fixed inset-0 z-[70] grid place-items-center bg-overlay p-4 backdrop-blur-sm" onClick={() => setConfirmDelete(null)}>
                     <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-2xl">
                         <h2 className="text-lg font-extrabold text-foreground">Delete campaign?</h2>
                         <p className="mt-2 text-sm leading-6 text-muted-foreground">
                             <strong>{confirmDelete.title}</strong> will be permanently removed.
                         </p>
                         <div className="mt-6 flex gap-2">
-                            <button type="button" disabled={busy} onClick={remove} className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-rose-600 px-4 text-sm font-bold text-white disabled:opacity-60">
+                            <button type="button" disabled={busy} onClick={remove} className="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-destructive px-4 text-sm font-bold text-primary-foreground disabled:opacity-60">
                                 {busy ? "Deleting…" : "Delete"}
                             </button>
                             <button type="button" onClick={() => setConfirmDelete(null)} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">{t("text.Cancel")}</button>

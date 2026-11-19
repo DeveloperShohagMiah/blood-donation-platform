@@ -41,6 +41,22 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  /* Extended brand/semantic tokens (values live in :root / .dark below) */
+  --color-brand-light: var(--brand-light);
+  --color-brand-vivid: var(--brand-vivid);
+  --color-brand-deep: var(--brand-deep);
+  --color-success: var(--success);
+  --color-success-deep: var(--success-deep);
+  --color-success-soft: var(--success-soft);
+  --color-surface-alt: var(--surface-alt);
+  --color-surface-soft: var(--surface-soft);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-violet: var(--violet);
+  --color-indigo: var(--indigo);
+  --color-overlay: var(--overlay);
+  --color-overlay-soft: var(--overlay-soft);
+
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -98,8 +114,8 @@
   --popover: #ffffff;
   --popover-foreground: #1f2933;
 
-  --primary: #c8102e;
-  --primary-hover: #9e0b23;
+  --primary: #f37820;
+  --primary-hover: #d96311;
   --primary-foreground: #ffffff;
 
   --secondary: #f4eff0;
@@ -139,6 +155,23 @@
   --elev-md: 0 12px 30px -12px rgba(120, 10, 30, 0.22);
   --elev-lg: 0 24px 60px -20px rgba(120, 10, 30, 0.28);
   --shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 24px 48px -30px rgba(120, 10, 30, 0.26);
+
+  /* Extended brand/semantic palette */
+  --brand-light: #f26a77;
+  --brand-vivid: #e11d48;
+  --brand-deep: #7f1d1d;
+  --success: #1e8e5a;
+  --success-deep: #277653;
+  --success-soft: #e7f7ef;
+  --surface-alt: #f8faf9;
+  --surface-soft: #fcfbfa;
+  --warning: #d97706;
+  --info: #1b7f8c;
+  --violet: #7c3aed;
+  --indigo: #4f46e5;
+  /* Scrims stay dark in both themes so modal/image overlays keep contrast. */
+  --overlay: rgb(0 0 0 / 0.55);
+  --overlay-soft: rgb(0 0 0 / 0.25);
 }
 
 /* Dark */
@@ -194,6 +227,22 @@
   --elev-md: 0 12px 30px -12px rgba(0, 0, 0, 0.6);
   --elev-lg: 0 24px 60px -20px rgba(0, 0, 0, 0.7);
   --shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 48px -30px rgba(0, 0, 0, 0.7);
+
+  /* Extended brand/semantic palette (dark counterparts) */
+  --brand-light: #ff8a9b;
+  --brand-vivid: #fb7185;
+  --brand-deep: #9e0b23;
+  --success: #4ade80;
+  --success-deep: #86efac;
+  --success-soft: #123a2c;
+  --surface-alt: #140a0c;
+  --surface-soft: #1d1114;
+  --warning: #fbbf24;
+  --info: #4fb6c4;
+  --violet: #a78bfa;
+  --indigo: #818cf8;
+  --overlay: rgb(0 0 0 / 0.65);
+  --overlay-soft: rgb(0 0 0 / 0.35);
 }
 
 /* ==========================================================================
@@ -273,10 +322,10 @@
     width: 100%;
     padding: 12px 16px;
     appearance: none;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--input);
     border-radius: 10px;
-    background: white;
-    color: #111827;
+    background: var(--card);
+    color: var(--foreground);
     font-size: 14px;
     cursor: pointer;
     outline: none;
@@ -284,8 +333,8 @@
   }
 
   select:focus {
-    border-color: #10b981;
-    box-shadow: 0 0 0 3px #10b98120;
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 12%, transparent);
   }
 
   /* Inside the base layer on purpose: an unlayered h1/h2 rule would override
@@ -518,10 +567,10 @@
   .glow-btn-border,
   .glow-btn-shadow {
     background: conic-gradient(from 0deg,
-        #c8102e,
-        #f43f5e,
-        #f59e0b,
-        #c8102e);
+        var(--primary),
+        var(--brand-vivid),
+        var(--chart-3),
+        var(--primary));
     animation: glow-spin 3s linear infinite;
   }
 
@@ -688,7 +737,7 @@
 
 /* Gradient text. Light is the default; dark gets a brighter gradient. */
 @utility text-gradient {
-  background-image: linear-gradient(90deg, #9e0b23, #e11d48);
+  background-image: linear-gradient(90deg, var(--brand-deep), var(--brand-vivid));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -696,7 +745,7 @@
   padding: 0 0.08em 0.1em 0;
 
   .dark & {
-    background-image: linear-gradient(90deg, #ff8a9b, #ffd1d8);
+    background-image: linear-gradient(90deg, var(--brand-light), var(--primary-foreground));
   }
 }
 

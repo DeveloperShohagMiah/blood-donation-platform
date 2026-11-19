@@ -85,13 +85,13 @@ const ForgotPassword = () => {
     };
 
     return (
-        <main className="grid min-h-[100vh] place-items-center bg-[#F8F9FC] px-4 py-12">
+        <main className="grid min-h-[100vh] place-items-center bg-surface-alt px-4 py-12">
             <div className="w-full max-w-[440px]">
                 <Link to="/" className="mb-8 inline-flex items-center gap-2.5">
-                    <span className="grid size-10 place-items-center rounded-xl bg-primary text-white shadow-lg shadow-primary/20">
+                    <span className="grid size-10 place-items-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
                         <Droplets size={21} />
                     </span>
-                    <span className="text-lg font-extrabold tracking-tight text-slate-900">
+                    <span className="text-lg font-extrabold tracking-tight text-foreground">
                         Blood <span className="text-primary">{t("text.Connect")}</span>
                     </span>
                 </Link>
@@ -99,7 +99,7 @@ const ForgotPassword = () => {
                 <div className="rounded-3xl border border-border bg-card p-6 shadow-lg sm:p-9">
                     {step === "done" ? (
                         <>
-                            <span className="grid size-14 place-items-center rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-600">
+                            <span className="grid size-14 place-items-center rounded-2xl border border-success/30 bg-success-soft text-success">
                                 <CheckCircle2 size={26} />
                             </span>
                             <h1 className="mt-6 text-2xl font-extrabold tracking-tight text-foreground">
@@ -110,7 +110,7 @@ const ForgotPassword = () => {
                             </p>
                             <Link
                                 to="/login"
-                                className="mt-7 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:brightness-95"
+                                className="mt-7 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground shadow-md shadow-primary/25 transition hover:brightness-95"
                             >
                                 Go to log in <ArrowRight size={16} />
                             </Link>
@@ -129,7 +129,7 @@ const ForgotPassword = () => {
                             </p>
 
                             {error && (
-                                <p role="alert" className="mt-5 flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                                <p role="alert" className="mt-5 flex items-start gap-2 rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-3 text-sm text-destructive">
                                     <AlertCircle size={16} className="mt-0.5 shrink-0" /> {error}
                                 </p>
                             )}
@@ -149,7 +149,7 @@ const ForgotPassword = () => {
                             <button
                                 type="submit"
                                 disabled={busy}
-                                className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+                                className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground shadow-md shadow-primary/25 transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
                             >
                                 {busy ? <><Loader2 size={17} className="animate-spin" /> Sending…</> : "Send reset code"}
                             </button>
@@ -168,14 +168,14 @@ const ForgotPassword = () => {
                             </p>
 
                             {devCode && (
-                                <p className="mt-4 rounded-xl bg-blue-50 px-4 py-3 text-sm text-blue-900 ring-1 ring-blue-100">
+                                <p className="mt-4 rounded-xl bg-info/10 px-4 py-3 text-sm text-info ring-1 ring-info/15">
                                     Development code:{" "}
                                     <strong className="tracking-widest">{devCode}</strong>
                                 </p>
                             )}
 
                             {error && (
-                                <p role="alert" className="mt-4 flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                                <p role="alert" className="mt-4 flex items-start gap-2 rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-3 text-sm text-destructive">
                                     <AlertCircle size={16} className="mt-0.5 shrink-0" /> {error}
                                 </p>
                             )}
@@ -222,7 +222,7 @@ const ForgotPassword = () => {
                             <button
                                 type="submit"
                                 disabled={busy}
-                                className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+                                className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground shadow-md shadow-primary/25 transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
                             >
                                 {busy ? <><Loader2 size={17} className="animate-spin" /> Resetting…</> : "Reset password"}
                             </button>

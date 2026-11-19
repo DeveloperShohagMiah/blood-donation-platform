@@ -211,34 +211,34 @@ const FindDonors = ({
     };
 
     return (
-        <main className="min-h-screen bg-[#F8FAF9]">
+        <main className="min-h-screen bg-surface-alt">
             {/* Hero */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-[#FFF3F3] via-white to-[#FFF8F5]">
-                <div className="absolute -top-24 -right-20 size-80 rounded-full bg-[#E84B5B]/5 blur-3xl" />
-                <div className="absolute -bottom-32 -left-20 size-80 rounded-full bg-[#E84B5B]/5 blur-3xl" />
+            <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-card to-primary/5">
+                <div className="absolute -top-24 -right-20 size-80 rounded-full bg-brand-light/5 blur-3xl" />
+                <div className="absolute -bottom-32 -left-20 size-80 rounded-full bg-brand-light/5 blur-3xl" />
 
                 <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
                     <div className="mx-auto max-w-3xl text-center">
-                        <span className="inline-flex items-center gap-2 rounded-full border border-[#F4D3D6] bg-white px-4 py-2 text-xs font-bold tracking-wide text-[#C62838] shadow-sm">
+                        <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-card px-4 py-2 text-xs font-bold tracking-wide text-primary shadow-sm">
                             <Droplets size={15} />
                             BLOOD CONNECT COMMUNITY
                         </span>
 
-                        <h1 className="mt-6 text-4xl leading-tight font-extrabold tracking-tight text-[#192623] sm:text-5xl lg:text-6xl">
+                        <h1 className="mt-6 text-4xl leading-tight font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
                             {content.title}
-                            <span className="mt-2 block text-[#C62838]">
+                            <span className="mt-2 block text-primary">
                                 {isBn ? "এক ফোঁটা রক্ত, একটি জীবন" : "Give Blood. Save Lives."}
                             </span>
                         </h1>
 
-                        <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[#68766F] sm:text-lg">
+                        <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
                             {content.subtitle}
                         </p>
 
                         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                             <a
                                 href="#donor-search"
-                                className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-[#C62838] px-6 text-sm font-bold text-white shadow-lg shadow-red-900/10 transition hover:-translate-y-0.5 hover:bg-[#A91F30]"
+                                className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/10 transition hover:-translate-y-0.5 hover:bg-primary-hover"
                             >
                                 <Search size={17} />
                                 {content.search}
@@ -246,7 +246,7 @@ const FindDonors = ({
 
                             <a
                                 href="/create-blood-requests"
-                                className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-[#E8D5D6] bg-white px-6 text-sm font-bold text-[#34423B] transition hover:border-[#C62838] hover:text-[#C62838]"
+                                className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-primary/20 bg-card px-6 text-sm font-bold text-foreground transition hover:border-primary hover:text-primary"
                             >
                                 {content.requestBlood}
                                 <ArrowRight size={16} />
@@ -261,18 +261,18 @@ const FindDonors = ({
                 id="donor-search"
                 className="relative z-10 mx-auto -mt-5 max-w-7xl scroll-mt-24 px-4 sm:px-6 lg:px-8"
             >
-                <div className="rounded-2xl border border-[#E9EFEB] bg-white p-5 shadow-[0_15px_50px_rgba(26,48,39,0.07)] sm:p-8">
+                <div className="rounded-2xl border border-border bg-card p-5 shadow-lg sm:p-8">
                     <div className="mb-7">
                         <div className="flex items-center gap-3">
-                            <div className="grid size-11 place-items-center rounded-xl bg-[#FFF0F1] text-[#C62838]">
+                            <div className="grid size-11 place-items-center rounded-xl bg-primary/5 text-primary">
                                 <Search size={21} />
                             </div>
 
                             <div>
-                                <h2 className="text-xl font-bold text-[#192623]">
+                                <h2 className="text-xl font-bold text-foreground">
                                     {content.searchTitle}
                                 </h2>
-                                <p className="mt-1 text-sm text-[#829089]">
+                                <p className="mt-1 text-sm text-muted-foreground">
                                     {content.searchDescription}
                                 </p>
                             </div>
@@ -283,7 +283,7 @@ const FindDonors = ({
                         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
                             {/* Blood group */}
                             <div>
-                                <label className="mb-2 block text-sm font-semibold text-[#34423B]">
+                                <label className="mb-2 block text-sm font-semibold text-foreground">
                                     {content.bloodGroup}
                                 </label>
 
@@ -303,7 +303,7 @@ const FindDonors = ({
 
                             {/* Division */}
                             <div>
-                                <label className="mb-2 block text-sm font-semibold text-[#34423B]">
+                                <label className="mb-2 block text-sm font-semibold text-foreground">
                                     {content.division}
                                 </label>
 
@@ -335,7 +335,7 @@ const FindDonors = ({
 
                             {/* District */}
                             <div>
-                                <label className="mb-2 block text-sm font-semibold text-[#34423B]">
+                                <label className="mb-2 block text-sm font-semibold text-foreground">
                                     {content.district}
                                 </label>
 
@@ -367,7 +367,7 @@ const FindDonors = ({
 
                             {/* Upazila */}
                             <div>
-                                <label className="mb-2 block text-sm font-semibold text-[#34423B]">
+                                <label className="mb-2 block text-sm font-semibold text-foreground">
                                     {content.upazila}
                                 </label>
 
@@ -388,7 +388,7 @@ const FindDonors = ({
 
                             {/* Union */}
                             <div>
-                                <label className="mb-2 block text-sm font-semibold text-[#34423B]">
+                                <label className="mb-2 block text-sm font-semibold text-foreground">
                                     {content.union}
                                 </label>
                                 <Select
@@ -407,11 +407,11 @@ const FindDonors = ({
                             </div>
                         </div>
 
-                        <div className="mt-7 flex flex-col-reverse gap-3 border-t border-[#EEF1EF] pt-5 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="mt-7 flex flex-col-reverse gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
                             <button
                                 type="button"
                                 onClick={clearFilters}
-                                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#E4EAE6] px-5 text-sm font-semibold text-[#68766F] transition hover:border-[#C62838] hover:text-[#C62838]"
+                                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border px-5 text-sm font-semibold text-muted-foreground transition hover:border-primary hover:text-primary"
                             >
                                 <RotateCcw size={15} />
                                 {content.clear}
@@ -420,7 +420,7 @@ const FindDonors = ({
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#C62838] px-8 text-sm font-bold text-white shadow-lg shadow-red-900/10 transition hover:bg-[#A91F30] disabled:cursor-not-allowed disabled:opacity-60"
+                                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-primary px-8 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/10 transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                             >
                                 <Search size={17} />
                                 {isLoading ? content.loading : content.search}
@@ -434,19 +434,19 @@ const FindDonors = ({
             <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
                 <div className="mb-7 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                     <div>
-                        <span className="text-xs font-bold tracking-[2px] text-[#C62838]">
+                        <span className="text-xs font-bold tracking-[2px] text-primary">
                             BLOOD DONOR DIRECTORY
                         </span>
-                        <h2 className="mt-2 text-2xl font-extrabold text-[#192623] sm:text-3xl">
+                        <h2 className="mt-2 text-2xl font-extrabold text-foreground sm:text-3xl">
                             {content.results}
                         </h2>
-                        <p className="mt-2 text-sm text-[#829089]">
+                        <p className="mt-2 text-sm text-muted-foreground">
                             {content.available}
                         </p>
                     </div>
 
                     {!isLoading && !error && (
-                        <div className="inline-flex w-fit items-center gap-2 rounded-full bg-[#EDF8F1] px-4 py-2 text-sm font-semibold text-[#27834D]">
+                        <div className="inline-flex w-fit items-center gap-2 rounded-full bg-success-soft px-4 py-2 text-sm font-semibold text-success">
                             <Users size={16} />
                             {totalDonors} {content.found}
                         </div>
@@ -455,12 +455,12 @@ const FindDonors = ({
 
                 {/* Error */}
                 {error && (
-                    <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center">
-                        <AlertCircle className="mx-auto text-[#C62838]" size={30} />
-                        <h3 className="mt-3 font-bold text-[#9F1D2B]">
+                    <div className="rounded-2xl border border-destructive/25 bg-destructive/10 p-6 text-center">
+                        <AlertCircle className="mx-auto text-primary" size={30} />
+                        <h3 className="mt-3 font-bold text-primary-hover">
                             {content.errorTitle}
                         </h3>
-                        <p className="mt-2 text-sm text-[#A34A52]">
+                        <p className="mt-2 text-sm text-destructive">
                             {content.errorDescription}
                         </p>
                     </div>
@@ -472,17 +472,17 @@ const FindDonors = ({
                         {[1, 2, 3, 4, 5, 6].map((item) => (
                             <div
                                 key={item}
-                                className="h-56 animate-pulse rounded-2xl border border-[#E9EFEB] bg-white p-5"
+                                className="h-56 animate-pulse rounded-2xl border border-border bg-card p-5"
                             >
                                 <div className="flex gap-4">
-                                    <div className="size-14 rounded-xl bg-gray-100" />
+                                    <div className="size-14 rounded-xl bg-muted" />
                                     <div className="flex-1 space-y-3 pt-1">
-                                        <div className="h-4 w-2/3 rounded bg-gray-100" />
-                                        <div className="h-3 w-1/2 rounded bg-gray-100" />
+                                        <div className="h-4 w-2/3 rounded bg-muted" />
+                                        <div className="h-3 w-1/2 rounded bg-muted" />
                                     </div>
                                 </div>
-                                <div className="mt-8 h-3 w-3/4 rounded bg-gray-100" />
-                                <div className="mt-5 h-10 rounded-lg bg-gray-100" />
+                                <div className="mt-8 h-3 w-3/4 rounded bg-muted" />
+                                <div className="mt-5 h-10 rounded-lg bg-muted" />
                             </div>
                         ))}
                     </div>
@@ -490,21 +490,21 @@ const FindDonors = ({
 
                 {/* Empty state */}
                 {!isLoading && !error && donors.length === 0 && (
-                    <div className="rounded-2xl border border-dashed border-[#DCE5DF] bg-white px-5 py-16 text-center">
-                        <div className="mx-auto grid size-16 place-items-center rounded-2xl bg-[#FFF0F1] text-[#C62838]">
+                    <div className="rounded-2xl border border-dashed border-border bg-card px-5 py-16 text-center">
+                        <div className="mx-auto grid size-16 place-items-center rounded-2xl bg-primary/5 text-primary">
                             <Search size={27} />
                         </div>
-                        <h3 className="mt-5 text-xl font-bold text-[#192623]">
+                        <h3 className="mt-5 text-xl font-bold text-foreground">
                             {content.noResults}
                         </h3>
-                        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#829089]">
+                        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">
                             {content.noResultsDescription}
                             {" "}
                             {content.tryAgain}
                         </p>
                         <button
                             onClick={clearFilters}
-                            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#C62838] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#A91F30]"
+                            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-primary-foreground transition hover:bg-primary-hover"
                         >
                             <RotateCcw size={15} />
                             {content.clear}
@@ -522,20 +522,20 @@ const FindDonors = ({
                                 return (
                                     <article
                                         key={donor._id}
-                                        className="group rounded-2xl border border-[#E8EEEA] bg-white p-5 shadow-[0_5px_20px_rgba(29,55,44,0.025)] transition duration-300 hover:-translate-y-1 hover:border-[#F0C5C9] hover:shadow-[0_15px_35px_rgba(29,55,44,0.07)]"
+                                        className="group rounded-2xl border border-border bg-card p-5 shadow-md transition duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-md"
                                     >
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="flex min-w-0 items-center gap-3">
-                                                <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-[#FFF0F1] text-[#C62838]">
+                                                <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-primary/5 text-primary">
                                                     <Droplets size={25} />
                                                 </div>
 
                                                 <div className="min-w-0">
-                                                    <h3 className="truncate font-bold text-lg text-[#192623]">
+                                                    <h3 className="truncate font-bold text-lg text-foreground">
                                                         {donor.fullName}
                                                     </h3>
 
-                                                    <div className="mt-1 flex items-center gap-1.5 text-xs text-[#829089]">
+                                                    <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
                                                         <MapPin size={13} />
                                                         <span className="truncate">
                                                             {isBn ? upazila?.nameBn : upazila?.nameEn}
@@ -546,35 +546,35 @@ const FindDonors = ({
                                                 </div>
                                             </div>
 
-                                            <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-[#C62838] text-lg font-extrabold text-white shadow-md shadow-red-900/10">
+                                            <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-primary text-lg font-extrabold text-primary-foreground shadow-md shadow-primary/10">
                                                 {donor.bloodGroup}
                                             </span>
                                         </div>
 
-                                        <div className="mt-5 flex items-center justify-between gap-2 border-t border-b border-[#EEF1EF] py-4">
+                                        <div className="mt-5 flex items-center justify-between gap-2 border-t border-b border-border py-4">
                                             <div>
-                                                <p className="text-[11px] font-medium text-[#929D97]">
+                                                <p className="text-[11px] font-medium text-muted-foreground">
                                                     {content.lastDonation}
                                                 </p>
-                                                <p className="mt-1 text-sm font-semibold text-[#34423B]">
+                                                <p className="mt-1 text-sm font-semibold text-foreground">
                                                     {formatDate(donor.lastDonationDate)}
                                                 </p>
                                             </div>
 
-                                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EDF8F1] px-3 py-1.5 text-xs font-bold text-[#27834D]">
-                                                <span className="size-1.5 rounded-full bg-[#35A467]" />
+                                            <span className="inline-flex items-center gap-1.5 rounded-full bg-success-soft px-3 py-1.5 text-xs font-bold text-success">
+                                                <span className="size-1.5 rounded-full bg-success" />
                                                 {content.availableStatus}
                                             </span>
                                         </div>
 
                                         <div className="mt-4 flex items-center justify-between gap-2">
                                             {donor.isVerified ? (
-                                                <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#43805C]">
+                                                <span className="inline-flex items-center gap-1 text-xs font-semibold text-success-deep">
                                                     <ShieldCheck size={15} />
                                                     {content.verified}
                                                 </span>
                                             ) : (
-                                                <span className="text-xs text-[#929D97]">
+                                                <span className="text-xs text-muted-foreground">
                                                     {isBn ? "যাচাই করা হয়নি" : "Not verified"}
                                                 </span>
                                             )}
@@ -582,7 +582,7 @@ const FindDonors = ({
                                             <button
                                                 type="button"
                                                 onClick={() => onContactRequest(donor._id)}
-                                                className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-[#FFF0F1] px-3 text-xs font-bold text-[#C62838] transition hover:bg-[#C62838] hover:text-white"
+                                                className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-primary/5 px-3 text-xs font-bold text-primary transition hover:bg-primary hover:text-primary-foreground"
                                             >
                                                 {content.contact}
                                                 <ArrowRight size={14} />
@@ -601,12 +601,12 @@ const FindDonors = ({
                                     disabled={currentPage <= 1}
                                     onClick={() => onPageChange(currentPage - 1)}
                                     aria-label={content.previous}
-                                    className="grid size-10 place-items-center rounded-lg border border-[#E4EAE6] bg-white text-[#475650] transition hover:border-[#C62838] hover:text-[#C62838] disabled:cursor-not-allowed disabled:opacity-40"
+                                    className="grid size-10 place-items-center rounded-lg border border-border bg-card text-muted-foreground transition hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
                                 >
                                     <ChevronLeft size={18} />
                                 </button>
 
-                                <span className="text-sm font-medium text-[#68766F]">
+                                <span className="text-sm font-medium text-muted-foreground">
                                     {content.page} {currentPage} {content.of} {totalPages}
                                 </span>
 
@@ -615,7 +615,7 @@ const FindDonors = ({
                                     disabled={currentPage >= totalPages}
                                     onClick={() => onPageChange(currentPage + 1)}
                                     aria-label={content.next}
-                                    className="grid size-10 place-items-center rounded-lg border border-[#E4EAE6] bg-white text-[#475650] transition hover:border-[#C62838] hover:text-[#C62838] disabled:cursor-not-allowed disabled:opacity-40"
+                                    className="grid size-10 place-items-center rounded-lg border border-border bg-card text-muted-foreground transition hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
                                 >
                                     <ChevronRight size={18} />
                                 </button>
@@ -626,13 +626,13 @@ const FindDonors = ({
             </section>
 
             {/* How it works */}
-            <section className="border-y border-[#E9EFEB] bg-white py-16">
+            <section className="border-y border-border bg-card py-16">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="mx-auto max-w-2xl text-center">
-                        <span className="text-xs font-bold tracking-[2px] text-[#C62838]">
+                        <span className="text-xs font-bold tracking-[2px] text-primary">
                             SIMPLE PROCESS
                         </span>
-                        <h2 className="mt-2 text-3xl font-extrabold text-[#192623]">
+                        <h2 className="mt-2 text-3xl font-extrabold text-foreground">
                             {content.howItWorks}
                         </h2>
                     </div>
@@ -648,22 +648,22 @@ const FindDonors = ({
                                 >
                                     {/* Connecting line */}
                                     {index !== steps.length - 1 && (
-                                        <div className="absolute left-1/2 top-8 z-0 hidden w-full border-t-2 border-dashed border-[#E5B9BE] md:block" />
+                                        <div className="absolute left-1/2 top-8 z-0 hidden w-full border-t-2 border-dashed border-primary/30 md:block" />
                                     )}
                                     {/* Icon */}
-                                    <div className="relative z-10 mx-auto grid size-16 place-items-center rounded-2xl bg-[#FFF0F1] text-[#C62838]">
+                                    <div className="relative z-10 mx-auto grid size-16 place-items-center rounded-2xl bg-primary/5 text-primary">
                                         <Icon size={27} />
 
-                                        <span className="absolute -right-2 -top-2 grid size-7 place-items-center rounded-full bg-[#C62838] text-[10px] font-bold text-white">
+                                        <span className="absolute -right-2 -top-2 grid size-7 place-items-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
                                             {step.number}
                                         </span>
                                     </div>
 
-                                    <h3 className="mt-5 font-bold text-[#192623]">
+                                    <h3 className="mt-5 font-bold text-foreground">
                                         {step.title}
                                     </h3>
 
-                                    <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-[#829089]">
+                                    <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-muted-foreground">
                                         {step.description}
                                     </p>
                                 </div>
@@ -675,16 +675,16 @@ const FindDonors = ({
 
             {/* Privacy */}
             <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-                <div className="flex flex-col gap-4 rounded-2xl border border-[#E5ECE7] bg-[#F0F7F2] p-6 sm:flex-row sm:items-center sm:p-8">
-                    <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-white text-[#27834D] shadow-sm">
+                <div className="flex flex-col gap-4 rounded-2xl border border-border bg-success-soft p-6 sm:flex-row sm:items-center sm:p-8">
+                    <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-card text-success shadow-sm">
                         <ShieldCheck size={28} />
                     </div>
 
                     <div>
-                        <h2 className="font-bold text-[#234B34]">
+                        <h2 className="font-bold text-success-deep">
                             {content.privacyTitle}
                         </h2>
-                        <p className="mt-1 text-sm leading-6 text-[#62816D]">
+                        <p className="mt-1 text-sm leading-6 text-success-deep">
                             {content.privacyDescription}
                         </p>
                     </div>
@@ -693,26 +693,26 @@ const FindDonors = ({
 
             {/* Emergency CTA */}
             <section className="px-4 pb-16 sm:px-6 lg:px-8">
-                <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-gradient-to-r from-[#B91F32] to-[#D94350] px-6 py-12 text-center sm:px-12 sm:py-16">
-                    <div className="absolute -top-20 -right-16 size-64 rounded-full border-[35px] border-white/5" />
-                    <div className="absolute -bottom-28 -left-16 size-72 rounded-full border-[35px] border-white/5" />
+                <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-gradient-to-r from-primary-hover to-brand-light px-6 py-12 text-center sm:px-12 sm:py-16">
+                    <div className="absolute -top-20 -right-16 size-64 rounded-full border-[35px] border-background/5" />
+                    <div className="absolute -bottom-28 -left-16 size-72 rounded-full border-[35px] border-background/5" />
 
                     <div className="relative">
-                        <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-white/15 text-white">
+                        <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-card/15 text-primary-foreground">
                             <Droplets size={28} />
                         </div>
 
-                        <h2 className="mt-5 text-2xl font-extrabold text-white sm:text-3xl">
+                        <h2 className="mt-5 text-2xl font-extrabold text-primary-foreground sm:text-3xl">
                             {content.emergencyTitle}
                         </h2>
 
-                        <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-white/80 sm:text-base">
+                        <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-primary-foreground/80 sm:text-base">
                             {content.emergencyDescription}
                         </p>
 
                         <a
                             href="/create-blood-requests"
-                            className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-xl bg-white px-6 text-sm font-bold text-[#C62838] shadow-lg transition hover:-translate-y-0.5 hover:bg-[#FFF4F4]"
+                            className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-xl bg-card px-6 text-sm font-bold text-primary shadow-lg transition hover:-translate-y-0.5 hover:bg-primary/5"
                         >
                             {content.requestBlood}
                             <ArrowRight size={17} />

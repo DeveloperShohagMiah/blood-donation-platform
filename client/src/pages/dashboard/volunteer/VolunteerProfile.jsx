@@ -10,7 +10,7 @@ const inputClass = (hasError) =>
     [
         "h-11 w-full rounded-xl border bg-background px-3.5 text-sm text-foreground outline-none transition focus:ring-4",
         hasError
-            ? "border-rose-400 focus:border-rose-400 focus:ring-rose-500/10"
+            ? "border-destructive focus:border-destructive focus:ring-destructive/10"
             : "border-border focus:border-primary focus:ring-primary/10",
     ].join(" ");
 
@@ -99,7 +99,7 @@ const VolunteerProfile = () => {
             />
             <ErrorBanner message={error} />
             {message && (
-                <div className="mb-5 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                <div className="mb-5 flex items-center gap-2 rounded-xl border border-success/30 bg-success-soft px-4 py-3 text-sm font-medium text-success-deep">
                     <CheckCircle2 size={17} /> {message}
                 </div>
             )}
@@ -138,7 +138,7 @@ const VolunteerProfile = () => {
                                 className={inputClass(errors.maxActiveAssignments)}
                             />
                             {errors.maxActiveAssignments && (
-                                <p role="alert" className="mt-1.5 text-xs font-medium text-rose-600">
+                                <p role="alert" className="mt-1.5 text-xs font-medium text-destructive">
                                     {errors.maxActiveAssignments.message}
                                 </p>
                             )}
@@ -180,7 +180,7 @@ const VolunteerProfile = () => {
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-bold text-primary-foreground shadow-md shadow-primary/25 transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     <Save size={17} /> {isSubmitting ? "Saving…" : "Save profile"}
                 </button>
