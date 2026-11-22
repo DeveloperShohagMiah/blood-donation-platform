@@ -71,7 +71,7 @@ const BloodRequests = () => {
     );
 
     return (
-        <main className="min-h-screen bg-surface-alt">
+        <div className="min-h-screen bg-surface-alt">
             {/* Hero */}
             <section className="relative isolate overflow-hidden bg-gradient-to-br text-center from-primary/5 via-card to-primary/5 py-16 sm:py-20">
                 <div className="pointer-events-none absolute -top-24 -right-20 size-80 rounded-full bg-primary/10 blur-3xl" />
@@ -272,7 +272,7 @@ const BloodRequests = () => {
                     </div>
                 )}
             </section>
-        </main>
+        </div>
     );
 };
 

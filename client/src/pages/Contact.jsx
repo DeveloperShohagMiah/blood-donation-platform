@@ -121,7 +121,7 @@ const Contact = () => {
     };
 
     return (
-        <main className="overflow-hidden bg-background text-foreground">
+        <div className="overflow-hidden bg-background text-foreground">
             {/* Hero */}
             <section className="relative isolate overflow-hidden">
                 <div aria-hidden="true" className="pointer-events-none absolute -top-48 left-1/3 -z-10 size-[560px] rounded-full bg-primary/10 blur-3xl" />
@@ -377,7 +377,7 @@ const Contact = () => {
                     </form>
                 </div>
             </section>
-        </main>
+        </div>
     );
 };
 

@@ -211,7 +211,7 @@ const FindDonors = ({
     };
 
     return (
-        <main className="min-h-screen bg-surface-alt">
+        <div className="min-h-screen bg-surface-alt">
             {/* Hero */}
             <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-card to-primary/5">
                 <div className="absolute -top-24 -right-20 size-80 rounded-full bg-brand-light/5 blur-3xl" />
@@ -720,7 +720,7 @@ const FindDonors = ({
                     </div>
                 </div>
             </section>
-        </main>
+        </div>
     );
 };
 

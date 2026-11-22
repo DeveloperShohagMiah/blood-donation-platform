@@ -128,7 +128,7 @@ export const getMyAssignments = asyncHandler(async (req, res) => {
     .populate({
       path: "request",
       select:
-        "patientName bloodGroup units unitsFulfilled hospitalName district upazila neededAt status",
+        "patientName bloodGroup units unitsFulfilled urgency hospitalName hospitalAddress district upazila neededAt expiresAt contactName contactPhone details status createdAt",
       populate: { path: "district upazila", select: "nameEn nameBn" },
     })
     .sort({ createdAt: -1 });

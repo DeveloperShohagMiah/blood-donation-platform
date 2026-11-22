@@ -166,7 +166,7 @@ const BecomeDonor = () => {
         const pending = step === "pending";
 
         return (
-            <main className="grid min-h-[70vh] place-items-center bg-surface-alt px-4 py-20">
+            <div className="grid min-h-[70vh] place-items-center bg-surface-alt px-4 py-10">
                 <div className="w-full max-w-[520px] rounded-3xl bg-card p-8 text-center shadow-lg sm:p-12">
                     <span className="mx-auto grid size-16 place-items-center rounded-full bg-success-soft text-success">
                         {pending ? <CheckCircle2 size={34} /> : <ShieldCheck size={34} />}
@@ -240,13 +240,13 @@ const BecomeDonor = () => {
                         </>
                     )}
                 </div>
-            </main>
+            </div>
         );
     }
 
     /* ---------- Account form ---------- */
     return (
-        <main className="pb-20">
+        <div>
             <div className="bg-linear-to-br from-primary/10 via-card/80 to-primary/10 pt-14 pb-30 sm:pt-28">
                 <div className="mx-auto w-[calc(100%-2rem)] max-w-[1280px] md:w-[calc(100%-4rem)]">
                     <SectionHeader
@@ -433,7 +433,7 @@ const BecomeDonor = () => {
                     </div>
                 </aside>
             </div>
-        </main>
+        </div>
     );
 };
 

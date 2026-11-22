@@ -5,7 +5,24 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f37820" />
   <title>Blood connect | Give blood, save life</title>
+  <script>
+    // Apply the saved theme before first paint to avoid a flash of the wrong theme.
+    (function () {
+      try {
+        var saved = localStorage.getItem("bc:theme");
+        var override = new URLSearchParams(window.location.search).get("theme");
+        var theme = override === "dark" || override === "light"
+          ? override
+          : saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.classList.toggle("dark", theme === "dark");
+        document.documentElement.style.colorScheme = theme;
+      } catch (error) {
+        // Storage or matchMedia may be unavailable; the default light theme still applies.
+      }
+    })();
+  </script>
 </head>
 
 <body>

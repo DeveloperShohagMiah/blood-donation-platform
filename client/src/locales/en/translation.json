@@ -12,6 +12,10 @@
     "login": "Sign in",
     "tagline": "DONATE BLOOD. SAVE LIVES.",
     "chooseLanguage": "Choose language",
+    "chooseTheme": "Choose theme",
+    "theme": "Theme",
+    "light": "Light mode",
+    "dark": "Dark mode",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "logout": "Log out"
@@ -136,7 +140,11 @@
     "title1": "Connecting donors",
     "title2": "",
     "titleAccent": "Saving Lives",
-    "viewRequests": "See open blood requests"
+    "viewRequests": "See open blood requests",
+    "visualVerified": "Verified donors",
+    "visualVerifiedText": "Community checked profiles",
+    "visualFree": "Always free",
+    "visualFreeText": "Voluntary, never paid"
   },
   "home": {
     "campaigns": {
@@ -261,6 +269,7 @@
       "timeout": "The request took too long. Check your connection and try again."
     },
     "expired": "Your session has expired. Please log in again.",
+    "eyebrow": "Member sign in",
     "f1": "Update your donor availability whenever you need.",
     "f1Title": "Manage availability",
     "f2": "Stay informed about blood requests in your area.",
@@ -279,6 +288,9 @@
     "remember": "Remember my identifier",
     "rememberOn": "Enabled",
     "secure": "Secure access",
+    "stat1": "Always online",
+    "stat2": "Voluntary",
+    "stat3": "No cost, ever",
     "submit": "Sign in to your account",
     "submitting": "Signing you in...",
     "subtitle": "Sign in to your Blood Connect account using your registered phone number or email.",
@@ -531,6 +543,12 @@
     "imageAlt": "Blood donation",
     "everyDrop": "Every Drop Matters",
     "giveHope": "Give blood. Give hope.",
+    "statOnline": "Always online",
+    "statVoluntary": "Voluntary donors",
+    "statBase": "Based in Tangail",
+    "pillar1": "Tangail, Bangladesh",
+    "pillar2": "Volunteer verified",
+    "pillar3": "Community driven",
     "whoHeading": "Who We Are",
     "whoTitle": "A Community Built Around Humanity",
     "whoText1": "Finding a blood donor during an emergency can be stressful and time-sensitive. Blood Connect aims to simplify that process by creating a structured platform where people can find available donors and volunteers can coordinate blood requests.",

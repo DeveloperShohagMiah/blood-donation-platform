@@ -308,7 +308,7 @@ const Home = () => {
         "grid size-11 place-items-center rounded-full border border-background/15 bg-card/10 text-primary-foreground backdrop-blur-md transition hover:bg-card/20 focus-visible:ring-2 focus-visible:ring-background/60 focus-visible:outline-none";
 
     return (
-        <main>
+        <div>
             <Hero />
 
             <DonorShowcase />
@@ -777,7 +777,7 @@ const Home = () => {
                     </div>
                 )}
             </section>
-        </main>
+        </div>
     );
 };
 

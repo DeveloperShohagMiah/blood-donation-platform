@@ -12,6 +12,13 @@ import {
 } from "lucide-react";
 import { useAuth } from "../context/useAuth";
 
+const roleStyles = {
+    admin: "bg-primary text-primary-foreground",
+    volunteer: "bg-green-500 text-white",
+    user: "bg-blue-600 text-white",
+};
+
+
 const UserMenu = ({ onNavigate, align = "right" }) => {
     const { user, logout } = useAuth();
     const [open, setOpen] = useState(false);
@@ -43,6 +50,7 @@ const UserMenu = ({ onNavigate, align = "right" }) => {
     const isVolunteer = user.role === "volunteer";
     const roleLabel = isStaff ? "Admin" : isVolunteer ? "Volunteer" : "Donor";
 
+    const role = roleLabel?.toLowerCase() || "user";
     const links = [
         { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
         ...(isStaff
@@ -98,13 +106,23 @@ const UserMenu = ({ onNavigate, align = "right" }) => {
             {open && (
                 <div
                     role="menu"
-                    className={`absolute top-[calc(100%+0.6rem)] z-50 w-60 rounded-2xl border border-border bg-card p-2 shadow-xl ${align === "left" ? "left-0" : "right-0"
-                        }`}
+                    className={[
+                        "absolute top-[calc(100%+0.6rem)] z-50 w-60 overflow-hidden rounded-2xl p-2",
+                        "border border-border/70 bg-card shadow-xl",
+                        "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px",
+                        "before:bg-linear-to-r before:from-transparent before:via-foreground/15 before:to-transparent",
+                        align === "left" ? "left-0" : "right-0",
+                    ].join(" ")}
                 >
-                    <div className="border-b border-border px-3 py-2.5">
-                        <p className="truncate text-sm font-bold text-foreground">{user.fullName}</p>
-                        <p className="truncate text-xs capitalize text-muted-foreground">
-                            {roleLabel} {user.email ? `· ${user.email}` : ""}
+                    <div className="border-b border-border/60 px-3 py-2.5">
+                        <p className="truncate text-sm font-bold text-foreground">{user.fullName} <span
+                            className={`shrink-0 rounded-full px-2 py-1 font-code text-[9px] font-semibold uppercase tracking-wider ${roleStyles[role] || roleStyles.user
+                                }`}
+                        >
+                            {role}
+                        </span></p>
+                        <p className="truncate text-xs lowercase text-muted-foreground">
+                            {user.email ? `${user.email}` : ""}
                         </p>
                     </div>
 
@@ -123,7 +141,7 @@ const UserMenu = ({ onNavigate, align = "right" }) => {
                         ))}
                     </div>
 
-                    <div className="border-t border-border pt-1">
+                    <div className="border-t border-border/60 pt-1">
                         <button
                             type="button"
                             role="menuitem"

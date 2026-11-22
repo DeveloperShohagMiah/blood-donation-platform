@@ -54,7 +54,7 @@ const CreateBloodRequest = () => {
 
     if (submitted) {
         return (
-            <main className="grid min-h-[70vh] place-items-center bg-surface-alt px-4 py-20">
+            <div className="grid min-h-[70vh] place-items-center bg-surface-alt px-4 py-10">
                 <div className="w-full max-w-[520px] rounded-3xl bg-card p-8 text-center shadow-lg sm:p-12">
                     <span className="mx-auto grid size-16 place-items-center rounded-full bg-success-soft text-success">
                         <CheckCircle2 size={34} />
@@ -82,7 +82,7 @@ const CreateBloodRequest = () => {
                         </button>
                     </div>
                 </div>
-            </main>
+            </div>
         );
     }
 

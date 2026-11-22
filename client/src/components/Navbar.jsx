@@ -14,7 +14,9 @@ import {
     Mail,
     Megaphone,
     Menu,
+    Moon,
     Search,
+    Sun,
     X,
 } from "lucide-react";
 
@@ -27,15 +29,81 @@ const navLinks = [
     { key: "contact", path: "/contact", icon: Mail },
 ];
 
+const ThemeSwitch = ({ theme, onChange, label, lightLabel, darkLabel, className = "" }) => (
+    <div
+        className={`theme-switch ${className}`.trim()}
+        data-theme={theme}
+        role="group"
+        aria-label={label}
+    >
+        <span className="theme-switch-thumb" aria-hidden="true" />
+
+        <button
+            type="button"
+            className="theme-switch-btn"
+            onClick={() => onChange("light")}
+            aria-pressed={theme === "light"}
+            aria-label={lightLabel}
+            title={lightLabel}
+        >
+            <Sun size={15} strokeWidth={2.3} />
+        </button>
+
+        <button
+            type="button"
+            className="theme-switch-btn"
+            onClick={() => onChange("dark")}
+            aria-pressed={theme === "dark"}
+            aria-label={darkLabel}
+            title={darkLabel}
+        >
+            <Moon size={15} strokeWidth={2.3} />
+        </button>
+    </div>
+);
+
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [hover, setHover] = useState({ left: 0, width: 0, visible: false });
     const listRef = useRef(null);
+    const themeTimerRef = useRef(null);
     const { t, i18n } = useTranslation();
     const { user, isAuthenticated, logout } = useAuth();
 
     const currentLanguage = i18n.resolvedLanguage?.startsWith("bn") ? "BN" : "EN";
+    const [theme, setTheme] = useState(() =>
+        document.documentElement.classList.contains("dark") ? "dark" : "light"
+    );
+
+    const changeTheme = (next) => {
+        if (next === theme) return;
+
+        const root = document.documentElement;
+        const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+        if (!reduceMotion) {
+            root.classList.add("theme-transition");
+            window.clearTimeout(themeTimerRef.current);
+            themeTimerRef.current = window.setTimeout(() => {
+                root.classList.remove("theme-transition");
+            }, 460);
+        }
+
+        root.classList.toggle("dark", next === "dark");
+        root.style.colorScheme = next;
+        document
+            .querySelector('meta[name="theme-color"]')
+            ?.setAttribute("content", next === "dark" ? "#140a0c" : "#f37820");
+
+        setTheme(next);
+
+        try {
+            localStorage.setItem("bc:theme", next);
+        } catch {
+            // Storage may be blocked; the switch still applies this session.
+        }
+    };
 
     const closeMenu = () => setMenuOpen(false);
 
@@ -49,6 +117,14 @@ const Navbar = () => {
         }
         i18n.changeLanguage(next).then(() => window.location.reload());
     };
+
+    useEffect(
+        () => () => {
+            window.clearTimeout(themeTimerRef.current);
+            document.documentElement.classList.remove("theme-transition");
+        },
+        []
+    );
 
     /* Condense the bar once the page scrolls */
     useEffect(() => {
@@ -117,7 +193,7 @@ const Navbar = () => {
                     "transition-[background-color,border-color,box-shadow] duration-300",
                     scrolled
                         ? "border-border/70 bg-card/75 shadow-md supports-[backdrop-filter]:bg-card/70"
-                        : "border-transparent bg-card/95",
+                        : "border-transparent bg-card",
                 ].join(" ")}
             >
                 <nav
@@ -237,6 +313,16 @@ const Navbar = () => {
                             ))}
                         </div>
 
+                        {/* Theme switcher */}
+                        <ThemeSwitch
+                            className="theme-switch--desktop"
+                            theme={theme}
+                            onChange={changeTheme}
+                            label={t("navigation.chooseTheme")}
+                            lightLabel={t("navigation.light")}
+                            darkLabel={t("navigation.dark")}
+                        />
+
                         {/* Desktop account dropdown / login */}
                         {isAuthenticated ? (
                             <div className="hidden md:block">
@@ -305,9 +391,12 @@ const Navbar = () => {
                     <div
                         id="primary-navigation"
                         className={[
-                            "absolute inset-x-0 top-full mt-2 origin-top md:hidden",
-                            "rounded-2xl border border-border/70 bg-card p-2",
-                            "shadow-lg",
+                            "absolute inset-x-0 top-full mt-2 origin-top overflow-hidden md:hidden",
+                            "rounded-2xl border border-border/70 bg-card/95 p-2",
+                            "shadow-xl backdrop-blur-xl backdrop-saturate-150",
+                            "supports-[backdrop-filter]:bg-card/90",
+                            "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px",
+                            "before:bg-linear-to-r before:from-transparent before:via-foreground/15 before:to-transparent",
                             "transition-all duration-200 ease-out motion-reduce:transition-none",
                             menuOpen
                                 ? "visible translate-y-0 scale-100 opacity-100"
@@ -332,7 +421,22 @@ const Navbar = () => {
                             })}
                         </div>
 
-                        <div className="mt-2 grid gap-2 border-t border-border p-1 pt-3">
+                        <div className="theme-row">
+                            <span className="theme-row-label">
+                                <Moon size={16} />
+                                {t("navigation.theme")}
+                            </span>
+
+                            <ThemeSwitch
+                                theme={theme}
+                                onChange={changeTheme}
+                                label={t("navigation.chooseTheme")}
+                                lightLabel={t("navigation.light")}
+                                darkLabel={t("navigation.dark")}
+                            />
+                        </div>
+
+                        <div className="mt-2 grid gap-2 border-t border-border/60 p-1 pt-3">
                             {isAuthenticated && user && (
                                 <div className="flex items-center gap-2.5 px-2 pb-1">
                                     <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary/10 text-[11px] font-bold text-primary">
