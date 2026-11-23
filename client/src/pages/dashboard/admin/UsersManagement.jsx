@@ -4,12 +4,18 @@ import { useForm } from "react-hook-form";
 import {
     AlertCircle,
     CheckCircle2,
+    Eye,
+    EyeOff,
+    LockKeyhole,
     Pencil,
     Trash2,
+    UserPlus,
     Users,
     X,
     XCircle,
 } from "lucide-react";
+import Button from "../../../ui/Button";
+import Input from "../../../ui/Input";
 import { useAuth } from "../../../context/useAuth";
 import { apiFetch } from "../../../utils/api";
 import { useApiData } from "../hooks";
@@ -47,14 +53,19 @@ const filterDefinitions = [
     },
 ];
 
-const emptyForm = { fullName: "", phone: "", email: "" };
+const emptyForm = {
+    fullName: "",
+    phone: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "user",
+    accountStatus: "approved",
+};
 const inputClass = (hasError) =>
-    [
-        "h-11 w-full rounded-xl border bg-background px-3.5 text-sm text-foreground outline-none transition focus:ring-4",
-        hasError
-            ? "border-destructive focus:border-destructive focus:ring-destructive/10"
-            : "border-border focus:border-primary focus:ring-primary/10",
-    ].join(" ");
+    ["input-premium h-11 px-3.5", hasError ? "is-invalid" : ""]
+        .filter(Boolean)
+        .join(" ");
 
 const FieldError = ({ message }) =>
     message ? (
@@ -70,6 +81,8 @@ const UsersManagement = () => {
     const [actionError, setActionError] = useState("");
     const [notice, setNotice] = useState("");
     const [editing, setEditing] = useState(null);
+    const [creating, setCreating] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(null);
 
     const {
@@ -88,7 +101,32 @@ const UsersManagement = () => {
 
     const closeForm = () => {
         setEditing(null);
+        setCreating(false);
+        setShowPassword(false);
         setActionError("");
+    };
+
+    const openCreate = () => {
+        reset(emptyForm);
+        setActionError("");
+        setCreating(true);
+    };
+
+    const saveCreate = async (values) => {
+        setActionError("");
+        try {
+            const { confirmPassword, ...payload } = values;
+            const { user } = await apiFetch("/users", {
+                method: "POST",
+                body: payload,
+            });
+            setNotice(`${user.fullName}'s account was created.`);
+            closeForm();
+            reload();
+        } catch (err) {
+            setError("root.server", { type: "server", message: err.message });
+            setActionError(err.message);
+        }
     };
 
     const openEdit = (item) => {
@@ -166,6 +204,11 @@ const UsersManagement = () => {
             <PageHeader
                 title="Users & approvals"
                 subtitle={`${data?.pagination?.total || 0} active accounts`}
+                actions={
+                    <Button variant="primary" size="sm" onClick={openCreate}>
+                        <UserPlus size={15} /> Add user
+                    </Button>
+                }
             />
             <ErrorBanner message={error || actionError} />
             {notice && (
@@ -264,6 +307,146 @@ const UsersManagement = () => {
                     </tbody>
                 </TableShell>
                 </>
+            )}
+
+            {creating && (
+                <div className="fixed inset-0 z-[70] grid place-items-center overflow-y-auto bg-overlay p-4 backdrop-blur-sm" onClick={closeForm}>
+                    <form
+                        onSubmit={handleSubmit(saveCreate)}
+                        onClick={(e) => e.stopPropagation()}
+                        noValidate
+                        className="my-8 w-full max-w-lg rounded-2xl border border-border bg-card p-6 shadow-2xl"
+                    >
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h2 className="text-lg font-extrabold text-foreground">{t("text.Add user")}</h2>
+                                <p className="mt-1 text-xs text-muted-foreground">Create an account directly — no signup or approval needed.</p>
+                            </div>
+                            <button type="button" onClick={closeForm} aria-label="Close" className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-muted">
+                                <X size={18} />
+                            </button>
+                        </div>
+
+                        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                            <Input
+                                label={t("text.Full name")}
+                                id="create-name"
+                                icon={Users}
+                                error={errors.fullName?.message}
+                                placeholder="e.g. Rafi Ahmed"
+                                {...register("fullName", {
+                                    required: "Full name is required.",
+                                    minLength: { value: 2, message: "Name must be at least 2 characters." },
+                                })}
+                            />
+                            <Input
+                                label={t("text.Phone number")}
+                                id="create-phone"
+                                icon={UserPlus}
+                                error={errors.phone?.message}
+                                placeholder="01XXXXXXXXX"
+                                {...register("phone", {
+                                    required: "Phone number is required.",
+                                    pattern: {
+                                        value: /^(?:\+?88)?01[3-9]\d{8}$/,
+                                        message: "Enter a valid mobile number.",
+                                    },
+                                })}
+                            />
+                            <div className="sm:col-span-2">
+                                <Input
+                                    label={t("text.Email")}
+                                    id="create-email"
+                                    type="email"
+                                    icon={Users}
+                                    error={errors.email?.message}
+                                    placeholder="name@example.com (optional)"
+                                    {...register("email", {
+                                        pattern: {
+                                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                            message: "Enter a valid email address.",
+                                        },
+                                    })}
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="create-role" className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Role")}</label>
+                                <Select id="create-role" {...register("role")}>
+                                    <option value="user">user</option>
+                                    <option value="volunteer">volunteer</option>
+                                    <option value="moderator">moderator</option>
+                                    <option value="admin">admin</option>
+                                </Select>
+                            </div>
+                            <div>
+                                <label htmlFor="create-status" className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Status")}</label>
+                                <Select id="create-status" {...register("accountStatus")}>
+                                    <option value="approved">approved</option>
+                                    <option value="pending">pending</option>
+                                </Select>
+                            </div>
+                            <Input
+                                label={t("text.Password")}
+                                id="create-password"
+                                type={showPassword ? "text" : "password"}
+                                icon={LockKeyhole}
+                                error={errors.password?.message}
+                                hint="At least 8 characters."
+                                trailing={
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword((value) => !value)}
+                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                        className="grid size-9 place-items-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+                                    >
+                                        {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                                    </button>
+                                }
+                                {...register("password", {
+                                    required: "Password is required.",
+                                    minLength: { value: 8, message: "Use at least 8 characters." },
+                                })}
+                            />
+                            <Input
+                                label="Confirm password"
+                                id="create-confirm"
+                                type={showPassword ? "text" : "password"}
+                                icon={LockKeyhole}
+                                error={errors.confirmPassword?.message}
+                                trailing={
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword((value) => !value)}
+                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                        className="grid size-9 place-items-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+                                    >
+                                        {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                                    </button>
+                                }
+                                {...register("confirmPassword", {
+                                    required: "Please confirm the password.",
+                                    validate: (value, form) =>
+                                        value === form.password || "Passwords do not match.",
+                                })}
+                            />
+                        </div>
+
+                        {errors.root?.server && (
+                            <p role="alert" className="mt-4 rounded-xl border border-destructive/25 bg-destructive/10 px-3 py-2 text-xs font-medium text-destructive">
+                                {errors.root.server.message}
+                            </p>
+                        )}
+
+                        <div className="mt-6 flex gap-2">
+                            <Button type="submit" variant="primary" size="md" className="flex-1" disabled={isSubmitting}>
+                                {isSubmitting ? "Creating…" : "Create user"}
+                            </Button>
+                            <Button type="button" variant="outline" size="md" onClick={closeForm}>
+                                Cancel
+                            </Button>
+                        </div>
+                    </form>
+                </div>
             )}
 
             {editing && (

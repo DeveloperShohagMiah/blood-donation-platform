@@ -22,6 +22,75 @@ export const getUsers = asyncHandler(async (req, res) => {
   send(res, { items, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
 });
 
+/* Admin-created accounts are ready to use; no public signup/OTP flow involved. */
+export const createUser = asyncHandler(async (req, res) => {
+  const {
+    fullName,
+    phone,
+    email = "",
+    password,
+    role = ROLES.USER,
+    accountStatus = ACCOUNT_STATUS.APPROVED,
+  } = req.body;
+
+  const name = String(fullName ?? "").trim();
+  if (name.length < 2 || name.length > 100)
+    throw new AppError("Full name must be between 2 and 100 characters.", 400);
+
+  const normalizedPhone = normalizeBdPhone(phone);
+  if (!/^\+8801[3-9]\d{8}$/.test(normalizedPhone))
+    throw new AppError("Enter a valid Bangladesh mobile number.", 400);
+
+  const cleanEmail = String(email ?? "").trim().toLowerCase();
+  if (cleanEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail))
+    throw new AppError("Enter a valid email address.", 400);
+
+  const secret = String(password ?? "");
+  if (secret.length < 8)
+    throw new AppError("Password must be at least 8 characters.", 400);
+
+  if (!Object.values(ROLES).includes(role)) throw new AppError("Invalid role.", 400);
+  if (!Object.values(ACCOUNT_STATUS).includes(accountStatus))
+    throw new AppError("Invalid account status.", 400);
+
+  const duplicate = await User.findOne({
+    $or: [
+      { phone: normalizedPhone },
+      ...(cleanEmail ? [{ email: cleanEmail }] : []),
+    ],
+  });
+  if (duplicate)
+    throw new AppError(
+      duplicate.phone === normalizedPhone
+        ? "An account with this phone number already exists."
+        : "An account with this email already exists.",
+      409,
+    );
+
+  const approved = accountStatus === ACCOUNT_STATUS.APPROVED;
+  const user = await User.create({
+    fullName: name,
+    phone: normalizedPhone,
+    ...(cleanEmail ? { email: cleanEmail } : {}),
+    password: secret,
+    role,
+    accountStatus,
+    phoneVerified: true,
+    approvedBy: approved ? req.user._id : null,
+    approvedAt: approved ? new Date() : null,
+  });
+
+  await Notification.create({
+    recipient: user._id,
+    title: "Account created",
+    message: `An administrator created your ${role} account. You can sign in now.`,
+    type: "account",
+  });
+  await audit(req, "user.created", "User", user._id, { role, accountStatus });
+
+  send(res, { user: publicUser(user) }, 201, "User created.");
+});
+
 export const patchUsersByIdApproval = asyncHandler(async (req, res) => {
   ensureObjectId(req.params.id);
   const { decision, rejectionReason = "" } = req.body;
