@@ -17,8 +17,7 @@ import Select from "./Select";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
 
-const inputClass =
-    "mt-2 h-12 w-full rounded-xl border border-border bg-surface-soft px-4 text-sm font-medium text-foreground outline-none transition placeholder:font-normal placeholder:text-muted-foreground focus:border-primary focus:bg-card focus:ring-4 focus:ring-primary/[0.07] disabled:cursor-not-allowed disabled:bg-surface-soft disabled:opacity-60";
+const inputClass = "input-premium mt-2 h-12 px-4";
 const labelClass = "text-[13px] font-bold text-foreground";
 const errorClass = "mt-1.5 text-xs font-medium text-destructive";
 const today = () => new Date().toISOString().split("T")[0];

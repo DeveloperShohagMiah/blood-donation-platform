@@ -13,11 +13,16 @@
       try {
         var saved = localStorage.getItem("bc:theme");
         var override = new URLSearchParams(window.location.search).get("theme");
+        var mode = ["light", "dark", "system"].indexOf(saved) >= 0 ? saved : "system";
+        var accent = localStorage.getItem("bc:accent") || "original";
         var theme = override === "dark" || override === "light"
           ? override
-          : saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          : mode === "system"
+            ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+            : mode;
         document.documentElement.classList.toggle("dark", theme === "dark");
         document.documentElement.style.colorScheme = theme;
+        document.documentElement.dataset.accent = accent;
       } catch (error) {
         // Storage or matchMedia may be unavailable; the default light theme still applies.
       }

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/useAuth";
+import { useTheme } from "../context/ThemeContext";
 import UserMenu from "./UserMenu";
 import {
     ArrowUpRight,
@@ -15,6 +16,7 @@ import {
     Megaphone,
     Menu,
     Moon,
+    Palette,
     Search,
     Sun,
     X,
@@ -67,43 +69,11 @@ const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [hover, setHover] = useState({ left: 0, width: 0, visible: false });
     const listRef = useRef(null);
-    const themeTimerRef = useRef(null);
     const { t, i18n } = useTranslation();
     const { user, isAuthenticated, logout } = useAuth();
+    const { resolved: theme, setMode } = useTheme();
 
     const currentLanguage = i18n.resolvedLanguage?.startsWith("bn") ? "BN" : "EN";
-    const [theme, setTheme] = useState(() =>
-        document.documentElement.classList.contains("dark") ? "dark" : "light"
-    );
-
-    const changeTheme = (next) => {
-        if (next === theme) return;
-
-        const root = document.documentElement;
-        const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-
-        if (!reduceMotion) {
-            root.classList.add("theme-transition");
-            window.clearTimeout(themeTimerRef.current);
-            themeTimerRef.current = window.setTimeout(() => {
-                root.classList.remove("theme-transition");
-            }, 460);
-        }
-
-        root.classList.toggle("dark", next === "dark");
-        root.style.colorScheme = next;
-        document
-            .querySelector('meta[name="theme-color"]')
-            ?.setAttribute("content", next === "dark" ? "#140a0c" : "#f37820");
-
-        setTheme(next);
-
-        try {
-            localStorage.setItem("bc:theme", next);
-        } catch {
-            // Storage may be blocked; the switch still applies this session.
-        }
-    };
 
     const closeMenu = () => setMenuOpen(false);
 
@@ -117,14 +87,6 @@ const Navbar = () => {
         }
         i18n.changeLanguage(next).then(() => window.location.reload());
     };
-
-    useEffect(
-        () => () => {
-            window.clearTimeout(themeTimerRef.current);
-            document.documentElement.classList.remove("theme-transition");
-        },
-        []
-    );
 
     /* Condense the bar once the page scrolls */
     useEffect(() => {
@@ -317,11 +279,21 @@ const Navbar = () => {
                         <ThemeSwitch
                             className="theme-switch--desktop"
                             theme={theme}
-                            onChange={changeTheme}
+                            onChange={setMode}
                             label={t("navigation.chooseTheme")}
                             lightLabel={t("navigation.light")}
                             darkLabel={t("navigation.dark")}
                         />
+
+                        {/* Theme settings */}
+                        <Link
+                            to="/dashboard/settings"
+                            aria-label={t("navigation.themeSettings", "Theme settings")}
+                            title={t("navigation.themeSettings", "Theme settings")}
+                            className="hidden size-9 place-items-center rounded-full border border-border/70 text-muted-foreground transition hover:border-primary/40 hover:text-primary md:grid"
+                        >
+                            <Palette size={16} />
+                        </Link>
 
                         {/* Desktop account dropdown / login */}
                         {isAuthenticated ? (
@@ -429,7 +401,7 @@ const Navbar = () => {
 
                             <ThemeSwitch
                                 theme={theme}
-                                onChange={changeTheme}
+                                onChange={setMode}
                                 label={t("navigation.chooseTheme")}
                                 lightLabel={t("navigation.light")}
                                 darkLabel={t("navigation.dark")}
@@ -455,6 +427,16 @@ const Navbar = () => {
                                     className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-foreground text-sm font-bold text-primary-foreground"
                                 >
                                     Dashboard
+                                </Link>
+                            )}
+                            {isAuthenticated && (
+                                <Link
+                                    to="/dashboard/settings"
+                                    onClick={closeMenu}
+                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/70 text-sm font-semibold text-foreground transition-colors hover:bg-primary/5"
+                                >
+                                    <Palette size={16} />
+                                    {t("navigation.themeSettings", "Theme settings")}
                                 </Link>
                             )}
                             {isAuthenticated ? (

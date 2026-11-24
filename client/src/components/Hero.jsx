@@ -66,7 +66,7 @@ const Hero = ({ stats }) => {
         : [];
 
     return (
-        <section className="relative isolate overflow-hidden bg-card mb-10 lg:mb-40">
+        <section className="relative isolate overflow-hidden bg-card pb-30">
             {/* Ambient gradient field */}
             <div aria-hidden="true" className="pointer-events-none absolute -top-56 -left-40 -z-10 size-[620px] rounded-full bg-primary/10 blur-3xl" />
             <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-24 -z-10 size-[560px] rounded-full bg-success/10 blur-3xl" />

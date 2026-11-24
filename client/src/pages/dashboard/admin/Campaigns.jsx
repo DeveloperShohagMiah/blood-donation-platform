@@ -37,12 +37,9 @@ const emptyForm = {
 };
 
 const inputClass = (hasError) =>
-    [
-        "h-11 w-full rounded-xl border bg-background px-3.5 text-sm text-foreground outline-none transition focus:ring-4",
-        hasError
-            ? "border-destructive focus:border-destructive focus:ring-destructive/10"
-            : "border-border focus:border-primary focus:ring-primary/10",
-    ].join(" ");
+    ["input-premium h-11 px-3.5", hasError ? "is-invalid" : ""]
+        .filter(Boolean)
+        .join(" ");
 
 const FieldError = ({ message }) =>
     message ? (

@@ -92,6 +92,15 @@ export const postDonations = asyncHandler(async (req, res) => {
   await recalculateDonor(donor._id);
 
   await notifyRequester(updated, amount);
+  if (donor.user) {
+    await Notification.create({
+      recipient: donor.user,
+      title: "Donation confirmed",
+      message: `Your ${amount} ${amount === 1 ? "unit has" : "units have"} been recorded for ${request.patientName}. Thank you for donating.`,
+      type: "donation",
+      link: "/dashboard/donations",
+    });
+  }
   await audit(req, "donation.confirmed", "DonationRecord", record._id, { units: amount });
   send(res, { record, request: updated }, 201);
 });

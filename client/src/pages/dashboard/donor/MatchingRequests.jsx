@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { CheckCircle2, HeartHandshake, MapPin, Send } from "lucide-react";
+import { CheckCircle2, HeartHandshake, MapPin, Send, X } from "lucide-react";
 import { apiFetch } from "../../../utils/api";
 import { formatDate } from "../format";
 import { useApiData } from "../hooks";
@@ -19,6 +19,8 @@ const MatchingRequests = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [busyId, setBusyId] = useState("");
     const [responded, setResponded] = useState([]);
+    const [withdrawnIds, setWithdrawnIds] = useState([]);
+    const [localResponses, setLocalResponses] = useState({});
     const [actionError, setActionError] = useState("");
 
     const focusId = searchParams.get("request");
@@ -30,13 +32,33 @@ const MatchingRequests = () => {
     const myGroup = profile?.bloodGroup;
     const all = requestsQuery.data?.items || [];
 
+    const responseStatus = useMemo(() => {
+        const map = {};
+        all.forEach((item) => {
+            map[item._id] = item.hasDonated
+                ? "donated"
+                : item.myResponse || null;
+        });
+        Object.entries(localResponses).forEach(([id, status]) => {
+            map[id] = status;
+        });
+        withdrawnIds.forEach((id) => {
+            map[id] = "withdrawn";
+        });
+        return map;
+    }, [all, localResponses, withdrawnIds]);
+
     const respondedIds = useMemo(() => {
         const ids = new Set(responded);
         all.forEach((item) => {
             if (item.hasResponded) ids.add(item._id);
         });
+        Object.entries(responseStatus).forEach(([id, status]) => {
+            if (["interested", "accepted", "donated"].includes(status)) ids.add(id);
+            else ids.delete(id);
+        });
         return ids;
-    }, [responded, all]);
+    }, [responded, all, responseStatus]);
 
     // A deep link keeps the chosen request visible even if its group differs.
     const matches = myGroup
@@ -45,21 +67,36 @@ const MatchingRequests = () => {
 
     const unavailable = !profile || profile.availability !== "available";
 
-    const respond = async (id) => {
+    const respond = async (id, response = "interested") => {
         setActionError("");
         setBusyId(id);
         try {
             await apiFetch(`/blood-requests/${id}/responses`, {
                 method: "POST",
-                body: { response: "interested" },
+                body: { response },
             });
-            setResponded((current) => [...new Set([...current, id])]);
+            setResponded((current) =>
+                response === "withdrawn"
+                    ? current.filter((value) => value !== id)
+                    : [...new Set([...current, id])]
+            );
+            setWithdrawnIds((current) =>
+                response === "withdrawn"
+                    ? [...new Set([...current, id])]
+                    : current.filter((value) => value !== id)
+            );
+            setLocalResponses((current) => ({
+                ...current,
+                [id]: response === "withdrawn" ? "withdrawn" : "interested",
+            }));
         } catch (err) {
             setActionError(err.message);
         } finally {
             setBusyId("");
         }
     };
+
+    const withdraw = (id) => respond(id, "withdrawn");
 
     // Arriving from "I can donate" after login: complete that single response,
     // then drop the auto flag while keeping the request highlighted.
@@ -140,6 +177,7 @@ const MatchingRequests = () => {
                           ))
                         : matches.map((item) => {
                               const done = respondedIds.has(item._id);
+                              const status = responseStatus[item._id] || null;
                               const focused = item._id === focusId;
                               return (
                                   <article
@@ -189,19 +227,57 @@ const MatchingRequests = () => {
                                               }`}
                                           >
                                               {done ? (
-                                                  <><CheckCircle2 size={16} /> {t("text.Responded", "Responded")}</>
+                                                  <>
+                                                      <CheckCircle2 size={16} />
+                                                      {status === "donated"
+                                                          ? "Donation confirmed"
+                                                          : status === "accepted"
+                                                            ? "You're selected"
+                                                            : t("text.Responded", "Responded")}
+                                                  </>
                                               ) : (
                                                   <><Send size={15} /> {busyId === item._id ? t("text.Sending_DOT__DOT__DOT_", "Sending...") : t("text.I can donate", "I can donate")}</>
                                               )}
                                           </button>
-                                          <a
-                                              href={`tel:${item.contactPhone}`}
+                                          {status === "interested" && (
+                                              <button
+                                                  type="button"
+                                                  disabled={busyId === item._id}
+                                                  onClick={() => withdraw(item._id)}
+                                                  className="grid size-10 shrink-0 place-items-center rounded-xl border border-border text-muted-foreground transition hover:border-destructive hover:text-destructive disabled:opacity-60"
+                                                  aria-label={t("text.Withdraw offer", "Can't donate anymore?")}
+                                                  title={t("text.Withdraw offer", "Can't donate anymore?")}
+                                              >
+                                                  <X size={16} />
+                                              </button>
+                                          )}
+                                          <a href={`tel:${item.contactPhone}`}
                                               className="grid size-10 place-items-center rounded-xl border border-border text-foreground transition hover:border-primary hover:bg-primary/5 hover:text-primary"
                                               aria-label={t("text.Call requester", "Call requester")}
                                           >
                                               <HeartHandshake size={17} />
                                           </a>
                                       </div>
+
+                                      {status && (
+                                          <p
+                                              className={`mt-3 text-xs font-semibold ${
+                                                  status === "declined" || status === "withdrawn"
+                                                      ? "text-muted-foreground"
+                                                      : "text-success-deep"
+                                              }`}
+                                          >
+                                              {status === "interested"
+                                                  ? "Offer sent — a coordinator will review it shortly."
+                                                  : status === "accepted"
+                                                    ? "You've been selected! A volunteer will contact you soon."
+                                                    : status === "donated"
+                                                      ? "Your donation has been recorded. Thank you!"
+                                                      : status === "declined"
+                                                        ? "Your offer wasn't selected this time. Thank you for being ready to help."
+                                                        : "You withdrew this offer."}
+                                          </p>
+                                      )}
                                   </article>
                               );
                           })}

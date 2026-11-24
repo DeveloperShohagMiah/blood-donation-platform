@@ -4,6 +4,7 @@ import {
   Notification,
   DonorProfile,
   DonorResponse,
+  DonationRecord,
 } from "../models/index.js";
 import { ROLES, REQUEST_STATUS } from "../constants/index.js";
 import { AppError, asyncHandler, send, pick } from "../utils/http.js";
@@ -101,7 +102,7 @@ export const getPublicBloodRequests = asyncHandler(async (req, res) => {
     REQUEST_STATUS.IN_PROGRESS,
   ];
 
-  const [items, respondedIds] = await Promise.all([
+  const [items, myResponses] = await Promise.all([
     BloodRequest.find({
       status: {
         $in: [
@@ -120,23 +121,33 @@ export const getPublicBloodRequests = asyncHandler(async (req, res) => {
       .limit(20)
       .lean(),
     (async () => {
-      if (!req.user) return new Set();
+      if (!req.user) return {};
       const profile = await DonorProfile.findOne({ user: req.user._id }).select("_id");
-      if (!profile) return new Set();
-      const responses = await DonorResponse.find({
-        donor: profile._id,
-        response: { $in: ["interested", "accepted"] },
-      }).select("request");
-      return new Set(responses.map((item) => String(item.request)));
+      if (!profile) return {};
+      const [responses, donations] = await Promise.all([
+        DonorResponse.find({ donor: profile._id }).select("request response"),
+        DonationRecord.find({ donor: profile._id, status: "confirmed" }).select("request"),
+      ]);
+      const statuses = {};
+      responses.forEach((item) => {
+        statuses[String(item.request)] = item.response;
+      });
+      donations.forEach((item) => {
+        statuses[String(item.request)] = "donated";
+      });
+      return statuses;
     })(),
   ]);
 
   const publicItems = items.map((item) => {
     const isVerified = verifiedStatuses.includes(item.status);
+    const myResponse = myResponses[String(item._id)] || null;
     return {
       ...item,
       isVerified,
-      hasResponded: respondedIds.has(String(item._id)),
+      myResponse,
+      hasResponded: ["interested", "accepted", "donated"].includes(myResponse),
+      hasDonated: myResponse === "donated",
       contactName: isVerified ? item.contactName : undefined,
       contactPhone: isVerified ? item.contactPhone : undefined,
     };

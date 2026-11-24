@@ -6,6 +6,12 @@ import { protect } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 router.post("/blood-requests/:id/responses", protect, controller.postBloodRequestsByIdResponses);
+router.patch(
+  "/blood-requests/:id/responses/:responseId",
+  protect,
+  volunteerOrStaff,
+  controller.patchDonorResponseDecision,
+);
 router.get(
   "/blood-requests/:id/responses",
   protect,

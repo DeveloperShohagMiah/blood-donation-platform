@@ -12,11 +12,12 @@ import {
     X,
 } from "lucide-react";
 import { apiFetch } from "../utils/api";
+import HeroBadge from "../ui/HeroBadge.jsx";
 
 const tone = {
     published: "bg-success/10 text-success-deep ring-success/20",
     draft: "bg-muted-foreground/10 text-muted-foreground ring-muted-foreground/20",
-    completed: "bg-info/10 text-info ring-info/20",
+    completed: "bg-white/20 text-white ring-primary/70",
     cancelled: "bg-destructive/10 text-destructive ring-destructive/20",
 };
 
@@ -98,9 +99,10 @@ const Campaigns = () => {
                 <div className="pointer-events-none absolute -top-24 -right-20 size-80 rounded-full bg-primary/10 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-32 -left-20 size-80 rounded-full bg-accent/40 blur-3xl" />
                 <div className="container relative text-center max-w-7xl mx-auto">
-                    <span className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-card px-4 py-2 text-xs font-bold tracking-wide text-primary uppercase shadow-sm">
-                        <Megaphone size={15} /> Blood Connect Community
-                    </span>
+                    <HeroBadge
+                        icon={<Megaphone size={13} fill="currentColor" fillOpacity={0.25} />}
+                        label={t("text.campaigns", "Blood Connect Community")}
+                    />
                     <h1 className="mt-6 text-4xl leading-tight font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
                         Donation <span className="text-gradient">{t("text.campaigns")}</span>
                     </h1>

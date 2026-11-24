@@ -55,6 +55,39 @@ export const postBloodRequestsByIdResponses = asyncHandler(async (req, res) => {
   send(res, { response }, 201);
 });
 
+/* Coordinator decision on a donor's offer — the donor is always notified. */
+export const patchDonorResponseDecision = asyncHandler(async (req, res) => {
+  const { decision } = req.body;
+  if (!["accept", "decline"].includes(decision))
+    throw new AppError("Invalid decision.", 400);
+
+  const response = await DonorResponse.findById(req.params.responseId)
+    .populate({ path: "donor", select: "user", populate: { path: "user", select: "fullName" } })
+    .populate("request", "patientName");
+  if (!response) throw new AppError("Donor response not found.", 404);
+  if (!["interested", "accepted", "declined"].includes(response.response))
+    throw new AppError("This offer can no longer be reviewed.", 409);
+  if (!response.donor?.user || !response.request)
+    throw new AppError("Donor or request no longer exists.", 404);
+
+  response.response = decision === "accept" ? "accepted" : "declined";
+  await response.save();
+
+  await Notification.create({
+    recipient: response.donor.user._id,
+    title: decision === "accept" ? "You've been selected to donate" : "Donor offer update",
+    message:
+      decision === "accept"
+        ? `You've been selected for ${response.request.patientName}'s blood request. A volunteer will contact you with the next steps.`
+        : `Your offer for ${response.request.patientName}'s blood request was not selected this time. Thank you for being ready to help.`,
+    type: decision === "accept" ? "assignment" : "account",
+    link: `/dashboard/matching?request=${response.request._id}`,
+  });
+  await audit(req, `donor.response_${decision}`, "DonorResponse", response._id);
+
+  send(res, { response });
+});
+
 export const getBloodRequestsByIdResponses = asyncHandler(async (req, res) => {
   const items = await DonorResponse.find({ request: req.params.id }).populate({
     path: "donor",

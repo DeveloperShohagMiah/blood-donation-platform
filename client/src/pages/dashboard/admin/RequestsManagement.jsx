@@ -2,7 +2,8 @@ import { t } from "../../../utils/tr.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { AlertCircle, Check, Pencil, Trash2, UserPlus, Users, X } from "lucide-react";
+import { AlertCircle, Check, Pencil, Plus, Trash2, UserPlus, Users, X } from "lucide-react";
+import Button from "../../../ui/Button";
 import { apiFetch } from "../../../utils/api";
 import { useApiData } from "../hooks";
 import Select from "../../../components/Select";
@@ -54,12 +55,9 @@ const filterDefinitions = [
 ];
 
 const inputClass = (hasError) =>
-    [
-        "h-11 w-full rounded-xl border bg-background px-3.5 text-sm text-foreground outline-none transition focus:ring-4",
-        hasError
-            ? "border-destructive focus:border-destructive focus:ring-destructive/10"
-            : "border-border focus:border-primary focus:ring-primary/10",
-    ].join(" ");
+    ["input-premium h-11 px-3.5", hasError ? "is-invalid" : ""]
+        .filter(Boolean)
+        .join(" ");
 
 const FieldError = ({ message }) =>
     message ? (
@@ -96,11 +94,13 @@ const RequestsManagement = () => {
     const [actionError, setActionError] = useState("");
     const [notice, setNotice] = useState("");
     const [editing, setEditing] = useState(null);
+    const [creating, setCreating] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(null);
     const [responsesRequest, setResponsesRequest] = useState(null);
     const [responses, setResponses] = useState([]);
     const [responsesLoading, setResponsesLoading] = useState(false);
     const [responsesError, setResponsesError] = useState("");
+    const [busyResponseId, setBusyResponseId] = useState("");
 
     const {
         register,
@@ -139,7 +139,40 @@ const RequestsManagement = () => {
 
     const closeForm = () => {
         setEditing(null);
+        setCreating(false);
         setActionError("");
+    };
+
+    const today = () => new Date().toISOString().slice(0, 10);
+
+    const openCreate = () => {
+        reset({ ...emptyForm, neededAt: today() });
+        setActionError("");
+        setCreating(true);
+    };
+
+    const saveCreate = async (values) => {
+        setActionError("");
+        try {
+            await apiFetch("/blood-requests", {
+                method: "POST",
+                body: {
+                    ...values,
+                    units: Number(values.units),
+                    upazila: values.upazila || undefined,
+                    union: values.union || undefined,
+                    neededAt: values.neededAt
+                        ? new Date(values.neededAt).toISOString()
+                        : undefined,
+                },
+            });
+            setNotice("Blood request created.");
+            closeForm();
+            reload();
+        } catch (err) {
+            setError("root.server", { type: "server", message: err.message });
+            setActionError(err.message);
+        }
     };
 
     const openResponses = async (item) => {
@@ -154,6 +187,30 @@ const RequestsManagement = () => {
             setResponsesError(err.message);
         } finally {
             setResponsesLoading(false);
+        }
+    };
+
+    const reviewResponse = async (responseId, decision) => {
+        if (!responsesRequest) return;
+        setResponsesError("");
+        setBusyResponseId(responseId);
+        try {
+            await apiFetch(
+                `/blood-requests/${responsesRequest._id}/responses/${responseId}`,
+                { method: "PATCH", body: { decision } }
+            );
+            setResponses((current) =>
+                current.map((item) =>
+                    item._id === responseId
+                        ? { ...item, response: decision === "accept" ? "accepted" : "declined" }
+                        : item
+                )
+            );
+            setNotice(decision === "accept" ? "Donor selected — they've been notified." : "Offer declined — donor notified.");
+        } catch (err) {
+            setResponsesError(err.message);
+        } finally {
+            setBusyResponseId("");
         }
     };
 
@@ -271,6 +328,11 @@ const RequestsManagement = () => {
             <PageHeader
                 title="All blood requests"
                 subtitle="Review, edit, assign and delete submitted requests."
+                actions={
+                    <Button variant="primary" size="sm" onClick={openCreate}>
+                        <Plus size={15} /> Add request
+                    </Button>
+                }
             />
             <ErrorBanner message={error || actionError} />
             {notice && (
@@ -383,16 +445,18 @@ const RequestsManagement = () => {
                 </>
             )}
 
-            {editing && (
+            {(editing || creating) && (
                 <div className="fixed inset-0 z-[70] grid place-items-center bg-overlay p-4 backdrop-blur-sm" onClick={closeForm}>
                     <form
-                        onSubmit={handleSubmit(saveEdit)}
+                        onSubmit={handleSubmit(creating ? saveCreate : saveEdit)}
                         onClick={(e) => e.stopPropagation()}
                         noValidate
                         className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-2xl"
                     >
                         <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-extrabold text-foreground">{t("text.Edit request")}</h2>
+                            <h2 className="text-lg font-extrabold text-foreground">
+                                {creating ? "Add blood request" : t("text.Edit request")}
+                            </h2>
                             <button type="button" onClick={closeForm} aria-label="Close" className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-muted">
                                 <X size={18} />
                             </button>
@@ -402,6 +466,7 @@ const RequestsManagement = () => {
                             <label className="sm:col-span-2">
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Patient name")}</span>
                                 <input
+                                    placeholder="e.g. Rahim Ahmed"
                                     {...register("patientName", {
                                         required: "Patient name is required.",
                                         minLength: { value: 2, message: "Name must be at least 2 characters." },
@@ -413,6 +478,7 @@ const RequestsManagement = () => {
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Blood group")}</span>
                                 <Select size="lg" {...register("bloodGroup", { required: true })} value={watch("bloodGroup")} invalid={Boolean(errors.bloodGroup)}>
+                                    <option value="">Select group</option>
                                     {bloodGroups.map((group) => <option key={group} value={group}>{group}</option>)}
                                 </Select>
                             </label>
@@ -427,7 +493,7 @@ const RequestsManagement = () => {
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Units")}</span>
                                 <input
-                                    type="number"
+                                    type="number" placeholder="1–10"
                                     min="1"
                                     max="10"
                                     {...register("units", {
@@ -441,12 +507,21 @@ const RequestsManagement = () => {
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Needed by")}</span>
-                                <input type="date" {...register("neededAt")} className={inputClass(errors.neededAt)} />
+                                <input
+                                    type="date"
+                                    min={today()}
+                                    {...register("neededAt", {
+                                        validate: (value) =>
+                                            !value || value >= today() || "Choose today or a future date.",
+                                    })}
+                                    className={inputClass(errors.neededAt)}
+                                />
                                 <FieldError message={errors.neededAt?.message} />
                             </label>
                             <label className="sm:col-span-2">
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Hospital")}</span>
                                 <input
+                                    placeholder="e.g. Tangail General Hospital"
                                     {...register("hospitalName", { required: "Hospital is required." })}
                                     className={inputClass(errors.hospitalName)}
                                 />
@@ -454,13 +529,14 @@ const RequestsManagement = () => {
                             </label>
                             <label className="sm:col-span-2">
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Hospital address")}</span>
-                                <input {...register("hospitalAddress")} className={inputClass(errors.hospitalAddress)} />
+                                <input placeholder="Street, area, city" {...register("hospitalAddress")} className={inputClass(errors.hospitalAddress)} />
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Division")}</span>
                                 <Select
                                     size="lg"
                                     {...register("division", {
+                                        required: "Select a division.",
                                         onChange: () => {
                                             setValue("district", "");
                                             setValue("upazila", "");
@@ -472,12 +548,14 @@ const RequestsManagement = () => {
                                     <option value="">{t("text.Select division")}</option>
                                     {divisions.map((item) => <option key={item._id} value={item._id}>{item.nameEn}</option>)}
                                 </Select>
+                                <FieldError message={errors.division?.message} />
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.District")}</span>
                                 <Select
                                     size="lg"
                                     {...register("district", {
+                                        required: "Select a district.",
                                         onChange: () => {
                                             setValue("upazila", "");
                                             setValue("union", "");
@@ -489,6 +567,7 @@ const RequestsManagement = () => {
                                     <option value="">{t("text.Select district")}</option>
                                     {districts.map((item) => <option key={item._id} value={item._id}>{item.nameEn}</option>)}
                                 </Select>
+                                <FieldError message={errors.district?.message} />
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Upazila")}</span>
@@ -509,23 +588,25 @@ const RequestsManagement = () => {
                                     {unions.map((item) => <option key={item._id} value={item._id}>{item.nameEn}</option>)}
                                 </Select>
                             </label>
-                            <label>
-                                <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Status")}</span>
-                                <Select size="lg" {...register("status")} value={watch("status")}>
-                                    {statuses.map((status) => <option key={status} value={status}>{status.replaceAll("_", " ")}</option>)}
-                                </Select>
-                            </label>
+                            {!creating && (
+                                <label>
+                                    <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Status")}</span>
+                                    <Select size="lg" {...register("status")} value={watch("status")}>
+                                        {statuses.map((status) => <option key={status} value={status}>{status.replaceAll("_", " ")}</option>)}
+                                    </Select>
+                                </label>
+                            )}
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Contact name")}</span>
-                                <input {...register("contactName")} className={inputClass(errors.contactName)} />
+                                <input placeholder="e.g. Rafi Ahmed" {...register("contactName")} className={inputClass(errors.contactName)} />
                             </label>
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Contact phone")}</span>
-                                <input {...register("contactPhone")} className={inputClass(errors.contactPhone)} />
+                                <input placeholder="01XXXXXXXXX" {...register("contactPhone")} className={inputClass(errors.contactPhone)} />
                             </label>
                             <label className="sm:col-span-2">
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Details")}</span>
-                                <textarea rows={2} {...register("details")} className="w-full resize-y rounded-xl border border-border bg-background px-3.5 py-3 text-sm outline-none focus:border-primary" />
+                                <textarea rows={2} placeholder="Anything volunteers should know…" {...register("details")} className="w-full resize-y rounded-xl border border-border bg-background px-3.5 py-3 text-sm outline-none focus:border-primary" />
                             </label>
                         </div>
 
@@ -536,8 +617,14 @@ const RequestsManagement = () => {
                         )}
 
                         <div className="mt-6 flex gap-2">
-                            <button type="submit" disabled={isSubmitting || busyId === editing._id} className="btn-premium h-10 flex-1 px-4 text-sm">
-                                {isSubmitting || busyId === editing._id ? "Saving…" : "Save changes"}
+                            <button
+                                type="submit"
+                                disabled={isSubmitting || (!creating && busyId === editing._id)}
+                                className="btn-premium h-10 flex-1 px-4 text-sm"
+                            >
+                                {isSubmitting
+                                    ? creating ? "Creating…" : "Saving…"
+                                    : creating ? "Create request" : "Save changes"}
                             </button>
                             <button type="button" onClick={closeForm} className="h-10 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground">{t("text.Cancel")}</button>
                         </div>
@@ -598,7 +685,29 @@ const RequestsManagement = () => {
                                                 {response.donor?.bloodGroup || "—"} · {response.donor?.availability || "—"} · {formatDate(response.respondedAt)}
                                             </p>
                                         </div>
-                                        <StatusBadge value={response.response} />
+                                        <div className="flex shrink-0 items-center gap-2">
+                                            <StatusBadge value={response.response} />
+                                            {response.response === "interested" && (
+                                                <>
+                                                    <button
+                                                        type="button"
+                                                        disabled={busyResponseId === response._id}
+                                                        onClick={() => reviewResponse(response._id, "accept")}
+                                                        className="h-8 rounded-lg bg-primary px-2.5 text-xs font-bold text-primary-foreground transition hover:opacity-90 disabled:opacity-60"
+                                                    >
+                                                        Accept
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        disabled={busyResponseId === response._id}
+                                                        onClick={() => reviewResponse(response._id, "decline")}
+                                                        className="h-8 rounded-lg border border-border px-2.5 text-xs font-bold text-muted-foreground transition hover:border-destructive hover:text-destructive disabled:opacity-60"
+                                                    >
+                                                        Decline
+                                                    </button>
+                                                </>
+                                            )}
+                                        </div>
                                     </li>
                                 ))}
                             </ul>

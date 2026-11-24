@@ -6,6 +6,7 @@ import {
     ClipboardList,
     LayoutDashboard,
     LogOut,
+    Palette,
     ShieldCheck,
     UserRound,
     Users,
@@ -68,6 +69,7 @@ const UserMenu = ({ onNavigate, align = "right" }) => {
                     { to: "/dashboard/my-requests", label: "My requests", icon: ClipboardList },
                 ]),
         { to: "/dashboard/notifications", label: "Notifications", icon: Bell },
+        { to: "/dashboard/settings", label: "Theme settings", icon: Palette },
     ];
 
     const close = () => {

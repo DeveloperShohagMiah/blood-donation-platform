@@ -12,6 +12,7 @@ import Contact from "./pages/Contact";
 import PublicCampaigns from "./pages/Campaigns";
 import BloodRequests from "./pages/BloodRequests";
 import { RequireAuth, RequireRole } from "./components/RequireRole";
+import Settings from "./pages/dashboard/Settings";
 
 import DashboardLayout from "./pages/dashboard/DashboardLayout";
 import DashboardHome from "./pages/dashboard/DashboardHome";
@@ -63,6 +64,7 @@ const App = () => {
             >
                 <Route index element={<DashboardHome />} />
                 <Route path="notifications" element={<Notifications />} />
+                <Route path="settings" element={<Settings />} />
 
                 <Route path="profile" element={<RequireRole roles={DONOR}><DonorProfile /></RequireRole>} />
                 <Route path="my-requests" element={<RequireRole roles={DONOR}><MyRequests /></RequireRole>} />

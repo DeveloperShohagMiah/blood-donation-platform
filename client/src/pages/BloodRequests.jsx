@@ -247,6 +247,8 @@ const BloodRequests = () => {
                                                     <DonateButton
                                                         requestId={item._id}
                                                         hasResponded={item.hasResponded}
+                                                        myResponse={item.myResponse}
+                                                        hasDonated={item.hasDonated}
                                                         compact
                                                     />
                                                     {item.contactPhone && (

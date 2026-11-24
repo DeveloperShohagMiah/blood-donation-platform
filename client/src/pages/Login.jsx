@@ -3,22 +3,22 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/useAuth";
+import Button from "../ui/Button";
+import Input from "../ui/Input";
 import {
     AlertCircle,
     ArrowLeft,
     ArrowRight,
-    CalendarCheck,
-    CheckCircle2,
-    Droplets,
     Eye,
     EyeOff,
-    HeartPulse,
+    Globe,
     Info,
+    Layers,
     Loader2,
     LockKeyhole,
     ShieldCheck,
+    TrendingUp,
     UserRound,
-    UserCog,
 } from "lucide-react";
 
 // --------------------------------------------------
@@ -28,10 +28,9 @@ import {
 const REQUEST_TIMEOUT_MS = 15000;
 const LAST_ID_KEY = "bc:lastIdentifier";
 
-// Bangladesh mobile number:
-// 01XXXXXXXXX, +8801XXXXXXXXX, 8801XXXXXXXXX
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^(?:\+?88)?01[3-9]\d{8}$/;
+const USERNAME_RE = /^[a-zA-Z0-9._-]{3,30}$/;
 
 // --------------------------------------------------
 // Helpers
@@ -76,45 +75,27 @@ const getSafeRedirect = (from) => {
     return raw;
 };
 
-const inputClass = (hasError) =>
-    hasError ? "login-input is-invalid" : "login-input";
-
 // --------------------------------------------------
 // Reusable components
 // --------------------------------------------------
 
-const BrandMark = ({ className }) => (
-    <span className={className}>
-        <Droplets size={25} strokeWidth={2.2} />
-    </span>
-);
-
 const FeatureItem = ({ icon: Icon, title, description, index }) => (
     <div
-        className="login-feature"
+        className="cms-feature flex items-start gap-4 rounded-2xl p-[0.85rem_1rem]"
         style={{ animationDelay: `${120 + index * 80}ms` }}
     >
-        <div className="login-feature-icon">
+        <div className="cms-feature-icon">
             <Icon size={19} />
         </div>
 
         <div>
-            <h3 className="login-feature-title">{title}</h3>
-            <p className="login-feature-copy">{description}</p>
+            <h3 className="text-[0.85rem] font-bold text-white">{title}</h3>
+            <p className="mt-0.5 text-[0.78rem] leading-relaxed text-white/55">
+                {description}
+            </p>
         </div>
     </div>
 );
-
-const FieldError = ({ id, children }) => {
-    if (!children) return null;
-
-    return (
-        <p id={id} role="alert" className="login-hint login-hint-error">
-            <AlertCircle size={14} />
-            {children}
-        </p>
-    );
-};
 
 // --------------------------------------------------
 // Login component
@@ -154,9 +135,8 @@ const Login = ({ onSuccess }) => {
 
     const rememberMe = watch("remember");
 
-    // Focus the appropriate field on initial render.
     useEffect(() => {
-        document.title = `${t("login.title", "Log in")} | Blood Connect`;
+        document.title = `${t("cmsLogin.title", "Welcome back")} | Portfolio CMS`;
 
         setFocus(rememberedId ? "password" : "identifier");
 
@@ -196,16 +176,11 @@ const Login = ({ onSuccess }) => {
                 controller.signal
             );
 
-            writeStorage(
-                LAST_ID_KEY,
-                values.remember ? identifier : ""
-            );
+            writeStorage(LAST_ID_KEY, values.remember ? identifier : "");
 
             onSuccess?.(data);
 
-            navigate(getSafeRedirect(location.state?.from), {
-                replace: true,
-            });
+            navigate(getSafeRedirect(location.state?.from), { replace: true });
         } catch (error) {
             if (controller.signal.aborted && !error.status) {
                 if (timedOut) {
@@ -225,8 +200,8 @@ const Login = ({ onSuccess }) => {
 
             if ([400, 401, 404].includes(error.status)) {
                 message = t(
-                    "login.err.invalid",
-                    "Incorrect phone, email or password. Please try again."
+                    "cmsLogin.err.invalid",
+                    "Incorrect email or password. Please try again."
                 );
 
                 resetField("password");
@@ -261,10 +236,7 @@ const Login = ({ onSuccess }) => {
                 );
             }
 
-            setError("root.serverError", {
-                type: "server",
-                message,
-            });
+            setError("root.serverError", { type: "server", message });
         } finally {
             clearTimeout(timer);
         }
@@ -279,180 +251,150 @@ const Login = ({ onSuccess }) => {
 
     const features = [
         {
-            icon: CalendarCheck,
-            title: t("login.f1Title", "Manage availability"),
-            description: t(
-                "login.f1",
-                "Update your donor availability whenever you need."
-            ),
+            icon: Layers,
+            title: t("cmsLogin.f1Title", "Curate projects"),
+            description: t("cmsLogin.f1", "Organize work, drafts and case studies in one place."),
         },
         {
-            icon: HeartPulse,
-            title: t("login.f2Title", "Help save lives"),
-            description: t(
-                "login.f2",
-                "Stay informed about blood requests in your area."
-            ),
+            icon: Globe,
+            title: t("cmsLogin.f2Title", "Publish with confidence"),
+            description: t("cmsLogin.f2", "Preview and release updates whenever you are ready."),
         },
         {
-            icon: UserCog,
-            title: t("login.f3Title", "Your donor profile"),
-            description: t(
-                "login.f3",
-                "Manage your personal information and donation history."
-            ),
+            icon: TrendingUp,
+            title: t("cmsLogin.f3Title", "Know your audience"),
+            description: t("cmsLogin.f3", "See what resonates with visitors and clients."),
         },
     ];
 
     return (
-        <main className="login-page">
+        <main className="cms-login-page min-h-dvh bg-surface-alt lg:grid lg:grid-cols-[minmax(0,1.04fr)_minmax(0,1fr)]">
 
             {/* ------------------------------------------- */}
-            {/* Left brand showcase */}
+            {/* Left — studio showcase */}
             {/* ------------------------------------------- */}
 
-            <section className="login-showcase">
-                <div className="login-texture" aria-hidden="true" />
-                <div className="login-sheen" aria-hidden="true" />
+            <section className="cms-showcase relative isolate hidden overflow-hidden text-white lg:flex lg:flex-col">
+                <div className="cms-orb cms-orb-a" aria-hidden="true" />
+                <div className="cms-orb cms-orb-b" aria-hidden="true" />
 
-                <div className="login-orb login-orb-a" aria-hidden="true" />
-                <div className="login-orb login-orb-b" aria-hidden="true" />
-                <div className="login-orb login-orb-c" aria-hidden="true" />
-
-                {/* Decorative heartbeat — the visual signature of the page. */}
-                <div className="login-pulse" aria-hidden="true">
-                    <svg viewBox="0 0 420 170" preserveAspectRatio="none">
-                        <defs>
-                            <linearGradient id="authPulseStroke" x1="0" y1="0" x2="1" y2="0">
-                                <stop offset="0%" stopColor="var(--login-pulse-edge)" />
-                                <stop offset="45%" stopColor="var(--login-rose)" />
-                                <stop offset="70%" stopColor="var(--login-rose-soft)" />
-                                <stop offset="100%" stopColor="var(--login-pulse-edge)" />
-                            </linearGradient>
-                        </defs>
-                        <path d="M0 110 H68 L84 110 L96 86 L110 138 L128 34 L146 110 H214 L230 110 L242 92 L254 128 L270 62 L286 110 L360 110 L376 96 L390 124 L406 74 L420 110" />
-                    </svg>
-                </div>
-
-                <Link to="/" className="login-brand">
-                    <BrandMark className="login-brand-mark" />
-                    <span className="login-brand-name">
-                        Blood <span>{t("text.Connect")}</span>
+                <Link to="/" className="inline-flex w-fit items-center gap-3">
+                    <span className="cms-brand-mark" aria-hidden="true">
+                        <Layers size={24} strokeWidth={2.2} />
+                    </span>
+                    <span className="font-display text-xl font-extrabold tracking-tight">
+                        Portfolio <span className="cms-brand-name">CMS</span>
                     </span>
                 </Link>
 
-                <div className="login-showcase-body">
-                    <span className="login-badge">
-                        <span className="login-badge-dot" />
-                        {t("login.brandBadge", "A COMMUNITY THAT CARES")}
+                <div className="cms-showcase-body my-auto max-w-[34rem] py-8">
+                    <span className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/5 px-3.5 py-2 text-[0.64rem] font-extrabold uppercase tracking-[0.16em] text-white/80 backdrop-blur-sm">
+                        <span className="size-1.5 animate-pulse rounded-full bg-indigo-300" />
+                        {t("cmsLogin.badge", "Portfolio CMS")}
                     </span>
 
-                    <h2 className="login-hero-title">
-                        {t("login.heroTitle", "Welcome back, donor.")}
-                        <span>
-                            {t("login.heroHighlight", "Your next act could save a life.")}
+                    <h2 className="cms-hero-title mt-6 font-display text-[clamp(2.6rem,4.2vw,4.2rem)] font-extrabold leading-[1.05] tracking-[-0.05em]">
+                        {t("cmsLogin.heroTitle", "Your work,")}
+                        <span className="cms-gradient-text mt-1 block">
+                            {t("cmsLogin.heroHighlight", "beautifully managed.")}
                         </span>
                     </h2>
 
-                    <p className="login-hero-copy">
+                    <p className="cms-hero-copy mt-5 max-w-[31rem] text-[0.95rem] leading-[1.85] text-white/60">
                         {t(
-                            "login.heroText",
-                            "Log in to manage your donor profile, update your availability and stay connected with people who need blood."
+                            "cmsLogin.heroText",
+                            "A calm, focused space to shape your portfolio, publish case studies, and keep every project in its best light."
                         )}
                     </p>
 
-                    <div className="login-features">
+                    <div className="cms-features mt-9 grid gap-2.5">
                         {features.map((feature, index) => (
                             <FeatureItem key={feature.title} {...feature} index={index} />
                         ))}
                     </div>
 
-                    <div className="login-stats">
-                        <div className="login-stat">
-                            <p className="login-stat-value">24/7</p>
-                            <p className="login-stat-label">
-                                {t("login.stat1", "Always online")}
+                    <div className="cms-stats mt-7 grid grid-cols-3 gap-3">
+                        <div className="cms-stat pt-3.5">
+                            <p className="font-display text-[1.25rem] font-extrabold tracking-tight text-white">24</p>
+                            <p className="mt-0.5 text-[0.63rem] font-semibold uppercase tracking-wider text-white/50">
+                                {t("cmsLogin.stat1", "Projects")}
                             </p>
                         </div>
-                        <div className="login-stat">
-                            <p className="login-stat-value">100%</p>
-                            <p className="login-stat-label">
-                                {t("login.stat2", "Voluntary")}
+                        <div className="cms-stat pt-3.5">
+                            <p className="font-display text-[1.25rem] font-extrabold tracking-tight text-white">18</p>
+                            <p className="mt-0.5 text-[0.63rem] font-semibold uppercase tracking-wider text-white/50">
+                                {t("cmsLogin.stat2", "Published")}
                             </p>
                         </div>
-                        <div className="login-stat">
-                            <p className="login-stat-value">Free</p>
-                            <p className="login-stat-label">
-                                {t("login.stat3", "No cost, ever")}
+                        <div className="cms-stat pt-3.5">
+                            <p className="font-display text-[1.25rem] font-extrabold tracking-tight text-white">06</p>
+                            <p className="mt-0.5 text-[0.63rem] font-semibold uppercase tracking-wider text-white/50">
+                                {t("cmsLogin.stat3", "Drafts")}
                             </p>
                         </div>
                     </div>
                 </div>
 
-                <div className="login-showcase-footer">
-                    <p>
-                        {t(
-                            "login.voluntary",
-                            "Blood donation is always voluntary and free."
-                        )}
-                    </p>
-
-                    <span className="login-secure">
+                <div className="cms-showcase-footer mt-auto flex items-center justify-between gap-4 border-t border-white/10 pt-5 text-[0.75rem] text-white/55">
+                    <p>© {new Date().getFullYear()} Portfolio CMS</p>
+                    <span className="cms-secure inline-flex items-center gap-1.5 font-semibold">
                         <ShieldCheck size={15} />
-                        {t("login.secure", "Secure access")}
+                        Encrypted workspace
                     </span>
                 </div>
             </section>
 
             {/* ------------------------------------------- */}
-            {/* Right form panel */}
+            {/* Right — sign in */}
             {/* ------------------------------------------- */}
 
-            <section className="login-panel">
-                <Link to="/" className="login-mobile-brand">
-                    <BrandMark className="login-mobile-mark" />
-                    <span className="login-mobile-name">
-                        Blood <span>{t("text.Connect")}</span>
+            <section className="bg-gradient relative flex min-h-dvh items-center justify-center px-4 pt-20 pb-8 sm:px-8 lg:min-h-0 lg:px-12 lg:py-10">
+                <Link to="/" className="absolute top-6 left-6 inline-flex items-center gap-2.5 lg:hidden">
+                    <span className="cms-brand-mark" aria-hidden="true">
+                        <Layers size={20} strokeWidth={2.2} />
+                    </span>
+                    <span className="font-display text-lg font-extrabold tracking-tight text-foreground">
+                        Portfolio <span className="text-primary">CMS</span>
                     </span>
                 </Link>
 
-                <div className="login-card">
-                    <div className="login-card-content">
-                        <Link to="/" className="login-back">
+                <div className="cms-card relative w-full max-w-[27.5rem] rounded-[1.6rem] p-6 sm:p-9">
+                    <div className="relative z-10">
+                        <Link
+                            to="/"
+                            className="inline-flex items-center gap-2 text-[0.78rem] font-semibold text-muted-foreground transition-colors hover:text-primary"
+                        >
                             <ArrowLeft size={16} />
-                            {t("login.backHome", "Back to home")}
+                            {t("cmsLogin.back", "Back to site")}
                         </Link>
 
-                        <div className="login-heading">
-                            <span className="login-eyebrow">
-                                {t("login.eyebrow", "Member sign in")}
+                        <div className="cms-heading mt-5">
+                            <span className="cms-eyebrow inline-flex items-center gap-2.5 text-[0.63rem] font-extrabold uppercase tracking-[0.18em] text-primary">
+                                {t("cmsLogin.eyebrow", "Studio access")}
                             </span>
 
-                            <h1 className="login-title">
-                                {t("login.title", "Welcome back")}
+                            <h1 className="cms-title mt-3 font-display text-[clamp(1.9rem,3vw,2.4rem)] font-extrabold leading-tight tracking-[-0.04em] text-foreground">
+                                {t("cmsLogin.title", "Welcome back")}
                             </h1>
 
-                            <p className="login-subtitle">
+                            <p className="mt-2.5 text-[0.875rem] leading-relaxed text-muted-foreground">
                                 {t(
-                                    "login.subtitle",
-                                    "Sign in to your Blood Connect account using your registered phone number or email."
+                                    "cmsLogin.subtitle",
+                                    "Sign in to manage your portfolio and publications."
                                 )}
                             </p>
                         </div>
 
                         {sessionExpired && (
-                            <div className="login-alert login-alert-info">
+                            <div className="mt-5 flex items-start gap-3 rounded-xl border border-info/20 bg-info/10 p-4 text-[0.82rem] leading-relaxed text-info [&>svg]:mt-0.5 [&>svg]:shrink-0">
                                 <Info size={18} />
-                                {t(
-                                    "login.expired",
-                                    "Your session has expired. Please log in again."
-                                )}
+                                {t("login.expired", "Your session has expired. Please log in again.")}
                             </div>
                         )}
 
                         <div aria-live="assertive">
                             {serverError && (
-                                <div className="login-alert login-alert-error">
+                                <div className="mt-5 flex items-start gap-3 rounded-xl border border-destructive/25 bg-destructive/10 p-4 text-[0.82rem] leading-relaxed text-destructive [&>svg]:mt-0.5 [&>svg]:shrink-0">
                                     <AlertCircle size={19} />
                                     <span>{serverError}</span>
                                 </div>
@@ -462,189 +404,169 @@ const Login = ({ onSuccess }) => {
                         <form
                             onSubmit={handleSubmit(onSubmit)}
                             noValidate
-                            className="login-form"
+                            className="cms-form mt-7 grid gap-5"
                         >
                             {/* Identifier */}
-                            <div>
-                                <label htmlFor="identifier" className="login-label">
-                                    {t("login.identifier", "Phone number or email")}
-                                </label>
+                            <Input
+                                id="identifier"
+                                label={t("cmsLogin.identifier", "Email or username")}
+                                icon={UserRound}
+                                size="lg"
+                                error={errors.identifier?.message}
+                                type="text"
+                                autoComplete="username"
+                                autoCapitalize="none"
+                                spellCheck={false}
+                                placeholder="you@studio.com or username"
+                                {...register("identifier", {
+                                    required: t(
+                                        "cmsLogin.err.idRequired",
+                                        "Please enter your email or username."
+                                    ),
+                                    setValueAs: (value) =>
+                                        typeof value === "string" ? value.trim() : value,
+                                    validate: (value) => {
+                                        const compact = value.replace(/[\s-]/g, "");
 
-                                <div className="login-field">
-                                    <UserRound size={19} className="login-input-icon" />
-
-                                    <input
-                                        id="identifier"
-                                        type="text"
-                                        inputMode="email"
-                                        autoComplete="username"
-                                        autoCapitalize="none"
-                                        spellCheck={false}
-                                        placeholder="01XXXXXXXXX or you@example.com"
-                                        aria-invalid={Boolean(errors.identifier)}
-                                        aria-describedby={
-                                            errors.identifier ? "identifier-error" : undefined
-                                        }
-                                        className={inputClass(errors.identifier)}
-                                        {...register("identifier", {
-                                            required: t(
-                                                "login.err.idRequired",
-                                                "Please enter your phone number or email."
-                                            ),
-                                            setValueAs: (value) =>
-                                                typeof value === "string" ? value.trim() : value,
-                                            validate: (value) => {
-                                                const compact = value.replace(/[\s-]/g, "");
-
-                                                return (
-                                                    EMAIL_RE.test(value) ||
-                                                    PHONE_RE.test(compact) ||
-                                                    t(
-                                                        "login.err.idInvalid",
-                                                        "Please enter a valid mobile number or email address."
-                                                    )
-                                                );
-                                            },
-                                        })}
-                                    />
-                                </div>
-
-                                <FieldError id="identifier-error">
-                                    {errors.identifier?.message}
-                                </FieldError>
-                            </div>
+                                        return (
+                                            EMAIL_RE.test(value) ||
+                                            PHONE_RE.test(compact) ||
+                                            USERNAME_RE.test(value) ||
+                                            t(
+                                                "cmsLogin.err.idInvalid",
+                                                "Enter a valid email address or username."
+                                            )
+                                        );
+                                    },
+                                })}
+                            />
 
                             {/* Password */}
                             <div>
-                                <div className="login-label-row">
-                                    <label htmlFor="password" className="login-label">
+                                <div className="mb-2 flex items-center justify-between gap-3">
+                                    <span className="text-[0.7rem] font-extrabold tracking-[0.11em] text-muted-foreground uppercase">
                                         {t("login.password", "Password")}
-                                    </label>
+                                    </span>
 
-                                    <Link to="/forgot-password" className="login-forgot">
-                                        {t("login.forgot", "Forgot password?")}
+                                    <Link
+                                        to="/forgot-password"
+                                        className="text-[0.75rem] font-bold text-primary hover:text-primary-hover hover:underline"
+                                    >
+                                        {t("cmsLogin.forgot", "Forgot password?")}
                                     </Link>
                                 </div>
 
-                                <div className="login-field">
-                                    <LockKeyhole size={19} className="login-input-icon" />
-
-                                    <input
-                                        id="password"
-                                        type={showPassword ? "text" : "password"}
-                                        autoComplete="current-password"
-                                        aria-invalid={Boolean(errors.password)}
-                                        aria-describedby={
-                                            [
-                                                errors.password && "password-error",
-                                                capsLock && "caps-warning",
-                                            ]
-                                                .filter(Boolean)
-                                                .join(" ") || undefined
-                                        }
-                                        onKeyUp={(event) =>
-                                            setCapsLock(
-                                                event.getModifierState?.("CapsLock") ?? false
-                                            )
-                                        }
-                                        className={inputClass(errors.password)}
-                                        {...register("password", {
-                                            required: t(
-                                                "login.err.pwRequired",
-                                                "Please enter your password."
-                                            ),
-                                            onBlur: () => setCapsLock(false),
-                                        })}
-                                    />
-
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword((previous) => !previous)}
-                                        aria-label={
-                                            showPassword ? "Hide password" : "Show password"
-                                        }
-                                        aria-pressed={showPassword}
-                                        className="login-eye"
-                                    >
-                                        {showPassword ? (
-                                            <EyeOff size={18} />
-                                        ) : (
-                                            <Eye size={18} />
-                                        )}
-                                    </button>
-                                </div>
-
-                                <FieldError id="password-error">
-                                    {errors.password?.message}
-                                </FieldError>
-
-                                {capsLock && !errors.password && (
-                                    <p id="caps-warning" className="login-hint login-hint-warn">
-                                        <Info size={14} />
-                                        {t("login.caps", "Caps Lock is on.")}
-                                    </p>
-                                )}
+                                <Input
+                                    id="password"
+                                    icon={LockKeyhole}
+                                    size="lg"
+                                    error={errors.password?.message}
+                                    hint={
+                                        capsLock && !errors.password
+                                            ? t("login.caps", "Caps Lock is on.")
+                                            : undefined
+                                    }
+                                    type={showPassword ? "text" : "password"}
+                                    autoComplete="current-password"
+                                    onKeyUp={(event) =>
+                                        setCapsLock(
+                                            event.getModifierState?.("CapsLock") ?? false
+                                        )
+                                    }
+                                    trailing={
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setShowPassword((previous) => !previous)
+                                            }
+                                            aria-label={
+                                                showPassword ? "Hide password" : "Show password"
+                                            }
+                                            aria-pressed={showPassword}
+                                            className="grid size-9 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+                                        >
+                                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    }
+                                    {...register("password", {
+                                        required: t(
+                                            "cmsLogin.err.pwRequired",
+                                            "Please enter your password."
+                                        ),
+                                        onBlur: () => setCapsLock(false),
+                                    })}
+                                />
                             </div>
 
                             {/* Remember me */}
-                            <div className="login-remember">
-                                <label className="login-check-label">
+                            <div className="flex items-center justify-between gap-3 pt-0.5">
+                                <label className="inline-flex cursor-pointer items-center gap-2.5 text-[0.82rem] text-muted-foreground">
                                     <input
                                         type="checkbox"
-                                        className="login-checkbox"
+                                        className="cms-checkbox"
                                         {...register("remember")}
                                     />
-                                    <span className="login-check-box" aria-hidden="true" />
+                                    <span className="cms-check-box" aria-hidden="true" />
 
-                                    {t("login.remember", "Remember my identifier")}
+                                    {t("cmsLogin.remember", "Keep me signed in")}
                                 </label>
 
                                 {rememberMe && (
-                                    <span className="login-enabled">
-                                        <CheckCircle2 size={14} />
+                                    <span className="inline-flex items-center gap-1 text-[0.72rem] font-bold text-success">
+                                        <ShieldCheck size={14} />
                                         {t("login.rememberOn", "Enabled")}
                                     </span>
                                 )}
                             </div>
 
                             {/* Submit */}
-                            <button
+                            <Button
                                 type="submit"
+                                variant="primary"
+                                size="xl"
                                 disabled={isSubmitting}
                                 aria-busy={isSubmitting}
-                                className="btn-premium login-submit"
+                                className="group mt-1 w-full"
                             >
                                 {isSubmitting ? (
                                     <>
                                         <Loader2 size={19} className="animate-spin" />
-                                        {t("login.submitting", "Signing you in...")}
+                                        {t("cmsLogin.submitting", "Signing you in...")}
                                     </>
                                 ) : (
                                     <>
-                                        {t("login.submit", "Sign in to your account")}
-                                        <ArrowRight size={18} className="login-arrow" />
+                                        {t("cmsLogin.submit", "Sign in to studio")}
+                                        <ArrowRight
+                                            size={18}
+                                            className="transition-transform duration-200 group-hover:translate-x-1"
+                                        />
                                     </>
                                 )}
-                            </button>
+                            </Button>
                         </form>
 
-                        <div className="login-switch">
-                            <p className="login-switch-text">
-                                {t("login.noAccount", "New to Blood Connect?")}
+                        <div className="cms-switch mt-6 border-t border-border pt-6 text-center">
+                            <p className="text-[0.82rem] text-muted-foreground">
+                                {t("cmsLogin.noAccount", "Need access to the studio?")}
                             </p>
 
-                            <Link to="/become-donor" className="login-register">
-                                {t("login.register", "Create an account")}
-                                <ArrowRight size={17} />
-                            </Link>
+                            <Button
+                                to="/become-donor"
+                                variant="outline"
+                                size="lg"
+                                className="group mt-3.5 w-full"
+                            >
+                                {t("cmsLogin.register", "Request an account")}
+                                <ArrowRight
+                                    size={17}
+                                    className="transition-transform duration-200 group-hover:translate-x-1"
+                                />
+                            </Button>
                         </div>
 
-                        <p className="login-trust">
+                        <p className="mt-5 flex items-center justify-center gap-2 text-[0.72rem] text-muted-foreground">
                             <ShieldCheck size={15} />
-                            {t(
-                                "login.privacy",
-                                "Your account information is protected."
-                            )}
+                            {t("cmsLogin.trust", "Encrypted session · Your work stays yours")}
                         </p>
                     </div>
                 </div>

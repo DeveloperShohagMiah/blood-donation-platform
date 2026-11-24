@@ -27,14 +27,9 @@ const initialForm = {
 const phoneOk = (v) => /^(?:\+?88)?01[3-9]\d{8}$/.test(v.replace(/[\s-]/g, ""));
 
 const inputClass = (error, extra = "") =>
-    [
-        "h-12 w-full rounded-xl border bg-surface-soft px-4 text-[15px] font-medium text-foreground outline-none transition",
-        "placeholder:font-normal placeholder:text-muted-foreground focus:bg-card focus:ring-4",
-        error
-            ? "border-destructive focus:border-destructive focus:ring-primary/10"
-            : "border-border focus:border-primary focus:ring-primary/10",
-        extra,
-    ].join(" ");
+    ["input-premium h-12 px-4", error ? "is-invalid" : "", extra]
+        .filter(Boolean)
+        .join(" ");
 
 const Field = ({ id, label, required, hint, error, children, className = "" }) => (
     <div className={className}>

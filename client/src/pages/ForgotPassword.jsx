@@ -18,8 +18,7 @@ const identifierOk = (value) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) || /^(?:\+?88)?01[3-9]\d{8}$/.test(v.replace(/[\s-]/g, ""));
 };
 
-const inputClass =
-    "h-12 w-full rounded-xl border border-input bg-background px-4 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-4 focus:ring-primary/10";
+const inputClass = "input-premium h-12 px-4";
 
 const ForgotPassword = () => {
     const [step, setStep] = useState("request"); // request | reset | done

@@ -18,6 +18,7 @@ import {
 import { Link } from "react-router-dom";
 import { apiFetch } from "../utils/api";
 import Select from "../components/Select";
+import HeroBadge from "../ui/HeroBadge";
 
 const contactMethods = [
     {
@@ -53,12 +54,9 @@ const contactMethods = [
 ];
 
 const inputClass = (hasError) =>
-    [
-        "mt-2 h-12 w-full rounded-xl border bg-background px-4 text-sm font-medium text-foreground outline-none transition placeholder:font-normal placeholder:text-muted-foreground/70 focus:ring-4",
-        hasError
-            ? "border-destructive focus:border-destructive focus:ring-destructive/10"
-            : "border-border focus:border-primary focus:ring-primary/10",
-    ].join(" ");
+    ["input-premium mt-2 h-12 px-4", hasError ? "is-invalid" : ""]
+        .filter(Boolean)
+        .join(" ");
 
 const RequiredMark = () => (
     <span className="ml-0.5 align-top text-[11px] font-bold text-destructive/70">*</span>
@@ -126,13 +124,13 @@ const Contact = () => {
             <section className="relative isolate overflow-hidden">
                 <div aria-hidden="true" className="pointer-events-none absolute -top-48 left-1/3 -z-10 size-[560px] rounded-full bg-primary/10 blur-3xl" />
                 <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-10 -z-10 size-[520px] rounded-full bg-success/10 blur-3xl" />
-                <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-32 bg-gradient-to-t from-background to-transparent" />
+                <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-32 bg-linear-to-t from-background to-transparent" />
 
                 <div className="relative mx-auto max-w-7xl px-5 py-20 text-center sm:px-8 lg:py-24">
-                    <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2 text-xs font-bold tracking-wide text-primary shadow-sm backdrop-blur">
-                        <MessageCircle size={14} />
-                        {t("contact.badge", "Get in Touch")}
-                    </span>
+                    <HeroBadge
+                        icon={<MessageCircle size={13} fill="currentColor" fillOpacity={0.25} />}
+                        label={t("contact.badge", "Contact Us")}
+                    />
                     <h1 className="font-display mx-auto mt-7 max-w-4xl text-[clamp(2.6rem,6vw,4.4rem)] leading-[1.05] font-extrabold tracking-[-0.055em]">
                         {t("contact.heading1", "Let's Start a")}
                         <span className="mt-1 block bg-gradient-to-r from-primary via-primary-hover to-brand-deep bg-clip-text text-transparent">
@@ -336,8 +334,8 @@ const Contact = () => {
                             <div
                                 role="status"
                                 className={`flex items-start gap-3 rounded-xl border px-4 py-3 text-sm ${submitStatus.type === "success"
-                                        ? "border-success/25 bg-success-soft text-success-deep"
-                                        : "border-destructive/25 bg-destructive/10 text-destructive"
+                                    ? "border-success/25 bg-success-soft text-success-deep"
+                                    : "border-destructive/25 bg-destructive/10 text-destructive"
                                     }`}
                             >
                                 {submitStatus.type === "success" ? (
