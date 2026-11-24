@@ -1966,3 +1966,32 @@ html[data-accent="rose"] {
   --sidebar-ring: #fda4af;
   --chart-1: #fb7185;
 }
+
+/* Map markers */
+.bc-map-marker {
+  background: transparent;
+  border: 0;
+}
+
+.bc-map-pin {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #ffffff;
+  border-radius: 9999px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 11px;
+  font-weight: 800;
+  box-shadow: 0 8px 18px -8px color-mix(in srgb, var(--primary) 90%, transparent);
+}
+
+.bc-map-pin.is-active {
+  background: var(--primary-hover);
+}
+
+.leaflet-container {
+  font-family: var(--font-display);
+  z-index: 0;
+}

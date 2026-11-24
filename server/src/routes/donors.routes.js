@@ -24,6 +24,8 @@ router.patch(
     "district",
     "upazila",
     "area",
+    "lat",
+    "lng",
     "isPubliclyListed",
     "allowContactRequests",
   ])

@@ -1,7 +1,8 @@
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import Select from "../components/Select";
+import DonorMap from "../components/DonorMap";
 import {
     Search,
     MapPin,
@@ -44,6 +45,7 @@ const FindDonors = ({
     language = "en",
 }) => {
     const isBn = language === "bn";
+    const [mapView, setMapView] = useState(false);
 
     const content = {
         title: isBn ? "রক্তদাতা খুঁজুন" : "Find Blood Donors",
@@ -512,8 +514,34 @@ const FindDonors = ({
                     </div>
                 )}
 
-                {/* Donor cards */}
+                {/* Map / list toggle */}
                 {!isLoading && !error && donors.length > 0 && (
+                    <div className="mb-5 flex items-center justify-between gap-3">
+                        <p className="text-sm font-bold text-foreground">
+                            {totalDonors} {content.found}
+                        </p>
+                        <button
+                            type="button"
+                            onClick={() => setMapView((value) => !value)}
+                            className="inline-flex h-10 items-center gap-2 rounded-xl border border-border px-4 text-sm font-bold text-foreground transition hover:border-primary hover:text-primary"
+                        >
+                            <MapPin size={16} />
+                            {mapView ? (isBn ? "তালিকা দেখুন" : "List view") : (isBn ? "মানচিত্রে দেখুন" : "Map view")}
+                        </button>
+                    </div>
+                )}
+
+                {mapView && !isLoading && !error && donors.length > 0 && (
+                    <div className="mb-6 overflow-hidden rounded-2xl border border-border bg-card p-2 shadow-sm">
+                        <DonorMap donors={donors} />
+                        <p className="px-3 pb-2 pt-1 text-xs text-muted-foreground">
+                            Donors who shared a map location are shown here.
+                        </p>
+                    </div>
+                )}
+
+                {/* Donor cards */}
+                {!isLoading && !error && donors.length > 0 && !mapView && (
                     <>
                         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                             {donors.map((donor) => {

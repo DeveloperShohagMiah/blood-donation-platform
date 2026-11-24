@@ -13,11 +13,19 @@ export const putDonorsMe = asyncHandler(async (req, res) => {
     "upazila",
     "union",
     "area",
+    "lat",
+    "lng",
     "isPubliclyListed",
     "allowContactRequests",
   ]);
   if (!BLOOD_GROUPS.includes(allowed.bloodGroup))
     throw new AppError("Valid blood group is required.", 400);
+  const hasLat = allowed.lat !== undefined && allowed.lat !== null;
+  const hasLng = allowed.lng !== undefined && allowed.lng !== null;
+  if (hasLat !== hasLng)
+    throw new AppError("Provide both latitude and longitude.", 400);
+  if (hasLat && (Math.abs(allowed.lat) > 90 || Math.abs(allowed.lng) > 180))
+    throw new AppError("Invalid map coordinates.", 400);
   await validateLocation(allowed);
   if (allowed.isPubliclyListed && !allowed.allowContactRequests)
     throw new AppError("Public listing requires contact-request consent.", 400);
@@ -66,7 +74,7 @@ export const getDonorsSearch = asyncHandler(async (req, res) => {
   const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 20));
   const [items, total] = await Promise.all([
     DonorProfile.find(filter)
-      .select("bloodGroup availability division district upazila union area lastDonationDate user")
+      .select("bloodGroup availability division district upazila union area lat lng lastDonationDate user")
       .populate("division district upazila union", "nameEn nameBn")
       .populate("user", "fullName phoneVerified")
       .skip((page - 1) * limit)

@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import LocationPicker from "../../../components/LocationPicker";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -30,6 +31,8 @@ const emptyForm = {
     upazila: "",
     union: "",
     area: "",
+    lat: null,
+    lng: null,
     isPubliclyListed: true,
     allowContactRequests: true,
 };
@@ -138,6 +141,16 @@ const DonorProfile = () => {
     const availability = watch("availability");
     const isPubliclyListed = watch("isPubliclyListed");
     const allowContactRequests = watch("allowContactRequests");
+    const latitude = watch("lat");
+    const longitude = watch("lng");
+
+    const setLocation = useCallback(
+        ({ lat, lng }) => {
+            setValue("lat", lat, { shouldDirty: true });
+            setValue("lng", lng, { shouldDirty: true });
+        },
+        [setValue]
+    );
 
     useEffect(() => {
         let active = true;
@@ -157,6 +170,8 @@ const DonorProfile = () => {
                         upazila: profile.upazila?._id || profile.upazila || "",
                         union: profile.union?._id || profile.union || "",
                         area: profile.area || "",
+                        lat: profile.lat ?? null,
+                        lng: profile.lng ?? null,
                         isPubliclyListed: Boolean(profile.isPubliclyListed),
                         allowContactRequests: Boolean(profile.allowContactRequests),
                     });
@@ -505,6 +520,19 @@ const DonorProfile = () => {
                                         ))}
                                     </Select>
                                 </div>
+                            </div>
+
+                            <div className="mt-6">
+                                <h4 className="mb-2 text-sm font-bold text-foreground">
+                                    {t("text.Map location", "Map location")}
+                                </h4>
+                                <input type="hidden" {...register("lat")} />
+                                <input type="hidden" {...register("lng")} />
+                                <LocationPicker
+                                    lat={typeof latitude === "number" ? latitude : null}
+                                    lng={typeof longitude === "number" ? longitude : null}
+                                    onChange={setLocation}
+                                />
                             </div>
                         </SectionCard>
 
