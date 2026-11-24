@@ -9,6 +9,7 @@ import {
 import { ROLES, REQUEST_STATUS } from "../constants/index.js";
 import { AppError, asyncHandler, send, pick } from "../utils/http.js";
 import { audit, validateLocation } from "./helpers.js";
+import { notifyMatchingDonors } from "../services/request-lifecycle.service.js";
 
 export const postBloodRequests = asyncHandler(async (req, res) => {
   const body = pick(req.body, [
@@ -201,6 +202,9 @@ export const patchBloodRequestsByIdVerify = asyncHandler(async (req, res) => {
     message: `Your request was ${decision === "verify" ? "verified" : "rejected"}.`,
     type: "request",
   });
+  if (decision === "verify") {
+    await notifyMatchingDonors(item);
+  }
   await audit(req, `blood_request.${decision}`, "BloodRequest", item._id);
   send(res, { request: item });
 });
