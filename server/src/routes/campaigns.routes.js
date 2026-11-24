@@ -9,6 +9,9 @@ const router = Router();
 
 router.get("/campaigns", optionalAuth, controller.getCampaigns);
 router.post("/campaigns", protect, staff, controller.postCampaigns);
+router.post("/campaigns/:id/signup", protect, controller.postCampaignSignup);
+router.delete("/campaigns/:id/signup", protect, controller.deleteCampaignSignup);
+router.get("/campaigns/:id/signups", protect, staff, controller.getCampaignSignups);
 router.get("/campaigns/:id", protect, staff, controller.getCampaignById);
 router.patch("/campaigns/:id", protect, staff, controller.patchCampaignsById);
 router.delete("/campaigns/:id", protect, staff, deleteOne(Campaign));

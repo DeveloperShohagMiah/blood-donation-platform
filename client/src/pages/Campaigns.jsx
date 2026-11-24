@@ -9,6 +9,7 @@ import {
     Droplets,
     MapPin,
     Megaphone,
+    UserPlus,
     X,
 } from "lucide-react";
 import { apiFetch } from "../utils/api";
@@ -62,23 +63,40 @@ const Campaigns = () => {
     const [error, setError] = useState("");
     const [filter, setFilter] = useState("all");
     const [viewing, setViewing] = useState(null);
+    const [busyId, setBusyId] = useState("");
+    const [actionError, setActionError] = useState("");
+
+    const load = () =>
+        apiFetch("/campaigns")
+            .then((data) => setItems(data?.items || []))
+            .catch((err) => setError(err.message))
+            .finally(() => setLoading(false));
 
     useEffect(() => {
-        let active = true;
-        apiFetch("/campaigns")
-            .then((data) => {
-                if (active) setItems(data?.items || []);
-            })
-            .catch((err) => {
-                if (active) setError(err.message);
-            })
-            .finally(() => {
-                if (active) setLoading(false);
-            });
-        return () => {
-            active = false;
-        };
+        load();
     }, []);
+
+    const toggleSignup = async (campaign) => {
+        setBusyId(campaign._id);
+        setActionError("");
+        try {
+            await apiFetch(`/campaigns/${campaign._id}/signup`, {
+                method: campaign.isRegistered ? "DELETE" : "POST",
+            });
+            await load();
+            if (viewing?._id === campaign._id) {
+                setViewing((current) => ({
+                    ...current,
+                    isRegistered: !campaign.isRegistered,
+                    signupCount: (current.signupCount || 0) + (campaign.isRegistered ? -1 : 1),
+                }));
+            }
+        } catch (err) {
+            setActionError(err.message);
+        } finally {
+            setBusyId("");
+        }
+    };
 
     const counts = useMemo(() => {
         const result = { all: items.length, upcoming: 0, ongoing: 0, completed: 0 };
@@ -154,6 +172,11 @@ const Campaigns = () => {
                 {error && (
                     <p className="mb-6 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning">
                         Campaigns could not be loaded right now ({error}).
+                    </p>
+                )}
+                {actionError && (
+                    <p role="alert" className="mb-6 rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                        {actionError}
                     </p>
                 )}
 
@@ -234,6 +257,27 @@ const Campaigns = () => {
                                             <span className="font-semibold text-foreground">{t("text.Duration:")}</span>{" "}
                                             {formatDateTime(item.startAt)} — {formatDateTime(item.endAt)}
                                         </div>
+                                        {state === "upcoming" && item.status === "published" && (
+                                            <div className="mt-4 flex items-center justify-between gap-2 rounded-xl bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
+                                                <span>
+                                                    <strong className="text-foreground">{item.signupCount || 0}</strong> registered
+                                                    {item.spotsLeft !== null && ` · ${item.spotsLeft} spots left`}
+                                                </span>
+                                                <button
+                                                    type="button"
+                                                    disabled={busyId === item._id || (!item.isRegistered && item.spotsLeft === 0)}
+                                                    onClick={() => toggleSignup(item)}
+                                                    className={`inline-flex h-8 items-center gap-1.5 rounded-lg px-3 text-xs font-bold transition disabled:opacity-60 ${
+                                                        item.isRegistered
+                                                            ? "border border-border text-foreground hover:border-destructive hover:text-destructive"
+                                                            : "bg-primary text-primary-foreground hover:bg-primary-hover"
+                                                    }`}
+                                                >
+                                                    <UserPlus size={13} />
+                                                    {item.isRegistered ? "Registered" : item.spotsLeft === 0 ? "Full" : "Register"}
+                                                </button>
+                                            </div>
+                                        )}
                                         <button
                                             type="button"
                                             onClick={() => setViewing(item)}

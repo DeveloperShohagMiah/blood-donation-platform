@@ -11,6 +11,7 @@ const campaignSchema = new Schema(
     endAt: { type: Date, required: true },
     location: { type: String, trim: true, default: "" },
     venue: { type: String, maxlength: 300, default: "" },
+    capacity: { type: Number, min: 1, default: null },
     banner: { url: String, publicId: String },
     status: {
       type: String,
