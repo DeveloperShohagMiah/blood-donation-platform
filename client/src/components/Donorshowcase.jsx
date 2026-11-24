@@ -31,7 +31,10 @@ const mapApiDonor = (item) => ({
             year: "numeric",
         })
         : "Never",
-    available: item.availability === "available",
+    available:
+        item.availability === "available" &&
+        !(item.lastDonationDate &&
+          Date.now() - new Date(item.lastDonationDate).getTime() < 90 * 86_400_000),
     phone: "",
 });
 

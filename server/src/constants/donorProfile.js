@@ -9,6 +9,9 @@ export const BLOOD_GROUPS = {
     O_NEGATIVE: "O-",
 };
 
+/* Minimum rest period after a donation before someone can donate again. */
+export const DONOR_COOLDOWN_DAYS = 90;
+
 export const GENDER_OPTIONS = {
     MALE: "male",
     FEMALE: "female",

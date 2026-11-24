@@ -7,6 +7,7 @@ import {
   Notification,
 } from "../models/index.js";
 import { REQUEST_STATUS } from "../constants/index.js";
+import { donorCooldownCutoff } from "../controllers/helpers.js";
 
 const HOUR = 60 * 60 * 1000;
 const ACTIVE_STATUSES = [
@@ -109,9 +110,14 @@ export const notifyMatchingDonors = async (request) => {
   const donors = await DonorProfile.find({
     availability: "available",
     bloodGroup: request.bloodGroup,
-    $or: [
-      { district: request.district },
-      ...(request.division ? [{ division: request.division }] : []),
+    $and: [
+      { $or: [{ lastDonationDate: null }, { lastDonationDate: { $lte: donorCooldownCutoff() } }] },
+      {
+        $or: [
+          { district: request.district },
+          ...(request.division ? [{ division: request.division }] : []),
+        ],
+      },
     ],
   })
     .select("user")

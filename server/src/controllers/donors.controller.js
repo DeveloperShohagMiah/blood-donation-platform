@@ -1,7 +1,13 @@
 import { DonorProfile } from "../models/index.js";
-import { BLOOD_GROUPS } from "../constants/index.js";
+import { BLOOD_GROUPS, DONOR_COOLDOWN_DAYS } from "../constants/index.js";
 import { AppError, asyncHandler, send, pick } from "../utils/http.js";
-import { audit, validateLocation } from "./helpers.js";
+import {
+    audit,
+    validateLocation,
+    isInCooldown,
+    donorCooldownCutoff,
+    effectiveAvailability,
+} from "./helpers.js";
 
 export const putDonorsMe = asyncHandler(async (req, res) => {
   const allowed = pick(req.body, [
@@ -27,6 +33,23 @@ export const putDonorsMe = asyncHandler(async (req, res) => {
   if (hasLat && (Math.abs(allowed.lat) > 90 || Math.abs(allowed.lng) > 180))
     throw new AppError("Invalid map coordinates.", 400);
   await validateLocation(allowed);
+
+  const current = await DonorProfile.findOne({ user: req.user._id })
+    .select("lastDonationDate availability")
+    .lean();
+  const nextLastDonationDate =
+    allowed.lastDonationDate !== undefined
+      ? allowed.lastDonationDate
+      : current?.lastDonationDate;
+  const resting = isInCooldown(nextLastDonationDate);
+  if (resting && allowed.availability === "available")
+    throw new AppError(
+      `You can be marked available again ${DONOR_COOLDOWN_DAYS} days after your last donation.`,
+      409
+    );
+  // Never leave a recent donor marked available, even if they didn't touch that field.
+  if (resting) allowed.availability = "unavailable";
+
   if (allowed.isPubliclyListed && !allowed.allowContactRequests)
     throw new AppError("Public listing requires contact-request consent.", 400);
   const profile = await DonorProfile.findOneAndUpdate(
@@ -64,7 +87,13 @@ export const getDonorById = asyncHandler(async (req, res) => {
 });
 
 export const getDonorsSearch = asyncHandler(async (req, res) => {
-  const filter = { isPubliclyListed: true, allowContactRequests: true, availability: "available" };
+  const filter = {
+    isPubliclyListed: true,
+    allowContactRequests: true,
+    availability: "available",
+    // Donors inside the post-donation rest period are never shown as available.
+    $or: [{ lastDonationDate: null }, { lastDonationDate: { $lte: donorCooldownCutoff() } }],
+  };
   if (req.query.bloodGroup) filter.bloodGroup = req.query.bloodGroup;
   if (req.query.district) filter.district = req.query.district;
   if (req.query.upazila) filter.upazila = req.query.upazila;
@@ -85,6 +114,7 @@ export const getDonorsSearch = asyncHandler(async (req, res) => {
   // Never expose phone/address; the UI only needs a display name and verification state.
   const publicItems = items.map(({ user, ...donor }) => ({
     ...donor,
+    availability: effectiveAvailability(donor),
     fullName: user?.fullName || "Donor",
     isVerified: Boolean(user?.phoneVerified),
   }));

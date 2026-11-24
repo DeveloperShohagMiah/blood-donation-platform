@@ -547,6 +547,17 @@ const FindDonors = ({
                             {donors.map((donor) => {
                                 const upazila = donor.upazila || donor.location?.upazila;
                                 const district = donor.district || donor.location?.district;
+                                const resting = donor.availability !== "available";
+                                const eligibleIn = donor.lastDonationDate
+                                    ? Math.max(
+                                          0,
+                                          90 - Math.floor(
+                                              (Date.now() -
+                                                  new Date(donor.lastDonationDate).getTime()) /
+                                                  86_400_000
+                                          )
+                                      )
+                                    : 0;
                                 return (
                                     <article
                                         key={donor._id}
@@ -589,9 +600,23 @@ const FindDonors = ({
                                                 </p>
                                             </div>
 
-                                            <span className="inline-flex items-center gap-1.5 rounded-full bg-success-soft px-3 py-1.5 text-xs font-bold text-success">
-                                                <span className="size-1.5 rounded-full bg-success" />
-                                                {content.availableStatus}
+                                            <span
+                                                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${
+                                                    resting
+                                                        ? "bg-muted text-muted-foreground"
+                                                        : "bg-success-soft text-success"
+                                                }`}
+                                            >
+                                                <span
+                                                    className={`size-1.5 rounded-full ${
+                                                        resting ? "bg-muted-foreground" : "bg-success"
+                                                    }`}
+                                                />
+                                                {resting
+                                                    ? isBn
+                                                        ? `${eligibleIn} দিন পর আবার উপলব্ধ`
+                                                        : `Available in ${eligibleIn} days`
+                                                    : content.availableStatus}
                                             </span>
                                         </div>
 

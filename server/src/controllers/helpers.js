@@ -2,6 +2,20 @@ import jwt from "jsonwebtoken";
 import { AuditLog, Location, RequestAssignment } from "../models/index.js";
 import { env } from "../config/env.js";
 import { AppError } from "../utils/http.js";
+import { DONOR_COOLDOWN_DAYS } from "../constants/index.js";
+
+/* A donor cannot be available again until the rest period has passed. */
+export const donorCooldownCutoff = () =>
+  new Date(Date.now() - DONOR_COOLDOWN_DAYS * 24 * 60 * 60 * 1000);
+
+export const isInCooldown = (lastDonationDate) => {
+  if (!lastDonationDate) return false;
+  const date = new Date(lastDonationDate);
+  return !Number.isNaN(date.getTime()) && date > donorCooldownCutoff();
+};
+
+export const effectiveAvailability = (profile) =>
+  isInCooldown(profile?.lastDonationDate) ? "unavailable" : profile?.availability;
 
 export const audit = (req, action, resourceType, resourceId, metadata = {}) =>
   AuditLog.create({

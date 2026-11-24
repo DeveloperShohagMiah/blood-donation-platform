@@ -7,12 +7,14 @@ import {
 } from "../models/index.js";
 import { REQUEST_STATUS, ROLES, ACCOUNT_STATUS } from "../constants/index.js";
 import { AppError, asyncHandler, send } from "../utils/http.js";
-import { audit } from "./helpers.js";
+import { audit, isInCooldown } from "./helpers.js";
 
 export const postBloodRequestsByIdResponses = asyncHandler(async (req, res) => {
   const profile = await DonorProfile.findOne({ user: req.user._id });
   if (!profile || profile.availability !== "available")
     throw new AppError("An available donor profile is required.", 403);
+  if (isInCooldown(profile.lastDonationDate))
+    throw new AppError("You can donate again after the 90-day rest period.", 403);
   const request = await BloodRequest.findById(req.params.id);
   if (
     !request ||

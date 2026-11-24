@@ -23,3 +23,4 @@ export const REQUEST_STATUS = Object.freeze({
   EXPIRED: "expired",
 });
 export const DONOR_AVAILABILITY = ["available", "unavailable", "temporarily_unavailable"];
+export const DONOR_COOLDOWN_DAYS = 90;
