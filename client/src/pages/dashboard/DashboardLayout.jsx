@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
     ArrowUpRight,
+    BarChart3,
     Bell,
     CalendarDays,
     ChevronDown,
@@ -76,6 +77,7 @@ const adminSections = [
     {
         label: "Manage",
         items: [
+            { to: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
             { to: "/dashboard/admin/users", label: "Users & approvals", icon: Users },
             { to: "/dashboard/admin/audit", label: "Audit log", icon: FileClock },
         ],
