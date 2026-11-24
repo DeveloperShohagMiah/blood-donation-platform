@@ -4,6 +4,7 @@ export { DonorProfile } from "./DonorProfile.js";
 export { VolunteerProfile } from "./VolunteerProfile.js";
 export { BloodRequest } from "./BloodRequest.js";
 export { DonorResponse } from "./DonorResponse.js";
+export { RequestMessage } from "./RequestMessage.js";
 export { RequestAssignment } from "./RequestAssignment.js";
 export { DonationRecord } from "./DonationRecord.js";
 export { Campaign } from "./Campaign.js";

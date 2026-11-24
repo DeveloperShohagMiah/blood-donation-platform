@@ -2,7 +2,8 @@ import { t } from "../../../utils/tr.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { AlertCircle, Check, Pencil, Plus, Trash2, UserPlus, Users, X } from "lucide-react";
+import { AlertCircle, Check, MessageCircle, Pencil, Plus, Trash2, UserPlus, Users, X } from "lucide-react";
+import RequestMessages from "../../../components/RequestMessages";
 import Button from "../../../ui/Button";
 import { apiFetch } from "../../../utils/api";
 import { useApiData } from "../hooks";
@@ -101,6 +102,7 @@ const RequestsManagement = () => {
     const [responsesLoading, setResponsesLoading] = useState(false);
     const [responsesError, setResponsesError] = useState("");
     const [busyResponseId, setBusyResponseId] = useState("");
+    const [messagesRequestId, setMessagesRequestId] = useState(null);
 
     const {
         register,
@@ -399,6 +401,11 @@ const RequestsManagement = () => {
                                     <Td>{formatDate(item.createdAt)}</Td>
                                     <Td>
                                         <ActionGroup>
+                                            <IconButton
+                                                icon={MessageCircle}
+                                                label="Messages"
+                                                onClick={() => setMessagesRequestId(item._id)}
+                                            />
                                             <IconButton
                                                 icon={Users}
                                                 label="View donor responses"
@@ -752,6 +759,13 @@ const RequestsManagement = () => {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {messagesRequestId && (
+                <RequestMessages
+                    requestId={messagesRequestId}
+                    onClose={() => setMessagesRequestId(null)}
+                />
             )}
         </>
     );

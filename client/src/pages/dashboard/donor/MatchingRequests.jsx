@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { CheckCircle2, HeartHandshake, MapPin, Send, X } from "lucide-react";
+import { CheckCircle2, HeartHandshake, MapPin, MessageCircle, Send, X } from "lucide-react";
+import RequestMessages from "../../../components/RequestMessages";
 import { apiFetch } from "../../../utils/api";
 import { formatDate } from "../format";
 import { useApiData } from "../hooks";
@@ -22,6 +23,7 @@ const MatchingRequests = () => {
     const [withdrawnIds, setWithdrawnIds] = useState([]);
     const [localResponses, setLocalResponses] = useState({});
     const [actionError, setActionError] = useState("");
+    const [messagesRequestId, setMessagesRequestId] = useState(null);
 
     const focusId = searchParams.get("request");
     const autoRespond = searchParams.get("respond") === "1";
@@ -251,6 +253,17 @@ const MatchingRequests = () => {
                                                   <X size={16} />
                                               </button>
                                           )}
+                                          {(status === "interested" || status === "accepted") && (
+                                              <button
+                                                  type="button"
+                                                  onClick={() => setMessagesRequestId(item._id)}
+                                                  className="grid size-10 shrink-0 place-items-center rounded-xl border border-border text-muted-foreground transition hover:border-primary hover:text-primary"
+                                                  aria-label="Message coordinator"
+                                                  title="Message coordinator"
+                                              >
+                                                  <MessageCircle size={16} />
+                                              </button>
+                                          )}
                                           <a href={`tel:${item.contactPhone}`}
                                               className="grid size-10 place-items-center rounded-xl border border-border text-foreground transition hover:border-primary hover:bg-primary/5 hover:text-primary"
                                               aria-label={t("text.Call requester", "Call requester")}
@@ -282,6 +295,13 @@ const MatchingRequests = () => {
                               );
                           })}
                 </div>
+            )}
+
+            {messagesRequestId && (
+                <RequestMessages
+                    requestId={messagesRequestId}
+                    onClose={() => setMessagesRequestId(null)}
+                />
             )}
         </>
     );
