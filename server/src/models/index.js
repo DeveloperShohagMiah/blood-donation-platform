@@ -8,6 +8,7 @@ export { RequestAssignment } from "./RequestAssignment.js";
 export { DonationRecord } from "./DonationRecord.js";
 export { Campaign } from "./Campaign.js";
 export { Notification } from "./Notification.js";
+export { PushSubscription } from "./PushSubscription.js";
 export { AuditLog } from "./AuditLog.js";
 export { ContactRequest } from "./ContactRequest.js";
 export { ContactMessage } from "./ContactMessage.js";

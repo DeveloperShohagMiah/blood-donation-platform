@@ -25,4 +25,7 @@ export const env = {
   COOKIE_SAME_SITE: process.env.COOKIE_SAME_SITE || "lax",
   OTP_EXPIRES_MINUTES: Number(process.env.OTP_EXPIRES_MINUTES || 10),
   OTP_DEV_RETURN: process.env.OTP_DEV_RETURN === "true",
+  VAPID_PUBLIC_KEY: process.env.VAPID_PUBLIC_KEY || "",
+  VAPID_PRIVATE_KEY: process.env.VAPID_PRIVATE_KEY || "",
+  VAPID_SUBJECT: process.env.VAPID_SUBJECT || "mailto:admin@example.com",
 };

@@ -1,5 +1,6 @@
 import { Monitor, Moon, Palette, Sun } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
+import PushNotifications from "../../components/PushNotifications";
 import { PageHeader } from "./components/UI";
 
 const MODE_OPTIONS = [
@@ -128,6 +129,8 @@ const Settings = () => {
                         );
                     })}
                 </div>
+
+                <PushNotifications />
             </section>
         </>
     );
