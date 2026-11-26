@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
+import FlipText from "./FlipText";
 import {
     ArrowRight,
     ArrowUp,
@@ -20,7 +21,7 @@ const socials = [
 
 // Animated underline on hover, quiet colour shift
 const linkClass =
-    "relative inline-block py-0.5 text-sm text-background/70 transition-colors duration-200 hover:text-primary-foreground focus-visible:text-primary-foreground focus-visible:outline-none " +
+    "group relative inline-block py-0.5 text-sm text-background/70 transition-colors duration-200 hover:text-primary-foreground focus-visible:text-primary-foreground focus-visible:outline-none " +
     "after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:after:scale-x-100";
 
 const ColumnTitle = ({ children }) => (
@@ -156,7 +157,7 @@ const Footer = () => {
                                 {platform.map((item) => (
                                     <li key={item.to}>
                                         <Link to={item.to} className={linkClass}>
-                                            {item.label}
+                                            <FlipText>{item.label}</FlipText>
                                         </Link>
                                     </li>
                                 ))}
@@ -169,7 +170,7 @@ const Footer = () => {
                                 {resources.map((item) => (
                                     <li key={item.href}>
                                         <a href={item.href} className={linkClass}>
-                                            {item.label}
+                                            <FlipText>{item.label}</FlipText>
                                         </a>
                                     </li>
                                 ))}
@@ -206,11 +207,11 @@ const Footer = () => {
                         {t("footer.copyright", "© {{year}} Blood Connect. All rights reserved.", { year })}
                     </p>
                     <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-                        <Link to="/privacy" className="transition-colors hover:text-primary-foreground">
-                            {t("footer.privacy", "Privacy policy")}
+                        <Link to="/privacy" className="group inline-flex transition-colors hover:text-primary-foreground">
+                            <FlipText>{t("footer.privacy", "Privacy policy")}</FlipText>
                         </Link>
-                        <Link to="/terms" className="transition-colors hover:text-primary-foreground">
-                            {t("footer.terms", "Terms of use")}
+                        <Link to="/terms" className="group inline-flex transition-colors hover:text-primary-foreground">
+                            <FlipText>{t("footer.terms", "Terms of use")}</FlipText>
                         </Link>
                         <button
                             type="button"

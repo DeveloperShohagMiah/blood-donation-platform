@@ -5,6 +5,7 @@ import { useAuth } from "../context/useAuth";
 import { useTheme } from "../context/ThemeContext";
 import UserMenu from "./UserMenu";
 import LoginDialog from "./LoginDialog";
+import FlipText from "./FlipText";
 import {
     ArrowUpRight,
     Droplets,
@@ -143,14 +144,14 @@ const Navbar = () => {
 
     const desktopLinkClass = ({ isActive }) =>
         [
-            "relative z-10 rounded-full px-3.5 py-2 text-[13.5px] font-semibold",
+            "group relative z-10 rounded-sm px-3.5 py-2 text-[13.5px] font-semibold",
             "transition-colors duration-200 outline-none",
             "focus-visible:ring-2 focus-visible:ring-primary/40",
-            "after:absolute after:-bottom-0.5 after:left-1/2 after:size-1",
+            "after:absolute after:-bottom-0 after:left-1/2 after:size-0.5 after:w-[15px]",
             "after:-translate-x-1/2 after:rounded-full after:bg-primary",
             "after:transition-all after:duration-300",
             isActive
-                ? "bg-primary/5 text-primary after:scale-100 after:opacity-100"
+                ? "bg-primary/10 text-primary after:scale-100 after:opacity-100"
                 : "text-muted-foreground hover:text-foreground after:scale-0 after:opacity-0",
         ].join(" ");
 
@@ -231,7 +232,7 @@ const Navbar = () => {
                     >
                         <span
                             aria-hidden="true"
-                            className="pointer-events-none absolute inset-y-0 my-auto h-9 rounded-full bg-muted/40 transition-[transform,width,opacity] duration-300 ease-out motion-reduce:transition-none"
+                            className="pointer-events-none absolute inset-y-0 my-auto h-9 rounded-sm bg-muted/40 transition-[transform,width,opacity] duration-300 ease-out motion-reduce:transition-none"
                             style={{
                                 width: hover.width,
                                 transform: `translateX(${hover.left}px)`,
@@ -248,7 +249,7 @@ const Navbar = () => {
                                 onFocus={moveHighlight}
                                 className={desktopLinkClass}
                             >
-                                {t(`navigation.${link.key}`)}
+                                <FlipText>{t(`navigation.${link.key}`)}</FlipText>
                             </NavLink>
                         ))}
                     </div>
@@ -302,15 +303,6 @@ const Navbar = () => {
                             systemLabel={t("navigation.system")}
                         />
 
-                        {/* Theme settings */}
-                        {/* <Link
-                            to="/dashboard/settings"
-                            aria-label={t("navigation.themeSettings", "Theme settings")}
-                            title={t("navigation.themeSettings", "Theme settings")}
-                            className="hidden size-9 place-items-center rounded-full border border-border/70 text-muted-foreground transition hover:border-primary/40 hover:text-primary md:grid"
-                        >
-                            <Palette size={16} />
-                        </Link> */}
 
                         {/* Desktop account dropdown / login */}
                         {isAuthenticated ? (
@@ -406,7 +398,7 @@ const Navbar = () => {
                                         className={mobileLinkClass}
                                     >
                                         <Icon size={18} strokeWidth={2.1} />
-                                        {t(`navigation.${link.key}`)}
+                                        <FlipText>{t(`navigation.${link.key}`)}</FlipText>
                                     </NavLink>
                                 );
                             })}
