@@ -7,12 +7,13 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("push", (event) => {
-  let payload = {};
-  try {
-    payload = event.data ? event.data.json() : {};
-  } catch {
-    payload = { body: event.data ? event.data.text() : "" };
-  }
+  const payload = (() => {
+    try {
+      return event.data ? event.data.json() : {};
+    } catch {
+      return { body: event.data ? event.data.text() : "" };
+    }
+  })();
 
   event.waitUntil(
     self.registration.showNotification(payload.title || "Blood Connect", {

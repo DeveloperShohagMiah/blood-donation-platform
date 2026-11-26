@@ -1,6 +1,8 @@
 import { t } from "../../../utils/tr.js";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { Badge } from "@/components/ui/badge";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
     AlertCircle,
     CalendarDays,
@@ -56,9 +58,9 @@ const statusStyles = {
 };
 
 const StatusPill = ({ status }) => (
-    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ring-1 ${statusStyles[status] || statusStyles.draft}`}>
+    <Badge variant="secondary" className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ring-1 ${statusStyles[status] || statusStyles.draft}`}>
         {status || "draft"}
-    </span>
+    </Badge>
 );
 
 const Campaigns = () => {
@@ -72,6 +74,7 @@ const Campaigns = () => {
 
     const {
         register,
+        control,
         handleSubmit,
         reset,
         watch,
@@ -359,32 +362,50 @@ const Campaigns = () => {
                                 <FieldError message={errors.description?.message} />
                             </label>
 
-                            <label>
+                            <div>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Starts")}</span>
-                                <input
-                                    type="datetime-local"
-                                    {...register("startAt", { required: "Start date is required." })}
-                                    className={inputClass(errors.startAt)}
+                                <Controller
+                                    control={control}
+                                    name="startAt"
+                                    rules={{ required: "Start date is required." }}
+                                    render={({ field }) => (
+                                        <DatePicker
+                                            withTime
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            onBlur={field.onBlur}
+                                            error={errors.startAt?.message}
+                                        />
+                                    )}
                                 />
                                 <FieldError message={errors.startAt?.message} />
-                            </label>
+                            </div>
 
-                            <label>
+                            <div>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Ends")}</span>
-                                <input
-                                    type="datetime-local"
-                                    {...register("endAt", {
+                                <Controller
+                                    control={control}
+                                    name="endAt"
+                                    rules={{
                                         required: "End date is required.",
                                         validate: (value) =>
                                             !startAtValue ||
                                             !value ||
                                             new Date(value) >= new Date(startAtValue) ||
                                             "End date must be after the start date.",
-                                    })}
-                                    className={inputClass(errors.endAt)}
+                                    }}
+                                    render={({ field }) => (
+                                        <DatePicker
+                                            withTime
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            onBlur={field.onBlur}
+                                            error={errors.endAt?.message}
+                                        />
+                                    )}
                                 />
                                 <FieldError message={errors.endAt?.message} />
-                            </label>
+                            </div>
 
                             <label>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Venue")}</span>

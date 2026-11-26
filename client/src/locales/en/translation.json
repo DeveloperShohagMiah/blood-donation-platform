@@ -50,6 +50,7 @@
     "theme": "Theme",
     "light": "Light mode",
     "dark": "Dark mode",
+    "system": "System",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "logout": "Log out"

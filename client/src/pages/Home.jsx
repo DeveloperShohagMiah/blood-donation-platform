@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Badge } from "@/components/ui/badge";
 import {
     AlertTriangle,
     ArrowRight,
@@ -25,10 +26,11 @@ import {
     Siren,
     Stethoscope,
     X,
+    Plus,
 } from "lucide-react";
 import Hero from "../components/Hero";
 import SectionHeader from "../components/SectionHeader";
-import DonorShowcase from "../components/Donorshowcase";
+import DonorShowcase from "../components/ui/Donorshowcase";
 import DonateButton from "../components/DonateButton";
 import { apiFetch } from "../utils/api";
 
@@ -389,13 +391,13 @@ const Home = () => {
                                             <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-linear-to-br from-primary to-primary/80 text-xl font-extrabold text-primary-foreground shadow-lg shadow-primary/30">
                                                 {r.group}
                                             </span>
-                                            <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ring-1 ${s.pill}`}>
+                                            <Badge variant="secondary" className={`gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ring-1 ${s.pill}`}>
                                                 <span className="relative flex size-2">
                                                     {s.pulse && <span className={`absolute inline-flex size-full animate-ping rounded-full opacity-60 motion-reduce:animate-none ${s.dot}`} />}
                                                     <span className={`relative size-2 rounded-full ${s.dot}`} />
                                                 </span>
                                                 {t(`home.emergency.${level}`, level)}
-                                            </span>
+                                            </Badge>
                                         </div>
 
                                         <h3 className="mt-4 text-[17px] leading-snug font-bold text-foreground">{r.hospital}</h3>
@@ -469,22 +471,39 @@ const Home = () => {
                             })}
                         </ul>
                     ) : (
-                        <p className="mt-8 rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center text-sm text-muted-foreground">
-                            {urgencyFilter === "all"
-                                ? t("home.emergency.noRequests", "No blood requests have been posted yet. Check back soon.")
-                                : t("home.emergency.empty", "No requests at this urgency level right now.")}
-                        </p>
+                        <div className="flex justify-center mt-10">
+                            <div className="grid max-w-4xl min-w-2xl place-items-center rounded-3xl border border-dashed border-primary/25 bg-linear-to-b from-primary/5 to-transparent px-6 py-10 text-center">
+                                <span className="grid size-14 place-items-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/15">
+                                    <Droplets size={26} />
+                                </span>
+                                <h3 className="mt-4 font-bold text-foreground uppercase text-lg">
+                                    {visibleRequests.length === 0 ? "No blood requests yet" : "No matching requests"}
+                                </h3>
+                                <p className="mt-1 max-w-sm text-sm text-muted-foreground">
+                                    {visibleRequests.length === 0
+                                        ? "There is no active public blood request at the moment. Check back later or create a new request if you need blood."
+                                        : "Try a different urgency filter or turn off verified-only."}
+                                </p>
+                                <Link
+                                    to="/create-blood-requests"
+                                    className="btn-premium mt-5 h-10 px-4 text-sm"
+                                >
+                                    <Plus size={15} /> Request blood
+                                </Link>
+                            </div>
+                        </div>
                     )}
-
-                    <div className="mt-8 text-center">
-                        <Link
-                            to="/blood-requests"
-                            className="group inline-flex h-11 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-bold text-foreground transition hover:border-primary hover:text-primary"
-                        >
-                            {t("home.emergency.viewAll", "View all requests")}
-                            <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
-                        </Link>
-                    </div>
+                    {visibleRequests.length > 0 && (
+                        <div className="mt-8 text-center">
+                            <Link
+                                to="/blood-requests"
+                                className="group inline-flex h-11 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-bold text-foreground transition hover:border-primary hover:text-primary"
+                            >
+                                {t("home.emergency.viewAll", "View all requests")}
+                                <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+                            </Link>
+                        </div>
+                    )}
                 </div>
             </section>
 
@@ -717,30 +736,30 @@ const Home = () => {
                             {t("home.gallery.empty", "No photos have been added yet.")}
                         </p>
                     ) : (
-                    <ul className="mt-10 grid auto-rows-[180px] grid-cols-2 gap-3 md:auto-rows-[220px] md:grid-cols-3 md:gap-4">
-                        {galleryItems.map((item, i) => (
-                            <li key={item.id} className={item.tall ? "row-span-2" : ""}>
-                                <button
-                                    type="button"
-                                    onClick={() => setLightbox(i)}
-                                    aria-label={t("home.gallery.open", "Open photo: {{caption}}", { caption: item.caption })}
-                                    className="group relative block size-full overflow-hidden rounded-3xl outline-none focus-visible:ring-4 focus-visible:ring-primary/40"
-                                >
-                                    <Tile item={item} className="transition-transform duration-700 ease-out group-hover:scale-110 motion-reduce:transition-none" />
+                        <ul className="mt-10 grid auto-rows-[180px] grid-cols-2 gap-3 md:auto-rows-[220px] md:grid-cols-3 md:gap-4">
+                            {galleryItems.map((item, i) => (
+                                <li key={item.id} className={item.tall ? "row-span-2" : ""}>
+                                    <button
+                                        type="button"
+                                        onClick={() => setLightbox(i)}
+                                        aria-label={t("home.gallery.open", "Open photo: {{caption}}", { caption: item.caption })}
+                                        className="group relative block size-full overflow-hidden rounded-3xl outline-none focus-visible:ring-4 focus-visible:ring-primary/40"
+                                    >
+                                        <Tile item={item} className="transition-transform duration-700 ease-out group-hover:scale-110 motion-reduce:transition-none" />
 
-                                    <span aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-overlay via-black/0 to-black/0 opacity-80 transition-opacity group-hover:opacity-100" />
+                                        <span aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-overlay via-black/0 to-black/0 opacity-80 transition-opacity group-hover:opacity-100" />
 
-                                    <span aria-hidden="true" className="absolute top-3 right-3 grid size-9 scale-90 place-items-center rounded-full bg-card/20 text-primary-foreground opacity-0 backdrop-blur-md transition-all duration-200 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100">
-                                        <Maximize2 size={15} />
-                                    </span>
+                                        <span aria-hidden="true" className="absolute top-3 right-3 grid size-9 scale-90 place-items-center rounded-full bg-card/20 text-primary-foreground opacity-0 backdrop-blur-md transition-all duration-200 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100">
+                                            <Maximize2 size={15} />
+                                        </span>
 
-                                    <span className="absolute inset-x-3 bottom-3 rounded-xl border border-background/20 bg-overlay-soft px-3.5 py-2.5 text-left text-[13px] leading-snug font-semibold text-primary-foreground backdrop-blur-xl transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
-                                        {item.caption}
-                                    </span>
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
+                                        <span className="absolute inset-x-3 bottom-3 rounded-xl border border-background/20 bg-overlay-soft px-3.5 py-2.5 text-left text-[13px] leading-snug font-semibold text-primary-foreground backdrop-blur-xl transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                                            {item.caption}
+                                        </span>
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
                     )}
                 </div>
 

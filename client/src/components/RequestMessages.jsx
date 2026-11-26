@@ -26,6 +26,8 @@ const RequestMessages = ({ requestId, onClose }) => {
     }, [requestId]);
 
     useEffect(() => {
+        // Initial fetch intentionally updates state; interval handles subsequent refreshes.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         load();
         const timer = setInterval(load, 10000);
         return () => clearInterval(timer);

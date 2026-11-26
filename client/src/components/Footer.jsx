@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Badge } from "@/components/ui/badge";
 import {
     ArrowRight,
     ArrowUp,
@@ -64,13 +65,13 @@ const Footer = () => {
 
                     <div className="relative flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
                         <div className="max-w-2xl">
-                            <span className="inline-flex items-center gap-2 rounded-full bg-black/20 py-1.5 pl-3 pr-4 text-xs font-medium text-primary-foreground backdrop-blur">
+                            <Badge variant="secondary" className="gap-2 rounded-full bg-black/20 py-1.5 pl-3 pr-4 text-xs font-medium text-primary-foreground backdrop-blur">
                                 <span className="relative flex size-2">
                                     <span className="absolute inline-flex size-full rounded-full bg-white/70 motion-safe:animate-ping" />
                                     <span className="relative inline-flex size-2 rounded-full bg-white" />
                                 </span>
                                 {t("footer.ctaBadge", "Every second counts")}
-                            </span>
+                            </Badge>
                             <h2 className="font-display mt-5 text-3xl font-extrabold leading-[1.05] tracking-tight text-primary-foreground sm:text-4xl lg:text-5xl">
                                 {t("footer.ctaTitle", "Need blood urgently?")}
                             </h2>

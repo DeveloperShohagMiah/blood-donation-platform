@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import Button from "../ui/Button";
+import { Badge } from "@/components/ui/badge";
 import {
     ArrowRight,
     Check,
@@ -8,7 +9,6 @@ import {
     HandHeart,
     Heart,
     MapPin,
-    MessageCircle,
     ShieldCheck,
     Target,
     Users,
@@ -41,13 +41,13 @@ const pillarItems = [
 
 const SectionHeading = ({ eyebrow, title, text, centered = true }) => (
     <div
-        className={`about-reveal about-section-heading ${centered
-            ? "about-section-heading--center mx-auto mb-12 max-w-2xl text-center"
+        className={`animate-[fade-in_600ms_var(--ease-premium)_backwards] ${centered
+            ? "mx-auto mb-12 max-w-2xl text-center"
             : "mb-10 max-w-2xl"
             }`}
     >
         <span
-            className={`about-section-eyebrow inline-flex items-center gap-3 text-[0.65rem] font-extrabold uppercase tracking-[0.18em] text-primary ${centered ? "justify-center" : ""
+            className={`inline-flex items-center gap-3 text-[0.65rem] font-extrabold uppercase tracking-[0.18em] text-primary before:h-0.5 before:w-6 before:rounded-sm before:bg-primary before:content-[''] after:h-0.5 after:w-6 after:rounded-sm after:bg-primary after:content-[''] ${centered ? "justify-center" : "after:hidden"
                 }`}
         >
             {eyebrow}
@@ -154,7 +154,7 @@ const About = () => {
             </section>
 
             {/* ---------- Manifesto ---------- */}
-            <section className="about-manifesto border-y border-white/5 py-20 sm:py-24">
+            <section className="relative isolate overflow-hidden border-y border-white/5 bg-[radial-gradient(60%_120%_at_10%_0%,rgba(99,102,241,0.26),transparent_65%),linear-gradient(120deg,#0b1020,#131a33_55%,#0b1020)] py-20 text-white before:absolute before:-top-16 before:left-[4%] before:-z-10 before:font-[family-name:var(--font-heading)] before:text-[22rem] before:leading-none before:text-white/5 before:content-['“'] sm:py-24">
                 <div className="mx-auto max-w-4xl px-5 text-center sm:px-8">
                     <span className="text-[0.65rem] font-extrabold tracking-[0.2em] text-indigo-300 uppercase">
                         {t("about.manifestoEyebrow", "What we believe")}
@@ -172,13 +172,13 @@ const About = () => {
             {/* ---------- Who we are ---------- */}
             <section className="py-20 sm:py-28">
                 <div className="mx-auto grid w-full max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-20">
-                    <div className="about-reveal">
+                    <div className="animate-[fade-in_600ms_var(--ease-premium)_backwards]">
                         <SectionHeading
                             eyebrow={t("about.whoHeading", "Who We Are")}
                             title={t("about.whoTitle", "A Community Built Around Humanity")}
                             centered={false}
                         />
-                        <p className="about-who-lead mt-7 pl-5 text-[clamp(1.15rem,1.8vw,1.5rem)] leading-relaxed text-foreground">
+                        <p className="mt-7 border-l-2 border-primary/55 pl-5 font-heading text-[clamp(1.15rem,1.8vw,1.5rem)] leading-relaxed italic text-foreground">
                             {t(
                                 "about.whoText1",
                                 "Finding a blood donor during an emergency can be stressful and time-sensitive. Blood Connect aims to simplify that process by creating a structured platform where people can find available donors and volunteers can coordinate blood requests."
@@ -186,7 +186,7 @@ const About = () => {
                         </p>
                     </div>
 
-                    <div className="about-reveal">
+                    <div className="animate-[fade-in_600ms_var(--ease-premium)_backwards]">
                         <p className="text-base leading-8 text-muted-foreground">
                             {t(
                                 "about.whoText2",
@@ -219,9 +219,9 @@ const About = () => {
                         {missionItems.map(({ key, icon: Icon }, index) => (
                             <article
                                 key={key}
-                                className="about-mv-card relative overflow-hidden rounded-3xl border border-border bg-card p-8 shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-10"
+                                className="relative overflow-hidden rounded-3xl border border-border bg-card p-8 shadow-lg transition duration-300 before:absolute before:inset-x-0 before:top-0 before:h-[3px] before:bg-[linear-gradient(90deg,var(--primary),var(--brand-vivid),transparent)] before:content-[''] after:absolute after:-top-16 after:-right-16 after:size-56 after:rounded-full after:bg-[color-mix(in_srgb,var(--primary)_8%,transparent)] after:blur-[30px] after:content-[''] hover:-translate-y-1 hover:shadow-xl sm:p-10"
                             >
-                                <span className="about-mv-index absolute top-6 right-7 font-display text-5xl font-extrabold leading-none" aria-hidden="true">
+                                <span className="absolute top-6 right-7 font-display text-5xl font-extrabold leading-none text-[color-mix(in_srgb,var(--primary)_12%,transparent)]" aria-hidden="true">
                                     0{index + 1}
                                 </span>
                                 <IconBadge icon={Icon} />
@@ -246,11 +246,11 @@ const About = () => {
                         text={t("about.valuesText", "The principles that guide how we serve our community.")}
                     />
 
-                    <div className="about-values-grid mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="mt-10 grid gap-5 [&>*:nth-child(2)]:[animation-delay:80ms] [&>*:nth-child(3)]:[animation-delay:160ms] [&>*:nth-child(4)]:[animation-delay:240ms] sm:grid-cols-2 lg:grid-cols-4">
                         {valueItems.map(({ key, icon: Icon }, index) => (
                             <article
                                 key={key}
-                                className="about-value-card relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+                                className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm transition duration-300 after:absolute after:-top-12 after:-right-12 after:size-44 after:rounded-full after:bg-[color-mix(in_srgb,var(--primary)_7%,transparent)] after:blur-[25px] after:content-[''] hover:-translate-y-1 hover:shadow-lg animate-[fade-in_600ms_var(--ease-premium)_backwards]"
                             >
                                 <div className="relative flex items-start justify-between gap-4">
                                     <IconBadge icon={Icon} small />
@@ -276,11 +276,11 @@ const About = () => {
                         title={t("about.howTitle", "How Blood Connect Works")}
                     />
 
-                    <div className="about-steps-grid relative mt-12 grid gap-10 md:grid-cols-3">
+                    <div className="relative mt-12 grid gap-10 md:grid-cols-3">
                         <div aria-hidden="true" className="absolute top-8 right-[12%] left-[12%] hidden h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent md:block" />
 
-                        {stepItems.map(({ number, key }) => (
-                            <article className="about-step relative" key={number}>
+                        {stepItems.map(({ number, key }, index) => (
+                            <article className="relative animate-[fade-in_600ms_var(--ease-premium)_backwards]" key={number} style={{ animationDelay: index * 100 + "ms" }}>
                                 <span className="grid size-16 place-items-center rounded-2xl bg-gradient-to-br from-primary to-primary-hover font-display text-xl font-black text-primary-foreground shadow-lg shadow-primary/25">
                                     {number}
                                 </span>
@@ -299,13 +299,13 @@ const About = () => {
             {/* ---------- CTA ---------- */}
             <section className="pt-16 pb-24">
                 <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
-                    <div className="about-cta rounded-[2rem] p-9 sm:p-12">
+                    <div className="relative isolate overflow-hidden rounded-[2rem] bg-[linear-gradient(115deg,var(--brand-deep)_0%,var(--primary)_55%,var(--primary-hover)_100%)] p-9 text-white shadow-[0_34px_70px_-32px_color-mix(in_srgb,var(--primary)_70%,transparent)] before:absolute before:-top-36 before:-right-24 before:size-96 before:rounded-full before:border-[26px] before:border-white/10 before:content-[''] after:absolute after:-bottom-40 after:left-[20%] after:size-96 after:rounded-full after:bg-[rgba(255,255,255,0.12)] after:blur-[45px] after:content-[''] sm:p-12">
                         <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
                             <div className="max-w-2xl">
-                                <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[11px] font-bold tracking-wide text-white uppercase backdrop-blur">
+                                <Badge variant="outline" className="gap-2 rounded-full border-white/25 bg-white/10 px-3.5 py-1.5 text-[11px] font-bold tracking-wide text-white uppercase backdrop-blur">
                                     <Heart size={13} />
                                     {t("about.badge", "About Blood Connect")}
-                                </span>
+                                </Badge>
                                 <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
                                     {t("about.ctaTitle", "Be Part of Something Meaningful")}
                                 </h2>

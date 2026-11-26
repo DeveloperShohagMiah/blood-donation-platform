@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/useAuth";
 import { useTheme } from "../context/ThemeContext";
 import UserMenu from "./UserMenu";
+import LoginDialog from "./LoginDialog";
 import {
     ArrowUpRight,
     Droplets,
@@ -15,6 +16,7 @@ import {
     Mail,
     Megaphone,
     Menu,
+    Monitor,
     Moon,
     Palette,
     Search,
@@ -31,38 +33,52 @@ const navLinks = [
     { key: "contact", path: "/contact", icon: Mail },
 ];
 
-const ThemeSwitch = ({ theme, onChange, label, lightLabel, darkLabel, className = "" }) => (
-    <div
-        className={`theme-switch ${className}`.trim()}
-        data-theme={theme}
-        role="group"
-        aria-label={label}
-    >
-        <span className="theme-switch-thumb" aria-hidden="true" />
+const THEME_MODES = [
+    { key: "light", icon: Sun },
+    { key: "dark", icon: Moon },
+    { key: "system", icon: Monitor },
+];
 
-        <button
-            type="button"
-            className="theme-switch-btn"
-            onClick={() => onChange("light")}
-            aria-pressed={theme === "light"}
-            aria-label={lightLabel}
-            title={lightLabel}
-        >
-            <Sun size={15} strokeWidth={2.3} />
-        </button>
+const ThemeSwitch = ({
+    mode,
+    onChange,
+    label,
+    lightLabel,
+    darkLabel,
+    systemLabel,
+    className = "",
+}) => {
+    const activeIndex = Math.max(0, THEME_MODES.findIndex((item) => item.key === mode));
+    const labels = { light: lightLabel, dark: darkLabel, system: systemLabel };
 
-        <button
-            type="button"
-            className="theme-switch-btn"
-            onClick={() => onChange("dark")}
-            aria-pressed={theme === "dark"}
-            aria-label={darkLabel}
-            title={darkLabel}
+    return (
+        <div
+            role="group"
+            aria-label={label}
+            className={`relative grid h-9 w-[6.5rem] flex-none grid-cols-3 items-center rounded-full border border-border bg-[color-mix(in_srgb,var(--muted)_70%,var(--card))] p-[3px] shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)] ${className}`.trim()}
         >
-            <Moon size={15} strokeWidth={2.3} />
-        </button>
-    </div>
-);
+            <span
+                aria-hidden="true"
+                className="absolute top-[3px] bottom-[3px] left-[3px] w-[calc((100%-6px)/3)] rounded-full bg-gradient-to-br from-[color-mix(in_srgb,var(--primary)_90%,#ffffff)] to-primary-hover shadow-[0_3px_10px_-3px_color-mix(in_srgb,var(--primary)_80%,transparent)] transition-[translate] duration-[380ms] ease-[var(--ease-premium)]"
+                style={{ translate: `${activeIndex * 100}% 0` }}
+            />
+
+            {THEME_MODES.map(({ key, icon: Icon }) => (
+                <button
+                    key={key}
+                    type="button"
+                    aria-pressed={mode === key}
+                    aria-label={labels[key]}
+                    title={labels[key]}
+                    onClick={() => onChange(key)}
+                    className="relative z-10 grid size-full place-items-center rounded-full text-muted-foreground outline-none transition-colors duration-300 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring aria-pressed:text-primary-foreground"
+                >
+                    <Icon size={15} strokeWidth={2.3} />
+                </button>
+            ))}
+        </div>
+    );
+};
 
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -71,7 +87,7 @@ const Navbar = () => {
     const listRef = useRef(null);
     const { t, i18n } = useTranslation();
     const { user, isAuthenticated, logout } = useAuth();
-    const { resolved: theme, setMode } = useTheme();
+    const { mode, setMode } = useTheme();
 
     const currentLanguage = i18n.resolvedLanguage?.startsWith("bn") ? "BN" : "EN";
 
@@ -277,23 +293,24 @@ const Navbar = () => {
 
                         {/* Theme switcher */}
                         <ThemeSwitch
-                            className="theme-switch--desktop"
-                            theme={theme}
+                            className="hidden md:grid"
+                            mode={mode}
                             onChange={setMode}
                             label={t("navigation.chooseTheme")}
                             lightLabel={t("navigation.light")}
                             darkLabel={t("navigation.dark")}
+                            systemLabel={t("navigation.system")}
                         />
 
                         {/* Theme settings */}
-                        <Link
+                        {/* <Link
                             to="/dashboard/settings"
                             aria-label={t("navigation.themeSettings", "Theme settings")}
                             title={t("navigation.themeSettings", "Theme settings")}
                             className="hidden size-9 place-items-center rounded-full border border-border/70 text-muted-foreground transition hover:border-primary/40 hover:text-primary md:grid"
                         >
                             <Palette size={16} />
-                        </Link>
+                        </Link> */}
 
                         {/* Desktop account dropdown / login */}
                         {isAuthenticated ? (
@@ -301,12 +318,14 @@ const Navbar = () => {
                                 <UserMenu onNavigate={closeMenu} />
                             </div>
                         ) : (
-                            <Link
-                                to="/login"
-                                className="btn-premium hidden rounded-full px-3.5 py-2 text-[13.5px] font-semibold md:inline-flex"
-                            >
-                                {t("navigation.login")}
-                            </Link>
+                            <LoginDialog>
+                                <button
+                                    type="button"
+                                    className="btn-premium hidden rounded-full px-3.5 py-2 text-[13.5px] font-semibold md:inline-flex"
+                                >
+                                    {t("navigation.login")}
+                                </button>
+                            </LoginDialog>
                         )}
 
                         {/* Desktop CTA */}
@@ -393,18 +412,19 @@ const Navbar = () => {
                             })}
                         </div>
 
-                        <div className="theme-row">
-                            <span className="theme-row-label">
+                        <div className="flex items-center justify-between gap-4 px-4 pt-[0.55rem] pb-[0.15rem]">
+                            <span className="inline-flex items-center gap-2.5 text-[0.85rem] font-bold text-foreground [&>svg]:text-primary">
                                 <Moon size={16} />
                                 {t("navigation.theme")}
                             </span>
 
                             <ThemeSwitch
-                                theme={theme}
+                                mode={mode}
                                 onChange={setMode}
                                 label={t("navigation.chooseTheme")}
                                 lightLabel={t("navigation.light")}
                                 darkLabel={t("navigation.dark")}
+                                systemLabel={t("navigation.system")}
                             />
                         </div>
 
@@ -449,14 +469,16 @@ const Navbar = () => {
                                     {t("navigation.logout", "Log out")}
                                 </button>
                             ) : (
-                                <Link
-                                    to="/login"
-                                    onClick={closeMenu}
-                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/70 text-sm font-semibold text-foreground transition-colors hover:bg-primary/5"
-                                >
-                                    <LogIn size={16} />
-                                    {t("navigation.login")}
-                                </Link>
+                                <LoginDialog>
+                                    <button
+                                        type="button"
+                                        onClick={closeMenu}
+                                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border/70 text-sm font-semibold text-foreground transition-colors hover:bg-primary/5"
+                                    >
+                                        <LogIn size={16} />
+                                        {t("navigation.login")}
+                                    </button>
+                                </LoginDialog>
                             )}
 
                             <Link

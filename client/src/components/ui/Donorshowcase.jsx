@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Badge } from "@/components/ui/badge";
 import {
     CalendarDays,
     Filter,
@@ -9,9 +10,9 @@ import {
     SearchX,
     Users,
 } from "lucide-react";
-import SectionHeader from "../components/SectionHeader";
-import Select from "./Select";
-import { apiFetch } from "../utils/api";
+import SectionHeader from "../SectionHeader";
+import Select from "../Select";
+import { apiFetch } from "../../utils/api";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
 const PREVIEW_LIMIT = 8;
@@ -34,7 +35,7 @@ const mapApiDonor = (item) => ({
     available:
         item.availability === "available" &&
         !(item.lastDonationDate &&
-          Date.now() - new Date(item.lastDonationDate).getTime() < 90 * 86_400_000),
+            Date.now() - new Date(item.lastDonationDate).getTime() < 90 * 86_400_000),
     phone: "",
 });
 
@@ -309,9 +310,10 @@ const DonorShowcase = () => {
                                 </p>
 
                                 <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
-                                    <span
+                                    <Badge
+                                        variant="secondary"
                                         className={[
-                                            "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold",
+                                            "gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold",
                                             d.available
                                                 ? "bg-success-soft text-success"
                                                 : "bg-muted/40 text-muted-foreground",
@@ -323,7 +325,7 @@ const DonorShowcase = () => {
                                         {d.available
                                             ? t("home.donors.available", "Available")
                                             : t("home.donors.unavailable", "Unavailable")}
-                                    </span>
+                                    </Badge>
 
                                     {d.phone ? (
                                         <a

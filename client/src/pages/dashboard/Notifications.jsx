@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Badge } from "@/components/ui/badge";
 import {
     ArrowUpRight,
     Bell,
@@ -272,9 +273,9 @@ const Notifications = () => {
                                                             <h3 className="text-sm font-extrabold text-foreground">
                                                                 {item.title}
                                                             </h3>
-                                                            <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                                                            <Badge variant="secondary" className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
                                                                 {config.label}
-                                                            </span>
+                                                            </Badge>
                                                         </div>
                                                         <p className="mt-1 text-sm leading-6 text-muted-foreground">
                                                             {item.message}

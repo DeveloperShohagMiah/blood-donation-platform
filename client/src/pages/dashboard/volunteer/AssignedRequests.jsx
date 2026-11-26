@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 import Select from "../../../components/Select";
 import { apiFetch } from "../../../utils/api";
 import { formatDate, formatDateTime } from "../format";
@@ -126,10 +127,10 @@ function UrgencyChip({ urgency, active }) {
                 ? "bg-warning/10 text-warning ring-warning/20"
                 : "bg-muted text-muted-foreground ring-border";
     return (
-        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ring-1 ${tone}`}>
+        <Badge variant="secondary" className={`gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ring-1 ${tone}`}>
             <span className={`size-1.5 rounded-full ${value === "critical" ? "animate-pulse bg-destructive" : value === "urgent" ? "bg-warning" : "bg-muted-foreground"}`} />
             {value || "normal"}
-        </span>
+        </Badge>
     );
 }
 
@@ -183,12 +184,12 @@ function AssignmentCard({ item, view, busy, onDetails, onStatus }) {
                     <div className="mt-4 flex flex-wrap items-center gap-2">
                         <UrgencyChip urgency={request.urgency} active={active} />
                         <StatusBadge value={request.status} />
-                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 ${toneChip[due.tone]}`}>
+                        <Badge variant="secondary" className={`gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 ${toneChip[due.tone]}`}>
                             <CalendarClock size={12} /> {due.label}
-                        </span>
-                        <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] font-semibold text-muted-foreground">
+                        </Badge>
+                        <Badge variant="secondary" className="rounded-full bg-muted px-2.5 py-1 text-[11px] font-semibold text-muted-foreground">
                             {TYPE_LABELS[item.assignmentType] || "Assignment"}
-                        </span>
+                        </Badge>
                     </div>
 
                     <div className="mt-4 grid gap-3">
@@ -351,9 +352,9 @@ function DetailsModal({ item, note, onNoteChange, onSaveNote, onClose, onStatus,
                     <StatusBadge value={item.status} />
                     <StatusBadge value={request.status} />
                     <UrgencyChip urgency={request.urgency} active={active} />
-                    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 ${toneChip[due.tone]}`}>
+                    <Badge variant="secondary" className={`gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 ${toneChip[due.tone]}`}>
                         <CalendarClock size={12} /> {due.label}
-                    </span>
+                    </Badge>
                 </div>
 
                 {active && ["urgent", "critical"].includes(String(request.urgency || "").toLowerCase()) && (

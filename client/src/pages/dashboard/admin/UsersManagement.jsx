@@ -115,7 +115,8 @@ const UsersManagement = () => {
     const saveCreate = async (values) => {
         setActionError("");
         try {
-            const { confirmPassword, ...payload } = values;
+            const payload = { ...values };
+            delete payload.confirmPassword;
             const { user } = await apiFetch("/users", {
                 method: "POST",
                 body: payload,

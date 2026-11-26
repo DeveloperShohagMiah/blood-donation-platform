@@ -1,6 +1,7 @@
 import { t } from "../utils/tr.js";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 import {
     ArrowRight,
     CalendarDays,
@@ -23,9 +24,9 @@ const tone = {
 };
 
 const StatusPill = ({ status, label }) => (
-    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ring-1 ${tone[status] || tone.draft}`}>
+    <Badge variant="secondary" className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ring-1 ${tone[status] || tone.draft}`}>
         {label || status}
-    </span>
+    </Badge>
 );
 
 const timelineStatus = (item) => {

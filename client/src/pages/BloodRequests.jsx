@@ -1,6 +1,7 @@
 import { t } from "../utils/tr.js";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 import {
     ArrowRight,
     Clock,
@@ -77,9 +78,9 @@ const BloodRequests = () => {
                 <div className="pointer-events-none absolute -top-24 -right-20 size-80 rounded-full bg-primary/10 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-32 -left-20 size-80 rounded-full bg-accent/40 blur-3xl" />
                 <div className="container relative max-w-7xl mx-auto flex flex-col items-center justify-center gap-3 px-4">
-                    <span className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-card px-4 py-2 text-xs font-bold tracking-wide text-primary uppercase shadow-sm">
+                    <Badge variant="outline" className="gap-2 rounded-full border-primary/15 bg-card px-4 py-2 text-xs font-bold tracking-wide text-primary uppercase shadow-sm">
                         <Droplets size={15} /> Community requests
-                    </span>
+                    </Badge>
                     <h1 className="mt-6 text-4xl leading-tight font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
                         All <span className="text-gradient">{t("text.blood requests")}</span>
                     </h1>
@@ -198,10 +199,10 @@ const BloodRequests = () => {
                                             <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-primary to-primary/80 text-xl font-extrabold text-primary-foreground shadow-lg shadow-primary/25">
                                                 {item.bloodGroup}
                                             </span>
-                                            <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ring-1 ${style.pill}`}>
+                                            <Badge variant="secondary" className={`gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ring-1 ${style.pill}`}>
                                                 <span className={`size-2 rounded-full ${style.dot}`} />
                                                 {style.label}
-                                            </span>
+                                            </Badge>
                                         </div>
 
                                         <h3 className="mt-4 text-lg font-extrabold text-foreground">

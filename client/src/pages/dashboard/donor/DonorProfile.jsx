@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import LocationPicker from "../../../components/LocationPicker";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { DatePicker } from "@/components/ui/date-picker";
 import { useTranslation } from "react-i18next";
 import {
     AlertCircle,
@@ -127,6 +128,7 @@ const DonorProfile = () => {
 
     const {
         register,
+        control,
         handleSubmit,
         reset,
         watch,
@@ -400,12 +402,19 @@ const DonorProfile = () => {
                                     <label htmlFor="lastDonation" className="mb-2 block text-sm font-bold text-foreground">
                                         {t("text.Last donation date", "Last donation date")}
                                     </label>
-                                    <input
-                                        id="lastDonation"
-                                        type="date"
-                                        max={new Date().toISOString().split("T")[0]}
-                                        {...register("lastDonationDate")}
-                                        className={inputClass(errors.lastDonationDate)}
+                                    <Controller
+                                        control={control}
+                                        name="lastDonationDate"
+                                        render={({ field }) => (
+                                            <DatePicker
+                                                id="lastDonation"
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                onBlur={field.onBlur}
+                                                max={new Date().toISOString().split("T")[0]}
+                                                error={errors.lastDonationDate?.message}
+                                            />
+                                        )}
                                     />
                                     <FieldError message={errors.lastDonationDate?.message} />
                                 </div>

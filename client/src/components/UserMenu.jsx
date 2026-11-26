@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 import {
     Bell,
     ChevronDown,
@@ -117,12 +118,13 @@ const UserMenu = ({ onNavigate, align = "right" }) => {
                     ].join(" ")}
                 >
                     <div className="border-b border-border/60 px-3 py-2.5">
-                        <p className="truncate text-sm font-bold text-foreground">{user.fullName} <span
+                        <p className="truncate text-sm font-bold text-foreground">{user.fullName} <Badge
+                            variant="secondary"
                             className={`shrink-0 rounded-full px-2 py-1 font-code text-[9px] font-semibold uppercase tracking-wider ${roleStyles[role] || roleStyles.user
                                 }`}
                         >
                             {role}
-                        </span></p>
+                        </Badge></p>
                         <p className="truncate text-xs lowercase text-muted-foreground">
                             {user.email ? `${user.email}` : ""}
                         </p>

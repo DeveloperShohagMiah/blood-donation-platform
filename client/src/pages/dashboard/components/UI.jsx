@@ -1,4 +1,5 @@
 import { Children, cloneElement, isValidElement } from "react";
+import { Badge } from "@/components/ui/badge";
 
 const toneClasses = {
     primary: "bg-primary/10 text-primary ring-primary/15",
@@ -51,9 +52,12 @@ const statusTones = {
 export const StatusBadge = ({ value }) => {
     const key = String(value || "—").toLowerCase();
     return (
-        <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ring-1 ${statusTones[key] || "bg-muted text-muted-foreground ring-border"}`}>
+        <Badge
+            variant="secondary"
+            className={`rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ring-1 ${statusTones[key] || "bg-muted text-muted-foreground ring-border"}`}
+        >
             {key.replaceAll("_", " ")}
-        </span>
+        </Badge>
     );
 };
 

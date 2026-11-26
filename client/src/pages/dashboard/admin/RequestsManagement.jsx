@@ -1,7 +1,8 @@
 import { t } from "../../../utils/tr.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { DatePicker } from "@/components/ui/date-picker";
 import { AlertCircle, Check, MessageCircle, Pencil, Plus, Trash2, UserPlus, Users, X } from "lucide-react";
 import RequestMessages from "../../../components/RequestMessages";
 import Button from "../../../ui/Button";
@@ -106,6 +107,7 @@ const RequestsManagement = () => {
 
     const {
         register,
+        control,
         handleSubmit,
         reset,
         watch,
@@ -512,19 +514,27 @@ const RequestsManagement = () => {
                                 />
                                 <FieldError message={errors.units?.message} />
                             </label>
-                            <label>
+                            <div>
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Needed by")}</span>
-                                <input
-                                    type="date"
-                                    min={today()}
-                                    {...register("neededAt", {
+                                <Controller
+                                    control={control}
+                                    name="neededAt"
+                                    rules={{
                                         validate: (value) =>
                                             !value || value >= today() || "Choose today or a future date.",
-                                    })}
-                                    className={inputClass(errors.neededAt)}
+                                    }}
+                                    render={({ field }) => (
+                                        <DatePicker
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            onBlur={field.onBlur}
+                                            min={today()}
+                                            error={errors.neededAt?.message}
+                                        />
+                                    )}
                                 />
                                 <FieldError message={errors.neededAt?.message} />
-                            </label>
+                            </div>
                             <label className="sm:col-span-2">
                                 <span className="mb-1.5 block text-sm font-bold text-foreground">{t("text.Hospital")}</span>
                                 <input

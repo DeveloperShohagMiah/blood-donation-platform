@@ -1,6 +1,7 @@
 import { t } from "../../utils/tr.js";
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 import {
     ArrowUpRight,
     BarChart3,
@@ -283,9 +284,9 @@ const DashboardLayout = () => {
                                                             </span>
                                                         )}
                                                         {showLabels && item.badge && unread > 0 && (
-                                                            <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-extrabold text-primary">
+                                                            <Badge className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-extrabold text-primary">
                                                                 {unread > 9 ? "9+" : unread}
-                                                            </span>
+                                                            </Badge>
                                                         )}
                                                     </NavLink>
                                                 </li>

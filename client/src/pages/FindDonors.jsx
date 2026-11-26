@@ -1,6 +1,7 @@
 
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import { Badge } from "@/components/ui/badge";
 import Select from "../components/Select";
 import DonorMap from "../components/DonorMap";
 import {
@@ -221,10 +222,10 @@ const FindDonors = ({
 
                 <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
                     <div className="mx-auto max-w-3xl text-center">
-                        <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-card px-4 py-2 text-xs font-bold tracking-wide text-primary shadow-sm">
+                        <Badge variant="outline" className="gap-2 rounded-full border-primary/25 bg-card px-4 py-2 text-xs font-bold tracking-wide text-primary shadow-sm">
                             <Droplets size={15} />
                             BLOOD CONNECT COMMUNITY
-                        </span>
+                        </Badge>
 
                         <h1 className="mt-6 text-4xl leading-tight font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
                             {content.title}
@@ -550,13 +551,13 @@ const FindDonors = ({
                                 const resting = donor.availability !== "available";
                                 const eligibleIn = donor.lastDonationDate
                                     ? Math.max(
-                                          0,
-                                          90 - Math.floor(
-                                              (Date.now() -
-                                                  new Date(donor.lastDonationDate).getTime()) /
-                                                  86_400_000
-                                          )
-                                      )
+                                        0,
+                                        90 - Math.floor(
+                                            (Date.now() -
+                                                new Date(donor.lastDonationDate).getTime()) /
+                                            86_400_000
+                                        )
+                                    )
                                     : 0;
                                 return (
                                     <article
@@ -600,24 +601,23 @@ const FindDonors = ({
                                                 </p>
                                             </div>
 
-                                            <span
-                                                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${
-                                                    resting
-                                                        ? "bg-muted text-muted-foreground"
-                                                        : "bg-success-soft text-success"
-                                                }`}
+                                            <Badge
+                                                variant="secondary"
+                                                className={`gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${resting
+                                                    ? "bg-muted text-muted-foreground"
+                                                    : "bg-success-soft text-success"
+                                                    }`}
                                             >
                                                 <span
-                                                    className={`size-1.5 rounded-full ${
-                                                        resting ? "bg-muted-foreground" : "bg-success"
-                                                    }`}
+                                                    className={`size-1.5 rounded-full ${resting ? "bg-muted-foreground" : "bg-success"
+                                                        }`}
                                                 />
                                                 {resting
                                                     ? isBn
                                                         ? `${eligibleIn} দিন পর আবার উপলব্ধ`
                                                         : `Available in ${eligibleIn} days`
                                                     : content.availableStatus}
-                                            </span>
+                                            </Badge>
                                         </div>
 
                                         <div className="mt-4 flex items-center justify-between gap-2">

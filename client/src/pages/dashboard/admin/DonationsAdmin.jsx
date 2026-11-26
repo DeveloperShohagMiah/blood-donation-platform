@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
     AlertCircle,
     CalendarDays,
@@ -78,6 +79,7 @@ const DonationsAdmin = () => {
 
     const {
         register,
+        control,
         handleSubmit,
         reset,
         watch,
@@ -347,7 +349,20 @@ const DonationsAdmin = () => {
                                 </div>
                                 <div>
                                     <label className="mb-1.5 block text-sm font-bold text-foreground">Date received</label>
-                                    <input type="datetime-local" {...register("donatedAt", { required: "Date is required." })} className={inputClass(errors.donatedAt)} />
+                                    <Controller
+                                        control={control}
+                                        name="donatedAt"
+                                        rules={{ required: "Date is required." }}
+                                        render={({ field }) => (
+                                            <DatePicker
+                                                withTime
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                onBlur={field.onBlur}
+                                                error={errors.donatedAt?.message}
+                                            />
+                                        )}
+                                    />
                                     <FieldError message={errors.donatedAt?.message} />
                                 </div>
                             </div>

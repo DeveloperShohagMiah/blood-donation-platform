@@ -29,6 +29,7 @@ import { useAuth } from "../../../context/useAuth";
 import { useApiData } from "../hooks";
 import { formatDate } from "../format";
 import { ErrorBanner, PageHeader, StatusBadge } from "../components/UI";
+import { Badge } from "@/components/ui/badge";
 
 const DEFAULTS = {
     availability: "unavailable",
@@ -299,9 +300,9 @@ const VolunteerProfile = () => {
                                     <div className="flex flex-wrap items-center gap-2">
                                         <p className="eyebrow text-[10px] text-white/70">Volunteer</p>
                                         {user?.accountStatus === "approved" && (
-                                            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-bold ring-1 ring-white/25">
+                                            <Badge variant="secondary" className="gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-bold text-white ring-1 ring-white/25">
                                                 <BadgeCheck size={11} /> Approved
-                                            </span>
+                                            </Badge>
                                         )}
                                     </div>
                                     <h2 className="font-display truncate text-2xl font-extrabold tracking-tight sm:text-3xl">
@@ -519,9 +520,9 @@ const VolunteerProfile = () => {
                                 title={t("text.Service areas", "Service areas")}
                                 subtitle={t("text.Service areas hint", "Select the districts and upazilas you can cover.")}
                                 action={
-                                    <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-extrabold text-primary ring-1 ring-primary/15">
+                                    <Badge className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-extrabold text-primary ring-1 ring-primary/15">
                                         {selectedAreas.length} selected
-                                    </span>
+                                    </Badge>
                                 }
                             >
                                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -561,9 +562,9 @@ const VolunteerProfile = () => {
                                         <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Your selection</p>
                                         <div className="flex flex-wrap gap-1.5">
                                             {selectedAreas.map((id) => (
-                                                <span
+                                                <Badge
                                                     key={id}
-                                                    className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 py-1 pr-1.5 pl-3 text-[11px] font-bold text-primary ring-1 ring-primary/15"
+                                                    className="gap-1.5 rounded-full bg-primary/10 py-1 pr-1.5 pl-3 text-[11px] font-bold text-primary ring-1 ring-primary/15"
                                                 >
                                                     {areaMap.get(id)?.nameEn || "Selected area"}
                                                     <button
@@ -574,7 +575,7 @@ const VolunteerProfile = () => {
                                                     >
                                                         <X size={10} />
                                                     </button>
-                                                </span>
+                                                </Badge>
                                             ))}
                                         </div>
                                     </div>

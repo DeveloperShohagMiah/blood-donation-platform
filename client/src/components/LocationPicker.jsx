@@ -42,8 +42,8 @@ const LocationPicker = ({ lat, lng, onChange }) => {
         markerRef.current = L.marker([lat, lng], {
             draggable: true,
             icon: L.divIcon({
-                className: "bc-map-marker",
-                html: '<span class="bc-map-pin is-active">●</span>',
+                className: "border-0 bg-transparent",
+                html: '<span class="grid size-10 place-items-center rounded-full border-2 border-white bg-primary-hover text-primary-foreground text-[11px] font-extrabold shadow-[0_8px_18px_-8px_color-mix(in_srgb,var(--primary)_90%,transparent)]">●</span>',
                 iconSize: [40, 40],
                 iconAnchor: [20, 20],
             }),
@@ -60,7 +60,7 @@ const LocationPicker = ({ lat, lng, onChange }) => {
 
     return (
         <div>
-            <div ref={containerRef} className="h-64 w-full rounded-xl border border-border" />
+            <div ref={containerRef} className="z-0 h-64 w-full rounded-xl border border-border font-display" />
             <p className="mt-2 text-xs text-muted-foreground">
                 Click the map (or drag the pin) to set your approximate location.
             </p>

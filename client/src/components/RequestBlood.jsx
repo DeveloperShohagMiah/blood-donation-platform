@@ -1,8 +1,9 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { Badge } from "@/components/ui/badge";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
     ArrowRight,
-    CalendarDays,
     CheckCircle2,
     Clock3,
     Droplet,
@@ -20,13 +21,19 @@ const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
 const inputClass = "input-premium mt-2 h-12 px-4";
 const labelClass = "text-[13px] font-bold text-foreground";
 const errorClass = "mt-1.5 text-xs font-medium text-destructive";
-const today = () => new Date().toISOString().split("T")[0];
+const toInputDate = (date) => {
+    const pad = (value) => String(value).padStart(2, "0");
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+};
+
+const today = () => toInputDate(new Date());
 
 export default function BloodRequestForm({ onSubmit, onCancel, locations = [], embedded = false }) {
     const { t } = useTranslation();
 
     const {
         register,
+        control,
         handleSubmit,
         watch,
         reset,
@@ -121,10 +128,10 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [], e
             <div className="mx-auto max-w-5xl">
                 {!embedded && (
                     <header className="mb-8 max-w-2xl">
-                        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-2 text-xs font-bold text-muted-foreground shadow-sm">
+                        <Badge variant="outline" className="mb-4 gap-2 rounded-full border-primary/20 bg-primary/5 px-3.5 py-2 text-xs font-bold text-muted-foreground shadow-sm">
                             <span className="size-2 rounded-full bg-primary" />
                             {t("bloodRequest.form.eyebrow", "HELP SOMEONE IN NEED")}
-                        </div>
+                        </Badge>
                         <h1 className="text-3xl leading-tight font-extrabold tracking-[-0.045em] sm:text-4xl lg:text-5xl">
                             {t("bloodRequest.form.title", "Create a blood request")}
                         </h1>
@@ -350,30 +357,34 @@ export default function BloodRequestForm({ onSubmit, onCancel, locations = [], e
                                     <FieldError error={errors.units} />
                                 </label>
 
-                                <label>
+                                <div>
                                     <span className={labelClass}>
                                         {t("bloodRequest.form.requiredDate", "Needed by")}
                                     </span>
-                                    <span className="relative block">
-                                        <CalendarDays
-                                            size={17}
-                                            className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground"
-                                        />
-                                        <input
-                                            type="date"
-                                            {...register("neededAt", {
-                                                required: requiredRule("Required date"),
-                                                validate: (value) =>
-                                                    value >= today() ||
-                                                    t("bloodRequest.form.validation.date", "Date cannot be in the past"),
-                                            })}
-                                            min={today()}
-                                            className={`${inputClass} pl-11`}
-                                            aria-invalid={Boolean(errors.neededAt)}
-                                        />
-                                    </span>
+                                    <Controller
+                                        control={control}
+                                        name="neededAt"
+                                        rules={{
+                                            required: requiredRule("Required date"),
+                                            validate: (value) =>
+                                                !value ||
+                                                value >= today() ||
+                                                t("bloodRequest.form.validation.date", "Date cannot be in the past"),
+                                        }}
+                                        render={({ field }) => (
+                                            <DatePicker
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                onBlur={field.onBlur}
+                                                name={field.name}
+                                                min={today()}
+                                                error={errors.neededAt?.message}
+                                                placeholder={t("bloodRequest.form.selectDate", "Select a date")}
+                                            />
+                                        )}
+                                    />
                                     <FieldError error={errors.neededAt} />
-                                </label>
+                                </div>
                             </div>
 
                             <Divider />

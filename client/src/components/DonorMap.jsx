@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 
+const PIN_BASE = "grid size-10 place-items-center rounded-full border-2 border-white bg-primary text-primary-foreground text-[11px] font-extrabold shadow-[0_8px_18px_-8px_color-mix(in_srgb,var(--primary)_90%,transparent)]";
+
 const markerIcon = (label, active = false) =>
     L.divIcon({
-        className: "bc-map-marker",
-        html: `<span class="bc-map-pin${active ? " is-active" : ""}">${label}</span>`,
+        className: "border-0 bg-transparent",
+        html: `<span class="${PIN_BASE}${active ? " bg-primary-hover" : ""}">${label}</span>`,
         iconSize: [40, 40],
         iconAnchor: [20, 20],
     });
@@ -68,7 +70,7 @@ const DonorMap = ({ donors = [], className = "h-[420px]" }) => {
         }
     }, [donors]);
 
-    return <div ref={containerRef} className={`w-full rounded-2xl ${className}`} />;
+    return <div ref={containerRef} className={`z-0 w-full rounded-2xl font-display ${className}`} />;
 };
 
 export default DonorMap;

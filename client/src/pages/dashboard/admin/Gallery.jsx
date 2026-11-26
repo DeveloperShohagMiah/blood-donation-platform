@@ -1,6 +1,7 @@
 import { t } from "../../../utils/tr.js";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Badge } from "@/components/ui/badge";
 import { AlertCircle, Check, Images, Pencil, Plus, Trash2, X } from "lucide-react";
 import { apiFetch } from "../../../utils/api";
 import { useApiData } from "../hooks";
@@ -227,18 +228,23 @@ const Gallery = () => {
                                     </Td>
                                     <Td>{item.order}</Td>
                                     <Td>
-                                        <button
-                                            type="button"
-                                            disabled={busyId === item._id}
-                                            onClick={() => toggleActive(item)}
-                                            className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 disabled:opacity-60 ${
+                                        <Badge
+                                            asChild
+                                            variant="secondary"
+                                            className={`cursor-pointer rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 disabled:opacity-60 ${
                                                 item.isActive
                                                     ? "bg-success/10 text-success-deep ring-success/20"
                                                     : "bg-muted-foreground/10 text-muted-foreground ring-muted-foreground/20"
                                             }`}
                                         >
-                                            {item.isActive ? "Active" : "Hidden"}
-                                        </button>
+                                            <button
+                                                type="button"
+                                                disabled={busyId === item._id}
+                                                onClick={() => toggleActive(item)}
+                                            >
+                                                {item.isActive ? "Active" : "Hidden"}
+                                            </button>
+                                        </Badge>
                                     </Td>
                                     <Td>{formatDate(item.createdAt)}</Td>
                                     <Td>

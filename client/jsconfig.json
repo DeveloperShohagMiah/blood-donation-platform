@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "jsx": "react-jsx",
+    "checkJs": false,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "esnext"
+  },
+  "include": [
+    "src/**/*",
+    "src/components/DonorMap.jsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

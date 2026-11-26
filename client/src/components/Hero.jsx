@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
 import {
     ArrowUpRight,
-    CalendarClock,
     CheckCircle2,
-    Clock,
     Droplets,
-    HeartPulse,
     MapPin,
     Search,
     ShieldCheck,
@@ -34,29 +32,6 @@ const Hero = ({ stats }) => {
         navigate(query ? `/donors?${query}` : "/donors");
     };
 
-    const facts = [
-        {
-            icon: Droplets,
-            title: t("hero.fact1.title", "O- is the universal donor"),
-            text: t("hero.fact1.text", "Its red cells can be given to any blood group in an emergency."),
-        },
-        {
-            icon: Clock,
-            title: t("hero.fact2.title", "About 10 minutes"),
-            text: t("hero.fact2.text", "The donation itself is quick. Plan about an hour in total."),
-        },
-        {
-            icon: HeartPulse,
-            title: t("hero.fact3.title", "Up to 3 lives"),
-            text: t("hero.fact3.text", "One donation is separated into red cells, plasma and platelets."),
-        },
-        {
-            icon: CalendarClock,
-            title: t("hero.fact4.title", "Every 3 to 4 months"),
-            text: t("hero.fact4.text", "The usual safe gap between whole-blood donations."),
-        },
-    ];
-
     const statItems = stats
         ? [
             stats.donors && { value: stats.donors, label: t("hero.stat.donors", "Registered donors") },
@@ -76,13 +51,13 @@ const Hero = ({ stats }) => {
                 <div className="grid items-center gap-14 pt-14 pb-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16 lg:pt-20">
                     {/* ---------- Copy + search ---------- */}
                     <div>
-                        <span className="inline-flex items-center gap-2.5 rounded-full border border-primary/20 bg-primary/5 py-1.5 pr-4 pl-3 text-xs font-semibold text-primary shadow-sm backdrop-blur">
+                        <Badge variant="outline" className="gap-2.5 rounded-full border-primary/20 bg-primary/5 py-1.5 pr-4 pl-3 text-xs font-semibold text-primary shadow-sm backdrop-blur">
                             <span className="relative flex size-2">
                                 <span className="absolute inline-flex size-full rounded-full bg-primary/60 motion-safe:animate-ping" />
                                 <span className="relative inline-flex size-2 rounded-full bg-primary" />
                             </span>
                             {t("hero.badge", "Voluntary donors, ready to help")}
-                        </span>
+                        </Badge>
 
                         <h1 className="font-display mt-7 font-extrabold text-balance text-foreground">
                             <span className="block">{t("hero.title1", "Connecting Donors")}</span>
@@ -216,13 +191,14 @@ const Hero = ({ stats }) => {
                             </div>
 
                             {["A+", "O-", "B+", "AB+"].map((groupBadge, index) => (
-                                <span
+                                <Badge
                                     key={groupBadge}
-                                    className={`absolute grid size-12 place-items-center rounded-2xl border border-border bg-card text-sm font-extrabold text-primary shadow-md ${index === 0 ? "top-1/4 right-2" : ""
+                                    variant="outline"
+                                    className={`absolute grid h-12 w-12 place-items-center rounded-2xl border-border bg-card text-sm font-extrabold text-primary shadow-md ${index === 0 ? "top-1/4 right-2" : ""
                                         } ${index === 1 ? "bottom-6 left-10" : ""} ${index === 2 ? "top-6 left-1/3" : ""} ${index === 3 ? "right-6 bottom-1/4" : ""}`}
                                 >
                                     {groupBadge}
-                                </span>
+                                </Badge>
                             ))}
                         </div>
                     </div>
